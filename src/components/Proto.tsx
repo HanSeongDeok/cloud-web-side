@@ -1,75 +1,50 @@
-import { memo } from "react";
+import { memo, useState } from "react";
 import {
     NavigationMenu,
-    NavigationMenuContent,
     NavigationMenuItem,
     NavigationMenuLink,
     NavigationMenuList,
     NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
-import { Lock } from "lucide-react";
-
-const Proto2 = memo(() => {
-    return (
-        <header className="w-full border-b bg-white px-6 py-2 flex items-center justify-between shadow-sm">
-            <a href="#" className="text-sm font-semibold text-blue-800 underline">
-                Service name
-            </a>
-            <NavigationMenu>
-                <NavigationMenuList className="flex items-center gap-6 text-sm">
-                    <NavigationMenuItem>
-                        <NavigationMenuLink className="text-blue-600 hover:underline">
-                            저장소
-                        </NavigationMenuLink>
-                    </NavigationMenuItem>
-                    <NavigationMenuItem>
-                        <NavigationMenuLink className="text-black hover:underline">
-                            복구
-                        </NavigationMenuLink>
-                    </NavigationMenuItem>
-                    <NavigationMenuItem>
-                        <NavigationMenuLink className="text-black hover:underline">
-                            대시보드
-                        </NavigationMenuLink>
-                    </NavigationMenuItem>
-                    <NavigationMenuItem className="flex items-center gap-1 cursor-pointer">
-                        <Lock className="w-4 h-4 text-black" />
-                        <span className="text-black">관리자</span>
-                    </NavigationMenuItem>
-                    <NavigationMenuItem>
-                        <div className="flex items-center gap-1 text-sm text-gray-600">
-                            <Avatar className="w-6 h-6">
-                                <AvatarImage src="" alt="@user" />
-                                <AvatarFallback>OO</AvatarFallback>
-                            </Avatar>
-                            <span>OO팀/홍길동</span>
-                        </div>
-                    </NavigationMenuItem>
-                </NavigationMenuList>
-            </NavigationMenu>
-        </header>
-    );
-});
-
+import { Route, Routes } from "react-router-dom";
+import ProtoPage1 from "./ProtoPage1";
+import ProtoPage2 from "./ProtoPage2";
+import ProtoPage3 from "./ProtoPage3";
 
 const Proto = memo(() => {
+    const [activePage, setActivePage] = useState<"page1" | "page2" | "page3" | null>(null);
+
+    const renderPage = () => {
+        switch (activePage) {
+            case "page1":
+                return <ProtoPage1 />;
+            case "page2":
+                return <ProtoPage2 />;
+            case "page3":
+                return <ProtoPage3 />;
+            default:
+                return <ProtoPage1 />;
+        }
+    };
     return (
         <div className="w-full">
             <nav className="fixed top-0 left-0 w-full bg-background shadow-md z-50 px-6 py-3 border-b border-border flex items-center">
+                <a href="/prototype" className="text-3xl font-semibold text-blue-800 underline">
+                    Service name
+                </a>
                 <NavigationMenu className="ml-auto">
                     <NavigationMenuList className="flex items-center gap-6">
                         <NavigationMenuItem>
-                            <NavigationMenuLink className="text-lg">저장소</NavigationMenuLink>
+                            <NavigationMenuLink className="text-lg cursor-pointer" onClick={() => setActivePage("page1")}>저장소</NavigationMenuLink>
                         </NavigationMenuItem>
 
                         <NavigationMenuItem>
-                            <NavigationMenuLink className="text-lg">복구</NavigationMenuLink>
+                            <NavigationMenuLink className="text-lg cursor-pointer" onClick={() => setActivePage("page2")}>복구</NavigationMenuLink>
                         </NavigationMenuItem>
 
                         <NavigationMenuItem>
-                            <NavigationMenuLink className="text-lg">대시보드</NavigationMenuLink>
+                            <NavigationMenuLink className="text-lg cursor-pointer" onClick={() => setActivePage("page3")}>대시보드</NavigationMenuLink>
                         </NavigationMenuItem>
 
                         <NavigationMenuItem>
@@ -77,15 +52,21 @@ const Proto = memo(() => {
                                 관리자
                             </NavigationMenuTrigger>
                         </NavigationMenuItem>
+
+                        <NavigationMenuItem>
+                            <div className="flex items-center gap-1 text-sm text-gray-300">
+                                <Avatar className="w-6 h-6">
+                                    <AvatarImage src="" alt="@user" />
+                                    <AvatarFallback>O</AvatarFallback>
+                                </Avatar>
+                                <span>OO팀/홍길동</span>
+                            </div>
+                        </NavigationMenuItem>
                     </NavigationMenuList>
                 </NavigationMenu>
             </nav>
-
             <main className="pt-20 px-4">
-                <h1 className="text-2xl font-bold">Prototype Page</h1>
-                <p className="mt-4 text-muted-foreground">
-                    여기에 본문 콘텐츠가 들어갑니다.
-                </p>
+               {renderPage()}
             </main>
         </div>
     );
