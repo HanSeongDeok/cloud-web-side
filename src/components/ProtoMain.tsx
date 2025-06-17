@@ -10,11 +10,12 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import ProtoPage1 from "./ProtoPage1";
 import ProtoPage2 from "./ProtoPage2";
 import ProtoPage3 from "./ProtoPage3";
-import { SidebarTrigger } from "./ui/sidebar";
+import { SidebarTrigger, useSidebar, SidebarProvider } from "./ui/sidebar";
 import Layout from "@/layout";
 
-const Proto = memo(() => {
+const ProtoMainContent = memo(() => {
     const [activePage, setActivePage] = useState<"page1" | "page2" | "page3" | null>(null);
+    const { open } = useSidebar();
 
     const renderPage = () => {
         switch (activePage) {
@@ -28,11 +29,17 @@ const Proto = memo(() => {
                 return <ProtoPage1 />;
         }
     };
+
     return (
-        <Layout>
         <div className="w-full">
             <nav className="fixed top-0 left-0 w-full bg-background shadow-md z-50 px-6 py-3 border-b border-border flex items-center">
-                <SidebarTrigger className="mr-4" />
+                <SidebarTrigger
+                    style={{
+                        transform: `translateX(${open ? '240px' : '0px'})`,
+                        transition: 'transform 0.2s ease-in-out',
+                    }}
+                    className="mr-3 w-10 h-10"
+                />
                 <a href="/" className="text-3xl font-semibold text-blue-800 underline">
                     Service name
                 </a>
@@ -55,7 +62,6 @@ const Proto = memo(() => {
                                 관리자
                             </NavigationMenuTrigger>
                         </NavigationMenuItem>
-
                         <NavigationMenuItem>
                             <div className="flex items-center gap-1 text-sm text-gray-300">
                                 <Avatar className="w-6 h-6">
@@ -69,12 +75,21 @@ const Proto = memo(() => {
                 </NavigationMenu>
             </nav>
             <main className="pt-20 px-4">
-               {renderPage()}
+                {renderPage()}
             </main>
         </div>
-        </Layout>
     );
 });
 
-export default Proto;
+const ProtoMain = memo(() => {
+    return (
+        <SidebarProvider>
+            <Layout>
+                <ProtoMainContent />
+            </Layout>
+        </SidebarProvider>
+    );
+});
+
+export default ProtoMain;
 
