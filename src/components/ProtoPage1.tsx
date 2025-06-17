@@ -1,4 +1,6 @@
 import { memo } from "react";
+import DataTable from "@components/DataTable";
+import AspectRatioLayout from "@components/AspectRatio";
 
 const ProtoPage1 = memo(() => {
     return (
@@ -7,6 +9,8 @@ const ProtoPage1 = memo(() => {
             <p className="mt-4 text-muted-foreground">
                 여기에 본문 콘텐츠가 들어갑니다.
             </p>
+            <AspectRatioLayout/>
+            <DataTable/>
         </div>)
 });
 

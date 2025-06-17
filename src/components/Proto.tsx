@@ -7,10 +7,11 @@ import {
     NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Route, Routes } from "react-router-dom";
 import ProtoPage1 from "./ProtoPage1";
 import ProtoPage2 from "./ProtoPage2";
 import ProtoPage3 from "./ProtoPage3";
+import { SidebarTrigger } from "./ui/sidebar";
+import Layout from "@/layout";
 
 const Proto = memo(() => {
     const [activePage, setActivePage] = useState<"page1" | "page2" | "page3" | null>(null);
@@ -28,9 +29,11 @@ const Proto = memo(() => {
         }
     };
     return (
+        <Layout>
         <div className="w-full">
             <nav className="fixed top-0 left-0 w-full bg-background shadow-md z-50 px-6 py-3 border-b border-border flex items-center">
-                <a href="/prototype" className="text-3xl font-semibold text-blue-800 underline">
+                <SidebarTrigger className="mr-4" />
+                <a href="/" className="text-3xl font-semibold text-blue-800 underline">
                     Service name
                 </a>
                 <NavigationMenu className="ml-auto">
@@ -69,6 +72,7 @@ const Proto = memo(() => {
                {renderPage()}
             </main>
         </div>
+        </Layout>
     );
 });
 
