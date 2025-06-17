@@ -35,10 +35,10 @@ const ProtoMainContent = memo(() => {
             <nav className="fixed top-0 left-0 w-full bg-background shadow-md z-50 px-6 py-3 border-b border-border flex items-center">
                 <SidebarTrigger
                     style={{
-                        transform: `translateX(${open ? '240px' : '0px'})`,
+                        transform: `translateX(${open ? '380px' : '0px'})`,
                         transition: 'transform 0.2s ease-in-out',
                     }}
-                    className="mr-3 w-10 h-10"
+                    className="mr-4 w-10 h-10"
                 />
                 <a href="/" className="text-3xl font-semibold text-blue-800 underline">
                     Service name

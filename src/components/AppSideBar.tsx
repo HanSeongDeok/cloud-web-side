@@ -44,7 +44,7 @@ const items = [
 export function AppSidebar() {
     const { open } = useSidebar();
     return (
-        <Sidebar className={`fixed top-0 left-0 z-60 h-full shadow-md ${open ? "w-[260px]" : "w-0"}`}>
+        <Sidebar className={`fixed top-0 left-0 z-60 h-full shadow-md ${open ? "w-[400px]" : "w-0"}`}>
             <SidebarContent>
                 <SidebarGroup>
                     <SidebarGroupLabel>Application</SidebarGroupLabel>
