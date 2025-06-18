@@ -1,0 +1,33 @@
+@import "../index.css";
+
+.accordionContainer {
+    @apply w-screen max-w-[1200px] mx-auto px-1;
+}
+
+.accordionWrapper {
+    @apply relative z-10 p-3;
+}
+
+.accordion {
+    @apply w-full rounded-lg shadow-md;
+}
+
+.accordionItem {
+    @apply rounded-md;
+}
+
+.accordionTrigger {
+    @apply !py-3 bg-neutral-900 !text-white text-lg rounded-t-md;
+}
+
+.accordionContent {
+    @apply flex flex-col gap-4 text-balance;
+}
+
+.filterSection {
+    @apply flex flex-col my-4 ml-4 space-y-4;
+}
+
+.filterRow {
+    @apply flex flex-row space-x-4;
+} 

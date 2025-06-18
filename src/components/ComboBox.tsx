@@ -1,5 +1,6 @@
 import * as React from "react"
 import { Check, ChevronsUpDown } from "lucide-react"
+import "@styles/ComboBox.css";
 
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
@@ -51,7 +52,7 @@ const ComboBox = React.memo(() => {
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className="w-[200px] justify-between"
+          className="popoverTrigger"
         >
           {value
             ? frameworks.find((framework) => framework.value === value)?.label
@@ -59,9 +60,9 @@ const ComboBox = React.memo(() => {
           <ChevronsUpDown className="opacity-50" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-[200px] p-0">
+      <PopoverContent className="popoverContent">
         <Command>
-          <CommandInput placeholder="Search framework..." className="h-9" />
+          <CommandInput placeholder="Search framework..." className="commandInput" />
           <CommandList>
             <CommandEmpty>No framework found.</CommandEmpty>
             <CommandGroup>
@@ -77,7 +78,7 @@ const ComboBox = React.memo(() => {
                   {framework.label}
                   <Check
                     className={cn(
-                      "ml-auto",
+                      "checkIcon",
                       value === framework.value ? "opacity-100" : "opacity-0"
                     )}
                   />

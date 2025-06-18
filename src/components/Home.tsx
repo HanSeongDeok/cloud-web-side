@@ -1,4 +1,5 @@
 import { memo, useState } from 'react'
+import "@styles/Home.css";
 import reactLogo from '@assets/react.svg'
 import viteLogo from '/vite.svg'
 import { NavLink } from 'react-router-dom';
@@ -6,8 +7,8 @@ import { NavLink } from 'react-router-dom';
 const Home = memo(() => {
   const [count, setCount] = useState(0)
   return (
-    <div className = "text-white">
-      <div className="flex justify-center items-center gap-4">
+    <div className="homeContainer">
+      <div className="logoContainer">
         <a href="https://vite.dev" target="_blank" rel="noopener">
           <img src={viteLogo} className="logo" alt="Vite logo" />
         </a>
@@ -16,7 +17,7 @@ const Home = memo(() => {
         </a>
       </div>
       <h1>Vite + React</h1>
-      <div className="card flex justify-center items-center gap-4">
+      <div className="card">
         <button className="btn" onClick={() => setCount((count) => count + 1)}>
           count is {count}
         </button>
@@ -24,10 +25,10 @@ const Home = memo(() => {
           <button className="btn">Prototype</button>
         </NavLink>
       </div>
-      <p className='text-2xl font-extrabold tracking-wide text-gradient-to-r from-purple-400 via-pink-500 to-red-500 drop-shadow-lg'>
+      <p className="testTitle">
           TEST HOME
         </p>
-      <p className="text-lg italic text-gray-300 mt-2 hover:text-white transition-colors duration-300">
+      <p className="description">
         Click on the Vite and React logos to learn more
       </p>
     </div>

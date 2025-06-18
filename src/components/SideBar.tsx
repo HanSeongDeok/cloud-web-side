@@ -46,23 +46,23 @@ export function AppSidebar() {
     return (
         <Sidebar className={`fixed top-0 left-0 z-60 h-full shadow-md ${open ? "w-[400px]" : "w-0"}`}>
             <SidebarContent>
-                <SidebarGroup>
-                    <SidebarGroupLabel>Application</SidebarGroupLabel>
-                    <SidebarGroupContent>
-                        <SidebarMenu>
-                            {items.map((item) => (
-                                <SidebarMenuItem key={item.title}>
-                                    <SidebarMenuButton asChild>
-                                        <a href={item.url} className="flex items-center gap-3 w-full px-4 py-2">
-                                            <item.icon />
-                                            <span>{item.title}</span>
-                                        </a>
-                                    </SidebarMenuButton>
-                                </SidebarMenuItem>
-                            ))}
-                        </SidebarMenu>
-                    </SidebarGroupContent>
-                </SidebarGroup>
+            <SidebarGroup>
+                <SidebarGroupLabel>Application</SidebarGroupLabel>
+                <SidebarGroupContent>
+                <SidebarMenu>
+                    {items.map((item) => (
+                        <SidebarMenuItem key={item.title}>
+                        <SidebarMenuButton asChild>
+                        <a href={item.url} className="flex items-center gap-3 w-full px-4 py-2">
+                            <item.icon />
+                            <span>{item.title}</span>
+                        </a>
+                        </SidebarMenuButton>
+                        </SidebarMenuItem>
+                    ))}
+                </SidebarMenu>
+            </SidebarGroupContent>
+            </SidebarGroup>
             </SidebarContent>
         </Sidebar>
     )

@@ -8,6 +8,7 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { memo, useState } from "react";
+import "@styles/SelectCombo.css";
 
 const SelectCombo = memo(() => {
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
@@ -22,10 +23,10 @@ const SelectCombo = memo(() => {
 
   return (
     <Select>
-      <SelectTrigger className="w-[180px]">
+      <SelectTrigger className="selectTrigger">
         <SelectValue placeholder="TEST"> TEST </SelectValue>
       </SelectTrigger>
-      <SelectContent className="max-h-[220px] overflow-auto">
+      <SelectContent className="selectContent">
         <SelectGroup>
           {[
             { value: "apple", label: "Apple" },
@@ -43,12 +44,12 @@ const SelectCombo = memo(() => {
               key={item.value}
               value={item.value}
               onSelect={() => handleSelect(item.value)}
-              className="flex items-center gap-2"
+              className="selectItem"
             >
               <Checkbox
                 checked={selectedItems.includes(item.value)}
                 onCheckedChange={() => handleSelect(item.value)}
-                className="mr-2"
+                className="checkbox"
               />
               {item.label}
             </SelectItem>

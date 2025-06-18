@@ -1,0 +1,21 @@
+@import "../index.css";
+
+.homeContainer {
+    @apply text-white;
+}
+
+.logoContainer {
+    @apply flex justify-center items-center gap-4;
+}
+
+.card {
+    @apply flex justify-center items-center gap-4;
+}
+
+.testTitle {
+    @apply text-2xl font-extrabold tracking-wide from-purple-400 via-pink-500 to-red-500 bg-clip-text text-transparent drop-shadow-lg;
+}
+
+.description {
+    @apply text-lg italic text-gray-300 mt-2 hover:text-white transition-colors duration-300;
+} 

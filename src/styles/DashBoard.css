@@ -1,0 +1,41 @@
+@import "../index.css";
+
+.sortableItem {
+    @apply p-4 bg-gray-900 rounded-lg shadow-md cursor-move hover:shadow-lg transition-shadow;
+}
+
+.itemHeader {
+    @apply flex items-center justify-between mb-2;
+}
+
+.itemTitle {
+    @apply font-semibold;
+}
+
+.itemContent {
+    @apply mt-2;
+}
+
+.chartContent {
+    @apply h-40 bg-gray-800 rounded flex items-center justify-center;
+}
+
+.gridContainer {
+    @apply grid grid-cols-2 gap-4 mt-6;
+}
+
+.dragOverlay {
+    @apply p-4 bg-gray-900 rounded-lg shadow-lg;
+}
+
+.overlayHeader {
+    @apply flex items-center justify-between mb-2;
+}
+
+.overlayTitle {
+    @apply font-semibold;
+}
+
+.overlayContent {
+    @apply mt-2;
+} 

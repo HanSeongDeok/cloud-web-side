@@ -1,5 +1,5 @@
 import { SidebarProvider } from "@/components/ui/sidebar"
-import { AppSidebar } from "@components/AppSideBar"
+import { AppSidebar } from "@components/SideBar"
 
 interface LayoutProps {
   children: React.ReactNode;

@@ -1,0 +1,44 @@
+@import "../index.css";
+
+.navContainer {
+    @apply fixed top-0 left-0 w-full bg-background shadow-md z-50 px-6 py-3 border-b border-border flex items-center;
+}
+
+.sidebarTrigger {
+    @apply mr-4 w-11 h-11 z-90;
+}
+
+.serviceName {
+    @apply text-3xl font-bold;
+}
+
+.navMenu {
+    @apply ml-auto font-bold;
+}
+
+.navList {
+    @apply flex items-center gap-6;
+}
+
+.navLink {
+    @apply text-xl cursor-pointer font-bold;
+}
+
+.adminTrigger {
+    @apply font-medium px-2 py-1 hover:underline;
+}
+
+.userInfo {
+    @apply flex items-center gap-1 text-sm text-gray-300;
+}
+
+.avatar {
+    @apply w-6 h-6;
+}
+
+.mainContent {
+    @apply pt-20 px-4;
+}
+
+
+
