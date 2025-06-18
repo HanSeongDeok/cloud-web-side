@@ -1,6 +1,5 @@
 import { memo } from "react";
-import "@styles/ProtoPage3.css";
-import DashBoard from "./DashBoard";
+import DashBoard from "@components/DashBoard";
 
 const ProtoPage3 = memo(() => {
     return (

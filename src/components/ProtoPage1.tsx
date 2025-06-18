@@ -1,5 +1,4 @@
 import { memo } from "react";
-import "@styles/ProtoPage1.css";
 import DataTable from "@components/DataTable";
 import AccordionLayout from "@components/Acodian";
 
