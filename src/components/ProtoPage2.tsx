@@ -1,6 +1,6 @@
 import { memo } from "react";
 import AccordionLayout from "@components/Acodian";
-import DataTable from "@components/DataTable";
+import DataTable from "@/components/DataTable";
 
 const ProtoPage2 = memo(() => {
     return (

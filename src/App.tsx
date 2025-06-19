@@ -1,7 +1,7 @@
 import './App.css'
 import { Route, Routes } from 'react-router-dom';
 import Home from '@components/Home';
-import ProtoMain from '@components/ProtoMain';
+import ProtoMain from '@components/NavigateMenu';
 
 const App = () => (
   <Routes>
