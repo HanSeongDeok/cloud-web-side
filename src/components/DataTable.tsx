@@ -9,8 +9,8 @@ import {
 import { renderDefaultTableRows, renderTableHeader, renderTableRows, useTable} from "@/handlers/dataTable.config.handler"
 import "@/styles/DataTable.css"
 import DataInput from "@/components/DataInput"
-import { TableDropDownMenu } from "@/components/DropDownMenu"
 import { useAccordionStore } from "@/stores/useAccordionStore"
+import { TableDropDownMenu } from "@/components/DropDownMenu"
 
 const DataTable = React.memo(() => {
   const table = useTable();

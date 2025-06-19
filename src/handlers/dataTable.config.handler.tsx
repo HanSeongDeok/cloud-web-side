@@ -13,7 +13,7 @@ import { useEffect, useState } from "react"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Button } from "@/components/ui/button"
 import { ArrowUpDown, Download, type LucideIcon } from "lucide-react"
-import { DropDownMenu } from "@/components/DropDownMenu"
+import { RowDropDownMenu } from "@/components/DropDownMenu"
 import { TableCell, TableHead, TableRow } from "@/components/ui/table"
 import { flexRender, type Table as TableType } from "@tanstack/react-table"
 
@@ -265,7 +265,7 @@ const createAmountColumn = (): ColumnDef<Payment> => ({
 const createActionsColumn = (): ColumnDef<Payment> => ({
   id: "actions",
   enableHiding: false,
-  cell: ({ row }) => <DropDownMenu payment={row.original} />,
+  cell: ({ row }) => <RowDropDownMenu payment={row.original} />,
 });
 
 const tableColumns: ColumnDef<Payment>[] = [
@@ -299,6 +299,7 @@ export const useTable = () => {
     onColumnVisibilityChange: setColumnVisibility,
     onRowSelectionChange: setRowSelection,
     onPaginationChange: setPagination,
+  
     state: {
       sorting,
       columnFilters,
