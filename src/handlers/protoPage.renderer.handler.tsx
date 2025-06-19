@@ -1,6 +1,5 @@
 import React from "react";
-import { usePageStore } from "@/stores/usePageStore";
-import { Suspense } from "react";
+import { usePageStore } from "@/stores/useNavigateStore";
 import ProtoPage1 from "@components/ProtoPage1";
 import ProtoPage2 from "@components/ProtoPage2";
 import ProtoPage3 from "@components/ProtoPage3";

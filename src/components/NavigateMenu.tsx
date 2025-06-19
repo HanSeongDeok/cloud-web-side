@@ -9,7 +9,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { SidebarTrigger, useSidebar, SidebarProvider } from "./ui/sidebar";
 import Layout from "@/layout";
-import { usePageStore } from "@/stores/usePageStore";
+import { usePageStore } from "@/stores/useNavigateStore";
 import "@styles/ProtoMain.css";
 import { PageRenderer } from "@/handlers/protoPage.renderer.handler";
 

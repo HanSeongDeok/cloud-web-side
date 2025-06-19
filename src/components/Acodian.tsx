@@ -9,18 +9,20 @@ import "@styles/Acodian.css";
 import SelectCombo from "@components/SelectCombo";
 import LabelBase from "@/components/Label1";
 import LabelCondition from "./Label2";
+import { useAccordionStore } from "@/stores/useAccordionStore";
 
 const AccordionLayout = memo(() => {
+    const { openItems, setOpenItems } = useAccordionStore();
     return (
         <div className="accordionContainer">
             <Accordion
-                type="single"
-                collapsible
+                type="multiple"
                 style={{ backgroundColor: 'oklch(0.145 0 0)' }}
                 className="accordion"
-                defaultValue="item-1"
+                value={openItems}
+                onValueChange={setOpenItems}
             >
-                <AccordionItem value="item-1" className="accordionItem">
+                <AccordionItem value="filter" className="accordionItem">
                     <AccordionTrigger className="accordionTrigger">필터 영역 구성</AccordionTrigger>
                     <AccordionContent className="accordionContent">
                         <div className="filterSection">
