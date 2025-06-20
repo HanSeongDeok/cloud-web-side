@@ -1,7 +1,7 @@
 @import "../index.css";
 
 .accordionContainer {
-    @apply relative z-10 p-2 w-screen max-w-[1200px] mx-auto px-1;
+    @apply relative z-10 w-full p-2;
 }
 
 .accordion {

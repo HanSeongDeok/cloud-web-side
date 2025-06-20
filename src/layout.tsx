@@ -10,7 +10,9 @@ export default function Layout({ children }: LayoutProps) {
     <SidebarProvider defaultOpen={false}>
       <AppSidebar />
       <main>
-        {children}
+        <div className="w-full">
+          {children}
+        </div>
       </main>
     </SidebarProvider>
   )

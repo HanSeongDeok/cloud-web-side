@@ -26,8 +26,8 @@ const DataTable = React.memo(() => {
         <DataInput table={table} />
         <TableDropDownMenu table={table} />
       </div>
-      <div className="rounded-md border">
-        <Table>
+      <div className="table-content-container">
+        <Table className="table-content">
           <TableHeader>
             {renderTableHeader(table)}
           </TableHeader>

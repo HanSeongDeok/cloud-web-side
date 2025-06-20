@@ -1,4 +1,4 @@
-import { memo} from "react";
+import { memo } from "react";
 import {
     NavigationMenu,
     NavigationMenuItem,
@@ -10,14 +10,14 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { SidebarTrigger, useSidebar, SidebarProvider } from "./ui/sidebar";
 import Layout from "@/layout";
 import { usePageStore } from "@/stores/useNavigateStore";
-import "@styles/ProtoMain.css";
+import "@styles/NavMenu.css";
 import { PageRenderer } from "@/handlers/protoPage.renderer.handler";
 
 const sidebarStyle = (open: boolean): React.CSSProperties => ({
     transform: `translateX(${open ? '380px' : '0px'})`,
     transition: 'transform 0.2s ease-in-out',
     outline: 'none',
-  });
+});
 
 const ProtoMainContent = memo(() => {
     const { open } = useSidebar();
@@ -62,7 +62,9 @@ const ProtoMainContent = memo(() => {
                 </NavigationMenu>
             </nav>
             <main className="mainContent">
-                <PageRenderer />
+                <div className="pageContainer">
+                    <PageRenderer />
+                </div>
             </main>
         </div>
     );

@@ -33,11 +33,10 @@ export const TableDropDownMenu = ({ table }: { table: Table<Payment> }) => {
           .map((column) => {
             return (
               <DropdownMenuCheckboxItem
-                key={`${column.id}-${column.getIsVisible()}`} // 리렌더링 유도
+                key={column.id}
                 className="capitalize"
                 checked={column.getIsVisible()}
                 onCheckedChange={(checked: boolean) => {
-                  console.log(`Column ${column.id}: checked = ${checked}`);
                   column.toggleVisibility(checked);
                 }}
               >

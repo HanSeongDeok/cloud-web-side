@@ -3,3 +3,48 @@
 .table-container {
     @apply w-full flex items-center py-4;
 }
+
+/* 테이블 셀 간격 조절 */
+.table-container + div table th,
+.table-container + div table td {
+    @apply w-24 text-center px-4 py-3;
+}
+
+/* 테이블 헤더 간격 조절 - y값 줄임 */
+.table-container + div table th {
+    @apply text-center font-medium py-2 border-r border-gray-800 text-gray-200;
+}
+
+/* 테이블 셀 내용 정렬 및 세로 실선 */
+.table-container + div table td {
+    @apply text-center border-r border-gray-800;
+}
+
+/* 테이블 행 간격 조절 */
+.table-container + div table tr {
+    @apply border-b;
+}
+
+/* 테이블 전체 스타일 */
+.table-container + div table {
+    @apply border-collapse w-full;
+}
+
+/* 마지막 컬럼의 오른쪽 테두리 제거 */
+.table-container + div table th:last-child,
+.table-container + div table td:last-child {
+    @apply border-r-0;
+}
+
+/* 테이블 헤더 배경색 */
+.table-container + div table thead {
+    @apply bg-gray-800;
+}
+
+.table-content-container {
+    @apply rounded-md border min-w-[1200px] overflow-x-auto;
+}
+
+.table-content {
+    @apply table-fixed w-full border-collapse;
+}
