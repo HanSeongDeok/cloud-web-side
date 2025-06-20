@@ -52,3 +52,56 @@ export default tseslint.config({
   },
 })
 ```
+
+# Cloud Web Side
+
+React 기반의 클라우드 웹 애플리케이션입니다.
+
+## 개발 도구
+
+- [React DevTools](https://reactjs.org/link/react-devtools) - React 컴포넌트 디버깅 도구
+
+## 주요 기능
+
+- **ag-grid 테이블**: 고성능 데이터 테이블 컴포넌트
+- **파일 업로드/다운로드**: 파일 관리 기능
+- **반응형 디자인**: 모바일 및 데스크톱 지원
+- **다크 모드**: 테마 전환 기능
+
+## 기술 스택
+
+- React 18
+- TypeScript
+- Tailwind CSS
+- ag-grid Community
+- Zustand (상태 관리)
+- Radix UI (UI 컴포넌트)
+
+## 설치 및 실행
+
+```bash
+npm install
+npm run dev
+```
+
+## ag-grid 사용법
+
+이 프로젝트는 ag-grid를 사용하여 고성능 데이터 테이블을 구현합니다:
+
+- 정렬, 필터링, 페이지네이션 지원
+- 컬럼 리사이징 및 드래그 앤 드롭
+- 체크박스 선택 기능
+- 커스텀 셀 렌더러
+
+## 파일 구조
+
+```
+src/
+├── components/
+│   ├── DataTable.tsx      # ag-grid 테이블 컴포넌트
+│   └── ...
+├── handlers/
+│   └── dataTable.config.handler.tsx  # ag-grid 설정
+└── styles/
+    └── DataTable.css      # ag-grid 커스텀 스타일
+```

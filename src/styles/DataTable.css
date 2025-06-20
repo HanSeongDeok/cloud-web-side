@@ -7,7 +7,7 @@
 /* 테이블 셀 간격 조절 */
 .table-container + div table th,
 .table-container + div table td {
-    @apply w-24 text-center px-4 py-3;
+    @apply px-4 py-3;
 }
 
 /* 테이블 헤더 간격 조절 - y값 줄임 */
@@ -47,4 +47,37 @@
 
 .table-content {
     @apply table-fixed w-full border-collapse;
+}
+
+/* 숨겨진 파일 input */
+.hidden-file-input {
+    display: none;
+}
+
+/* ag-grid 컨테이너 */
+.ag-grid-container {
+    height: 600px;
+    width: 100%;
+}
+
+/* ag-grid 커스텀 스타일 */
+.ag-theme-quartz {
+    --ag-header-height: 50px;
+    --ag-header-background-color: #374151;
+    --ag-header-foreground-color: #e5e7eb;
+    --ag-border-color: #6b7280;
+    --ag-row-hover-color: #f3f4f6;
+    --ag-selected-row-background-color: #dbeafe;
+}
+
+.ag-header-cell {
+    text-align: center !important;
+}
+
+.ag-cell {
+    text-align: center !important;
+}
+
+.ag-header-cell-label {
+    justify-content: center !important;
 }

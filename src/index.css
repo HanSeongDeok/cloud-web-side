@@ -1,5 +1,6 @@
 @import "tailwindcss";
 @import "tw-animate-css";
+
 @custom-variant dark (&:is(.dark *));
 
 #root {
@@ -45,11 +46,9 @@
   color: #888;
 }
 
-
 .btn {
   @apply inline-flex items-center justify-center gap-2 rounded-xl px-2 py-1 font-semibold text-white bg-gradient-to-r from-indigo-500 to-purple-500 shadow-md shadow-indigo-300/30 hover:from-indigo-600 hover:to-purple-600 active:scale-95 focus:outline-none focus:ring-2 focus:ring-indigo-300 transition-all duration-200 ease-in-out;
 }
-
 
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;

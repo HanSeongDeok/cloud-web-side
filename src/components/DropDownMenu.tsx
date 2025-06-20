@@ -8,17 +8,15 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import type { Table } from "@tanstack/react-table"
 import { ChevronDown, MoreHorizontal } from "lucide-react"
 import { memo } from "react"
 import { Button } from "./ui/button"
 
 /**
- * Main Table DropDownMenu
- * @param table 
+ * Main Table DropDownMenu - ag-grid용
  * @returns 
  */
-export const TableDropDownMenu = ({ table }: { table: Table<Payment> }) => {
+export const TableDropDownMenu = memo(() => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -27,41 +25,26 @@ export const TableDropDownMenu = ({ table }: { table: Table<Payment> }) => {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        {table
-          .getAllColumns()
-          .filter((column) => column.getCanHide())
-          .map((column) => {
-            return (
-              <DropdownMenuCheckboxItem
-                key={column.id}
-                className="capitalize"
-                checked={column.getIsVisible()}
-                onCheckedChange={(checked: boolean) => {
-                  column.toggleVisibility(checked);
-                }}
-              >
-                {column.id}
-              </DropdownMenuCheckboxItem>
-            )
-          })}
+        <DropdownMenuItem>
+          Column visibility will be handled by ag-grid
+        </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   )
-};
+});
 
 /**
- * Table Row DropDownMenu
- * @param table 
+ * Row DropDownMenu
+ * @param payment 
  * @returns 
  */
-export const RowDropDownMenu = memo(({ payment }: { payment: Payment }) => {
+export const RowDropDownMenu = ({ payment }: { payment: Payment }) => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" className="h-8 w-8 p-0">
           <span className="sr-only">Open menu</span>
-          <MoreHorizontal />
-          {/* 추후 세로 케밥 버튼으로도 변경 가능 */}
+          <MoreHorizontal className="h-4 w-4" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
@@ -77,4 +60,4 @@ export const RowDropDownMenu = memo(({ payment }: { payment: Payment }) => {
       </DropdownMenuContent>
     </DropdownMenu>
   )
-});  
+};  
