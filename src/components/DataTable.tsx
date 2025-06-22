@@ -2,15 +2,15 @@ import * as React from "react"
 import { useEffect, useRef } from "react"
 import { AgGridReact } from "ag-grid-react"
 import { Button } from "@/components/ui/button"
-import { useAgGrid, columnDefs } from "@/handlers/dataTable.config.handler"
 import "@/styles/DataTable.css"
 import DataInput from "@/components/DataInput"
 import { useAccordionStore } from "@/stores/useAccordionStore"
 import { TableDropDownMenu } from "@/components/DropDownMenu"
 import { Download, Upload } from "lucide-react"
+import { useAgGrid } from "@/handlers/dataTable.config.handler"
 
 const DataTable = React.memo(() => {
-  const { data, columnDefs, onGridReady, addNewFile, gridApi } = useAgGrid();
+  const { data, columnDefs, onRowClicked, onSelectionChanged } = useAgGrid();
   const openItems = useAccordionStore((state) => state.openItems);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -64,14 +64,11 @@ const DataTable = React.memo(() => {
       });
 
       if (response.ok) {
-        addNewFile(fileData);
         alert(`파일 "${file.name}"이 성공적으로 업로드되었습니다!`);
       } else {
-        console.error('파일 저장 실패:', response.statusText);
         alert('파일 저장에 실패했습니다. 다시 시도해주세요.');
       }
     } catch (error) {
-      console.error('파일 저장 중 오류 발생:', error);
       alert('파일 저장 중 오류가 발생했습니다.');
     }
   };
@@ -90,7 +87,7 @@ const DataTable = React.memo(() => {
   };
 
   const generateId = (): string => {
-    return 'id_' + Math.random().toString(36).substr(2, 9);
+    return Math.random().toString(36);
   };
 
   return (
@@ -118,18 +115,21 @@ const DataTable = React.memo(() => {
         </div>
       </div>
 
-      <div className="ag-theme-quartz ag-grid-container">
+      <div className="ag-theme-quartz-custom ag-grid-container">
         <AgGridReact
           rowData={data}
           columnDefs={columnDefs}
-          onGridReady={onGridReady}
           pagination={true}
-          paginationPageSize={20}
+          paginationPageSize={10}
           paginationPageSizeSelector={[10, 20, 50, 100]}
           animateRows={true}
+          domLayout="autoHeight"
+          rowSelection="multiple"
+          onRowClicked={onRowClicked}
+          onSelectionChanged={onSelectionChanged}
+          suppressRowClickSelection={true}
           defaultColDef={{
             sortable: true,
-            filter: true,
             resizable: true
           }}
         />

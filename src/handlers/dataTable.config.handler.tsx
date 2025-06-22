@@ -1,9 +1,9 @@
-import { useState } from "react"
+import { useCallback, useRef, useState } from "react"
 import type {
   ColDef,
-  GridApi,
-  GridReadyEvent,
-  GridOptions,
+  IRowNode,
+  RowClickedEvent,
+  SelectionChangedEvent,
 } from "ag-grid-community"
 import { Download, type LucideIcon } from "lucide-react"
 import { RowDropDownMenu } from "@/components/DropDownMenu"
@@ -50,6 +50,226 @@ const tableData: Payment[] = [
     status: "success",
     email: "ken99@example.com",
   },
+  {
+    id: "m5gr84i9",
+    download: Download,
+    fileName: "test.txt",
+    filePath: "C:/test.txt",
+    fileSize: "100 KB",
+    fileType: "text/plain",
+    testType: "test",
+    vehicle: "test",
+    step: "test",
+    ecu: "test",
+    swVersion: "test",
+    testName: "test",
+    description: "test",
+    memoryType: "test",
+    user: "test",
+    createdAt: new Date(),
+    status: "success",
+    email: "ken99@example.com",
+  },
+  {
+    id: "m5gr84i9",
+    download: Download,
+    fileName: "test.txt",
+    filePath: "C:/test.txt",
+    fileSize: "100 KB",
+    fileType: "text/plain",
+    testType: "test",
+    vehicle: "test",
+    step: "test",
+    ecu: "test",
+    swVersion: "test",
+    testName: "test",
+    description: "test",
+    memoryType: "test",
+    user: "test",
+    createdAt: new Date(),
+    status: "success",
+    email: "ken99@example.com",
+  },
+  {
+    id: "m5gr84i9",
+    download: Download,
+    fileName: "test.txt",
+    filePath: "C:/test.txt",
+    fileSize: "100 KB",
+    fileType: "text/plain",
+    testType: "test",
+    vehicle: "test",
+    step: "test",
+    ecu: "test",
+    swVersion: "test",
+    testName: "test",
+    description: "test",
+    memoryType: "test",
+    user: "test",
+    createdAt: new Date(),
+    status: "success",
+    email: "ken99@example.com",
+  },
+  {
+    id: "m5gr84i9",
+    download: Download,
+    fileName: "test.txt",
+    filePath: "C:/test.txt",
+    fileSize: "100 KB",
+    fileType: "text/plain",
+    testType: "test",
+    vehicle: "test",
+    step: "test",
+    ecu: "test",
+    swVersion: "test",
+    testName: "test",
+    description: "test",
+    memoryType: "test",
+    user: "test",
+    createdAt: new Date(),
+    status: "success",
+    email: "ken99@example.com",
+  },
+  {
+    id: "m5gr84i9",
+    download: Download,
+    fileName: "test.txt",
+    filePath: "C:/test.txt",
+    fileSize: "100 KB",
+    fileType: "text/plain",
+    testType: "test",
+    vehicle: "test",
+    step: "test",
+    ecu: "test",
+    swVersion: "test",
+    testName: "test",
+    description: "test",
+    memoryType: "test",
+    user: "test",
+    createdAt: new Date(),
+    status: "success",
+    email: "ken99@example.com",
+  },
+  {
+    id: "m5gr84i9",
+    download: Download,
+    fileName: "test.txt",
+    filePath: "C:/test.txt",
+    fileSize: "100 KB",
+    fileType: "text/plain",
+    testType: "test",
+    vehicle: "test",
+    step: "test",
+    ecu: "test",
+    swVersion: "test",
+    testName: "test",
+    description: "test",
+    memoryType: "test",
+    user: "test",
+    createdAt: new Date(),
+    status: "success",
+    email: "ken99@example.com",
+  },
+  {
+    id: "m5gr84i9",
+    download: Download,
+    fileName: "test.txt",
+    filePath: "C:/test.txt",
+    fileSize: "100 KB",
+    fileType: "text/plain",
+    testType: "test",
+    vehicle: "test",
+    step: "test",
+    ecu: "test",
+    swVersion: "test",
+    testName: "test",
+    description: "test",
+    memoryType: "test",
+    user: "test",
+    createdAt: new Date(),
+    status: "success",
+    email: "ken99@example.com",
+  },
+  {
+    id: "m5gr84i9",
+    download: Download,
+    fileName: "test.txt",
+    filePath: "C:/test.txt",
+    fileSize: "100 KB",
+    fileType: "text/plain",
+    testType: "test",
+    vehicle: "test",
+    step: "test",
+    ecu: "test",
+    swVersion: "test",
+    testName: "test",
+    description: "test",
+    memoryType: "test",
+    user: "test",
+    createdAt: new Date(),
+    status: "success",
+    email: "ken99@example.com",
+  },
+  {
+    id: "m5gr84i9",
+    download: Download,
+    fileName: "test.txt",
+    filePath: "C:/test.txt",
+    fileSize: "100 KB",
+    fileType: "text/plain",
+    testType: "test",
+    vehicle: "test",
+    step: "test",
+    ecu: "test",
+    swVersion: "test",
+    testName: "test",
+    description: "test",
+    memoryType: "test",
+    user: "test",
+    createdAt: new Date(),
+    status: "success",
+    email: "ken99@example.com",
+  },
+  {
+    id: "m5gr84i9",
+    download: Download,
+    fileName: "test.txt",
+    filePath: "C:/test.txt",
+    fileSize: "100 KB",
+    fileType: "text/plain",
+    testType: "test",
+    vehicle: "test",
+    step: "test",
+    ecu: "test",
+    swVersion: "test",
+    testName: "test",
+    description: "test",
+    memoryType: "test",
+    user: "test",
+    createdAt: new Date(),
+    status: "success",
+    email: "ken99@example.com",
+  },
+  {
+    id: "m5gr84i9",
+    download: Download,
+    fileName: "test.txt",
+    filePath: "C:/test.txt",
+    fileSize: "100 KB",
+    fileType: "text/plain",
+    testType: "test",
+    vehicle: "test",
+    step: "test",
+    ecu: "test",
+    swVersion: "test",
+    testName: "test",
+    description: "test",
+    memoryType: "test",
+    user: "test",
+    createdAt: new Date(),
+    status: "success",
+    email: "ken99@example.com",
+  },
 ]
 
 // ✅ 파일 다운로드 핸들러
@@ -68,29 +288,30 @@ const handleDownload = (fileName: string) => {
 // ✅ ag-grid 컬럼 정의
 export const columnDefs: ColDef<Payment>[] = [
   {
-    headerName: '',
-    colId: 'checkbox-col',
+    colId: 'checkbox',
+    checkboxSelection: true,
+    headerCheckboxSelection: true,
     width: 50,
     pinned: 'left',
+    resizable: false,
   },
   {
     headerName: 'Download',
     cellRenderer: (params: any) => {
       const Icon = params.data.download;
       return (
-        <div className="flex justify-center items-center">
-          <button 
+        <div className="flex items-center justify-center p-1">
+          <button
             onClick={() => handleDownload(params.data.fileName)}
             className="hover:bg-gray-100 p-1 rounded transition-colors"
             title={`Download ${params.data.fileName}`}
           >
-            <Icon className="w-4 h-4" />
+            <Icon className="w-4 h-4 text-gray-500 hover:text-blue-600 transition-colors" />
           </button>
         </div>
       );
     },
     width: 100,
-    pinned: 'left'
   },
   { headerName: 'File Name', field: 'fileName', width: 150, cellStyle: { textAlign: 'center' } },
   { headerName: 'File Path', field: 'filePath', width: 200, cellStyle: { textAlign: 'center' } },
@@ -105,9 +326,9 @@ export const columnDefs: ColDef<Payment>[] = [
   { headerName: 'Description', field: 'description', width: 200, cellStyle: { textAlign: 'center' } },
   { headerName: 'Memory Type', field: 'memoryType', width: 120, cellStyle: { textAlign: 'center' } },
   { headerName: 'User', field: 'user', width: 100, cellStyle: { textAlign: 'center' } },
-  { 
-    headerName: 'Created At', 
-    field: 'createdAt', 
+  {
+    headerName: 'Created At',
+    field: 'createdAt',
     width: 120,
     valueFormatter: (params) => params.value.toLocaleDateString(),
     cellStyle: { textAlign: 'center' }
@@ -122,31 +343,49 @@ export const columnDefs: ColDef<Payment>[] = [
       </div>
     ),
     width: 100,
-    pinned: 'right'
   }
 ];
 
+
 // ✅ useAgGrid 훅
 export const useAgGrid = () => {
+  const selectedMapRef = useRef(new Map<string, boolean>());
   const [data, setData] = useState<Payment[]>(tableData);
-  const [gridApi, setGridApi] = useState<GridApi | null>(null);
-
-  const onGridReady = (params: GridReadyEvent) => {
-    setGridApi(params.api);
+  
+  const onSelectionChanged = (event: SelectionChangedEvent) => {
+    const newMap = new Map<string, boolean>();
+    event.api.forEachNode((node) => {
+      newMap.set(node.id!, node.isSelected() || false);
+    });
+    selectedMapRef.current = newMap;
   };
 
-  const addNewFile = (fileData: Payment) => {
-    setData(prevData => [...prevData, fileData]);
-    if (gridApi) {
-      gridApi.applyTransaction({ add: [fileData] });
+  const onRowClicked = (event: RowClickedEvent) => {
+    const api = event.api;
+    const clickedNode = event.node;
+    const selectedNodes = api.getSelectedNodes();
+    const isShift = (event.event as KeyboardEvent)?.shiftKey;
+    const isCtrl = (event.event as KeyboardEvent)?.ctrlKey || (event.event as KeyboardEvent)?.metaKey;
+    const selectedMap = selectedMapRef.current;
+    const isSelected = selectedMap.get(clickedNode.id!);
+
+    if (selectedNodes.length > 0 && !isCtrl) {
+      if (selectedNodes.includes(clickedNode) && selectedNodes.length === 1) {
+        clickedNode.setSelected(false);
+      }
+      else if (!isShift) {
+        api.deselectAll();
+        clickedNode.setSelected(true);
+      } 
+    } else {
+      clickedNode.setSelected(!isSelected);
     }
-  };
+  }
 
   return {
     data,
     columnDefs,
-    onGridReady,
-    addNewFile,
-    gridApi
+    onRowClicked,
+    onSelectionChanged
   };
 };

@@ -4,49 +4,9 @@
     @apply w-full flex items-center py-4;
 }
 
-/* 테이블 셀 간격 조절 */
-.table-container + div table th,
-.table-container + div table td {
-    @apply px-4 py-3;
-}
-
-/* 테이블 헤더 간격 조절 - y값 줄임 */
-.table-container + div table th {
-    @apply text-center font-medium py-2 border-r border-gray-800 text-gray-200;
-}
-
-/* 테이블 셀 내용 정렬 및 세로 실선 */
-.table-container + div table td {
-    @apply text-center border-r border-gray-800;
-}
-
-/* 테이블 행 간격 조절 */
-.table-container + div table tr {
-    @apply border-b;
-}
-
-/* 테이블 전체 스타일 */
-.table-container + div table {
-    @apply border-collapse w-full;
-}
-
-/* 마지막 컬럼의 오른쪽 테두리 제거 */
-.table-container + div table th:last-child,
-.table-container + div table td:last-child {
-    @apply border-r-0;
-}
-
-/* 테이블 헤더 배경색 */
-.table-container + div table thead {
-    @apply bg-gray-800;
-}
-
-.table-content-container {
-    @apply rounded-md border min-w-[1200px] overflow-x-auto;
-}
-
-.table-content {
-    @apply table-fixed w-full border-collapse;
+.ag-grid-container {
+    width: 100%;
+    min-width: 1400px;
 }
 
 /* 숨겨진 파일 input */
@@ -60,6 +20,59 @@
     width: 100%;
 }
 
+.ag-theme-quartz-custom .ag-cell:focus,
+.ag-theme-quartz-custom .ag-cell-focus {
+    outline: none !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+.ag-theme-quartz-custom {
+    /* 전체 배경 및 기본 폰트색 */
+    --ag-background-color: #1d2025;
+    --ag-foreground-color: #f9fafb;
+
+    /* 헤더 */
+    --ag-header-height: 50px;
+    --ag-header-background-color: #13151a;
+    --ag-header-foreground-color: #e5e7eb;
+
+    /* 테두리 */
+    --ag-border-color: #353c46;
+
+    /* 행 호버 시 배경 */
+    --ag-row-hover-color: #374151;
+
+    /* 선택된 행 배경 */
+    --ag-selected-row-background-color: #67696e;
+
+    /* 폰트 및 기타 색상 */
+    --ag-font-size: 14px;
+    /* --ag-odd-row-background-color: #13151a; */
+    --ag-even-row-background-color: #13151a;
+    --ag-row-border-color: #374151;
+
+    /* 체크박스 커스텀 */
+    --ag-checkbox-background-color: #111827;
+    --ag-checkbox-checked-color: #3b82f6;
+}
+
+/* 🌙 스크롤바 다크 테마 */
+.ag-theme-quartz-custom ::-webkit-scrollbar {
+    height: 10px;
+    width: 10px;
+}
+
+.ag-theme-quartz-custom ::-webkit-scrollbar-thumb {
+    background-color: #4b5563;
+    border-radius: 6px;
+}
+
+.ag-theme-quartz-custom ::-webkit-scrollbar-track {
+    background-color: #111821;
+}
+
+
 /* ag-grid 커스텀 스타일 */
 .ag-theme-quartz {
     --ag-header-height: 50px;
@@ -68,6 +81,15 @@
     --ag-border-color: #6b7280;
     --ag-row-hover-color: #f3f4f6;
     --ag-selected-row-background-color: #dbeafe;
+}
+
+.ag-theme-quartz-dark {
+    --ag-header-height: 50px;
+    --ag-header-background-color: #1f2937;
+    --ag-header-foreground-color: #e5e7eb;
+    --ag-border-color: #4b5563;
+    --ag-row-hover-color: #374151;
+    --ag-selected-row-background-color: #1e40af;
 }
 
 .ag-header-cell {
