@@ -7,6 +7,7 @@ import type {
 } from "ag-grid-community"
 import { Download, type LucideIcon } from "lucide-react"
 import { RowDropDownMenu } from "@/components/DropDownMenu"
+import { toast } from "sonner"
 
 export type Payment = {
   id: string
@@ -250,39 +251,97 @@ const tableData: Payment[] = [
     status: "success",
     email: "ken99@example.com",
   },
-  {
-    id: "m5gr84i9",
-    download: Download,
-    fileName: "test.txt",
-    filePath: "C:/test.txt",
-    fileSize: "100 KB",
-    fileType: "text/plain",
-    testType: "test",
-    vehicle: "test",
-    step: "test",
-    ecu: "test",
-    swVersion: "test",
-    testName: "test",
-    description: "test",
-    memoryType: "test",
-    user: "test",
-    createdAt: new Date(),
-    status: "success",
-    email: "ken99@example.com",
-  },
 ]
 
-// ✅ 파일 다운로드 핸들러
-const handleDownload = (fileName: string) => {
-  const blob = new Blob(['테스트 파일 내용'], { type: 'text/plain' });
-  const url = window.URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = fileName;
-  document.body.appendChild(a);
-  a.click();
-  window.URL.revokeObjectURL(url);
-  document.body.removeChild(a);
+// ✅ Sonner를 활용한 파일 다운로드 핸들러
+const handleDownload = async (fileName: string, filePath: string, fileSize: string) => {
+  // 다운로드 시작 Toast
+  const toastId = toast.loading(
+    <div className="w-full">
+      <div className="mb-2 font-medium">파일 다운로드 준비 중...</div>
+      <div className="text-sm text-gray-600">{fileName}</div>
+      <div className="text-xs text-gray-500">{fileSize}</div>
+    </div>,
+    {
+      duration: Infinity,
+    }
+  );
+
+  try {
+    // 시뮬레이션된 다운로드 진행률
+    const simulateDownload = () => {
+      return new Promise<void>((resolve) => {
+        let currentProgress = 0;
+        const interval = setInterval(() => {
+          currentProgress += Math.random() * 15;
+          if (currentProgress >= 100) {
+            currentProgress = 100;
+            clearInterval(interval);
+            resolve();
+          }
+          
+          // 진행률 업데이트
+          toast.loading(
+            <div className="w-full">
+              <div className="mb-2 font-medium">파일 다운로드 중...</div>
+              <div className="text-sm text-gray-600 mb-2">{fileName}</div>
+              <div className="w-full bg-gray-200 rounded-full h-2 mb-1">
+                <div 
+                  className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+                  style={{ width: `${currentProgress}%` }}
+                />
+              </div>
+              <div className="text-xs text-gray-500">{Math.round(currentProgress)}%</div>
+            </div>,
+            {
+              id: toastId,
+              duration: Infinity,
+            }
+          );
+        }, 200);
+      });
+    };
+
+    await simulateDownload();
+
+    // 실제 파일 다운로드 로직
+    const blob = new Blob(['테스트 파일 내용'], { type: 'text/plain' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = fileName;
+    document.body.appendChild(a);
+    a.click();
+    window.URL.revokeObjectURL(url);
+    document.body.removeChild(a);
+
+    // 성공 메시지
+    toast.success(
+      <div>
+        <div className="font-medium">다운로드 완료!</div>
+        <div className="text-sm text-gray-600">{fileName}</div>
+        <div className="text-xs text-gray-500">파일이 성공적으로 다운로드되었습니다.</div>
+      </div>,
+      {
+        id: toastId,
+        duration: 4000,
+      }
+    );
+
+  } catch (error) {
+    // 오류 메시지
+    toast.error(
+      <div>
+        <div className="font-medium">다운로드 실패</div>
+        <div className="text-sm text-gray-600">{fileName}</div>
+        <div className="text-xs text-gray-500">파일 다운로드 중 오류가 발생했습니다.</div>
+      </div>,
+      {
+        id: toastId,
+        duration: 4000,
+      }
+    );
+  }
 };
 
 // ✅ ag-grid 컬럼 정의
@@ -302,7 +361,7 @@ export const columnDefs: ColDef<Payment>[] = [
       return (
         <div className="flex items-center justify-center p-1">
           <button
-            onClick={() => handleDownload(params.data.fileName)}
+            onClick={() => handleDownload(params.data.fileName, params.data.filePath, params.data.fileSize)}
             className="hover:bg-gray-100 p-1 rounded transition-colors"
             title={`Download ${params.data.fileName}`}
           >
