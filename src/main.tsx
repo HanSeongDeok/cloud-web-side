@@ -9,11 +9,12 @@ ModuleRegistry.registerModules([AllCommunityModule])
 createRoot(document.getElementById('root')!).render(
   <BrowserRouter>
     <App />
-    <Toaster 
-      position="bottom-right"
-      richColors
-      closeButton
-      duration={3000}
-    />
+      <Toaster
+        position="bottom-right"
+        richColors
+        closeButton
+        duration={5000}
+        visibleToasts={7}
+      />
   </BrowserRouter>,
 )

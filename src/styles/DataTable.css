@@ -20,14 +20,14 @@
     width: 100%;
 }
 
-.ag-theme-quartz-custom .ag-cell:focus,
-.ag-theme-quartz-custom .ag-cell-focus {
+.ag-theme-custom .ag-cell:focus,
+.ag-theme-custom .ag-cell-focus {
     outline: none !important;
     border: none !important;
     box-shadow: none !important;
 }
 
-.ag-theme-quartz-custom {
+.ag-theme-custom {
     /* 전체 배경 및 기본 폰트색 */
     --ag-background-color: #1d2025;
     --ag-foreground-color: #f9fafb;
@@ -57,39 +57,33 @@
     --ag-checkbox-checked-color: #3b82f6;
 }
 
+/* Material 테마 헤더 폰트 색상 커스터마이징 */
+.ag-theme-custom .ag-header-cell {
+    color: #9ca3af !important; /* 옅은 회색 */
+}
+
+.ag-theme-custom .ag-header-cell-label {
+    color: #9ca3af !important; /* 옅은 회색 */
+}
+
+.ag-theme-custom .ag-header-cell-text {
+    color: #9ca3af !important; /* 옅은 회색 */
+}
+
+
 /* 🌙 스크롤바 다크 테마 */
-.ag-theme-quartz-custom ::-webkit-scrollbar {
+.ag-theme-custom ::-webkit-scrollbar {
     height: 10px;
     width: 10px;
 }
 
-.ag-theme-quartz-custom ::-webkit-scrollbar-thumb {
+.ag-theme-custom ::-webkit-scrollbar-thumb {
     background-color: #4b5563;
     border-radius: 6px;
 }
 
-.ag-theme-quartz-custom ::-webkit-scrollbar-track {
+.ag-theme-custom ::-webkit-scrollbar-track {
     background-color: #111821;
-}
-
-
-/* ag-grid 커스텀 스타일 */
-.ag-theme-quartz {
-    --ag-header-height: 50px;
-    --ag-header-background-color: #374151;
-    --ag-header-foreground-color: #e5e7eb;
-    --ag-border-color: #6b7280;
-    --ag-row-hover-color: #f3f4f6;
-    --ag-selected-row-background-color: #dbeafe;
-}
-
-.ag-theme-quartz-dark {
-    --ag-header-height: 50px;
-    --ag-header-background-color: #1f2937;
-    --ag-header-foreground-color: #e5e7eb;
-    --ag-border-color: #4b5563;
-    --ag-row-hover-color: #374151;
-    --ag-selected-row-background-color: #1e40af;
 }
 
 .ag-header-cell {
@@ -102,4 +96,25 @@
 
 .ag-header-cell-label {
     justify-content: center !important;
+}
+
+/* 체크박스 가운데 정렬 */
+.ag-cell[col-id="checkbox"] {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+}
+
+.ag-header-cell[col-id="checkbox"] {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+}
+
+.ag-header-cell[col-id="checkbox"] .ag-checkbox {
+    margin: 0 auto 0 7px !important;
+}
+
+.ag-cell[col-id="checkbox"] .ag-checkbox {
+    margin: 0 auto 0 7px !important;
 }

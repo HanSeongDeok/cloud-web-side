@@ -8,6 +8,7 @@ import { useAccordionStore } from "@/stores/useAccordionStore"
 import { TableDropDownMenu } from "@/components/DropDownMenu"
 import { Download, Upload } from "lucide-react"
 import { useAgGrid } from "@/handlers/dataTable.config.handler"
+import { themeMaterial } from "ag-grid-community"
 
 const DataTable = React.memo(() => {
   const { data, columnDefs, onRowClicked, onSelectionChanged } = useAgGrid();
@@ -115,8 +116,9 @@ const DataTable = React.memo(() => {
         </div>
       </div>
 
-      <div className="ag-theme-quartz-custom ag-grid-container">
+      <div className="ag-theme-custom ag-grid-container">
         <AgGridReact
+          theme={themeMaterial}
           rowData={data}
           columnDefs={columnDefs}
           pagination={true}
