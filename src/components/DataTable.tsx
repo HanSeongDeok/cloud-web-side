@@ -36,27 +36,28 @@ const DataTable = React.memo(() => {
 
       const fileData = {
         id: generateId(),
-        download: Download,
+        // download: Download,
         fileName: file.name,
+        fileContent: base64,
         filePath: `uploads/${file.name}`,
         fileSize: `${(file.size / 1024).toFixed(2)} KB`,
         fileType: file.type,
-        testType: "uploaded",
-        vehicle: "N/A",
-        step: "upload",
-        ecu: "N/A",
-        swVersion: "1.0",
-        testName: file.name,
-        description: `Uploaded file: ${file.name}`,
-        memoryType: "N/A",
-        user: "current_user",
-        createdAt: new Date(),
-        status: "success" as const,
-        email: "user@example.com",
-        fileContent: base64
+        // testType: "uploaded",
+        // vehicle: "N/A",
+        // step: "upload",
+        // ecu: "N/A",
+        // swVersion: "1.0",
+        // testName: file.name,
+        // description: `Uploaded file: ${file.name}`,
+        // memoryType: "N/A",
+        // user: "current_user",
+        // createdAt: new Date(),
+        // status: "success" as const,
+        // email: "user@example.com",
+        
       };
 
-      const response = await fetch('/api/files', {
+      const response = await fetch('http://localhost:8080/api/files', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -111,7 +112,7 @@ const DataTable = React.memo(() => {
           >
             <Upload className="w-4 h-4 mr-2" />
             Upload
-          </Button>
+          </Button> 
           <TableDropDownMenu />
         </div>
       </div>

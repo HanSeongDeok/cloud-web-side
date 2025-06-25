@@ -14,7 +14,7 @@ import { useAccordionStore } from "@/stores/useAccordionStore";
 const AccordionLayout = memo(() => {
     const { openItems, setOpenItems } = useAccordionStore();
     return (
-        <div className="accordionContainer w-full">
+        <div className="accordionContainer">
             <Accordion
                 type="multiple"
                 style={{ backgroundColor: 'oklch(0.145 0 0)' }}
