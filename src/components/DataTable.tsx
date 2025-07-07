@@ -6,12 +6,12 @@ import "@/styles/DataTable.css"
 import DataInput from "@/components/DataInput"
 import { useAccordionStore } from "@/stores/useAccordionStore"
 import { TableDropDownMenu } from "@/components/DropDownMenu"
-import { Download, Upload } from "lucide-react"
-import { useAgGrid } from "@/handlers/dataTable.config.handler"
+import { Upload } from "lucide-react"
+import { columnDefs, onRowClicked, onSelectionChanged } from "@/handlers/dataTable.config.handler"
 import { themeMaterial } from "ag-grid-community"
+import { useTableDataStore } from "@/stores/useTableDataStore"
 
 const DataTable = React.memo(() => {
-  const { data, columnDefs, onRowClicked, onSelectionChanged } = useAgGrid();
   const openItems = useAccordionStore((state) => state.openItems);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -36,25 +36,11 @@ const DataTable = React.memo(() => {
 
       const fileData = {
         id: generateId(),
-        // download: Download,
         fileName: file.name,
         fileContent: base64,
         filePath: `uploads/${file.name}`,
         fileSize: `${(file.size / 1024).toFixed(2)} KB`,
         fileType: file.type,
-        // testType: "uploaded",
-        // vehicle: "N/A",
-        // step: "upload",
-        // ecu: "N/A",
-        // swVersion: "1.0",
-        // testName: file.name,
-        // description: `Uploaded file: ${file.name}`,
-        // memoryType: "N/A",
-        // user: "current_user",
-        // createdAt: new Date(),
-        // status: "success" as const,
-        // email: "user@example.com",
-        
       };
 
       const response = await fetch('http://localhost:8080/api/files', {
@@ -120,7 +106,7 @@ const DataTable = React.memo(() => {
       <div className="ag-theme-custom ag-grid-container">
         <AgGridReact
           theme={themeMaterial}
-          rowData={data}
+          rowData={useTableDataStore.getState().data}
           columnDefs={columnDefs}
           pagination={true}
           paginationPageSize={10}

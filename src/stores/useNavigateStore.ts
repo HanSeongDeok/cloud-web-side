@@ -1,13 +1,12 @@
+import ProtoPage1 from "@/components/ProtoPage1";
 import { create } from "zustand";
 
-type Page = "page1" | "page2" | "page3";
-
 interface PageStore {
-  activePage: Page;
-  setActivePage: (page: Page) => void;
+  activePage: React.FC;
+  setActivePage: (page: React.FC) => void;
 }
 
 export const usePageStore = create<PageStore>((set) => ({
-  activePage: "page1",
+  activePage: ProtoPage1,
   setActivePage: (page) => set({ activePage: page }),
 }));

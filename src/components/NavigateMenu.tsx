@@ -12,6 +12,9 @@ import Layout from "@/layout";
 import { usePageStore } from "@/stores/useNavigateStore";
 import "@styles/NavMenu.css";
 import { PageRenderer } from "@/handlers/protoPage.renderer.handler";
+import ProtoPage1 from "@/components/ProtoPage1";
+import ProtoPage3 from "@/components/ProtoPage3";
+import ProtoPage2 from "@/components/ProtoPage2";
 
 const sidebarStyle = (open: boolean): React.CSSProperties => ({
     transform: `translateX(${open ? '380px' : '0px'})`,
@@ -32,15 +35,15 @@ const ProtoMainContent = memo(() => {
                 <NavigationMenu className="navMenu">
                     <NavigationMenuList className="navList">
                         <NavigationMenuItem>
-                            <NavigationMenuLink className="navLink" onClick={() => setActivePage("page1")}>저장소</NavigationMenuLink>
+                            <NavigationMenuLink className="navLink" onClick={() => setActivePage(ProtoPage1)}>저장소</NavigationMenuLink>
                         </NavigationMenuItem>
 
                         <NavigationMenuItem>
-                            <NavigationMenuLink className="navLink" onClick={() => setActivePage("page2")}>복구</NavigationMenuLink>
+                            <NavigationMenuLink className="navLink" onClick={() => setActivePage(ProtoPage2)}>복구</NavigationMenuLink>
                         </NavigationMenuItem>
 
                         <NavigationMenuItem>
-                            <NavigationMenuLink className="navLink" onClick={() => setActivePage("page3")}>대시보드</NavigationMenuLink>
+                            <NavigationMenuLink className="navLink" onClick={() => setActivePage(ProtoPage3)}>대시보드</NavigationMenuLink>
                         </NavigationMenuItem>
 
                         <NavigationMenuItem>
