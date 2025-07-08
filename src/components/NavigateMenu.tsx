@@ -30,7 +30,7 @@ const ProtoMainContent = memo(() => {
             <nav className="navContainer">
                 <SidebarTrigger style={sidebarStyle(open)} className="sidebarTrigger" />
                 <a href="/" className="serviceName">
-                    Service name
+                    CTM Storage
                 </a>
                 <NavigationMenu className="navMenu">
                     <NavigationMenuList className="navList">
@@ -38,9 +38,9 @@ const ProtoMainContent = memo(() => {
                             <NavigationMenuLink className="navLink" onClick={() => setActivePage(ProtoPage1)}>저장소</NavigationMenuLink>
                         </NavigationMenuItem>
 
-                        <NavigationMenuItem>
+                        {/* <NavigationMenuItem>
                             <NavigationMenuLink className="navLink" onClick={() => setActivePage(ProtoPage2)}>복구</NavigationMenuLink>
-                        </NavigationMenuItem>
+                        </NavigationMenuItem> */}
 
                         <NavigationMenuItem>
                             <NavigationMenuLink className="navLink" onClick={() => setActivePage(ProtoPage3)}>대시보드</NavigationMenuLink>
