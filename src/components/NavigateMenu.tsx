@@ -30,7 +30,7 @@ const ProtoMainContent = memo(() => {
             <nav className="navContainer">
                 <SidebarTrigger style={sidebarStyle(open)} className="sidebarTrigger" />
                 <a href="/" className="serviceName">
-                    CTM Storage
+                    CTM
                 </a>
                 <NavigationMenu className="navMenu">
                     <NavigationMenuList className="navList">

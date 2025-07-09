@@ -13,7 +13,7 @@
 }
 
 .serviceName {
-    @apply text-3xl font-bold;
+    @apply text-4xl font-bold text-sky-700;
 }
 
 .navMenu {
