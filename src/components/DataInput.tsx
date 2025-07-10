@@ -68,14 +68,13 @@ const DataInput = memo(() => {
     const result = useResultStore((state) => state.result);
     const setResult = useResultStore((state) => state.setResult);
 
+    // 필터 검색의 날짜 범위 시작일
     const startDate = useDateStore((state) => state.startDate);
-    const endDate = useDateStore((state) => state.endDate);
-
     const setStartDate = useDateStore((state) => state.setStartDate);
-    const setEndDate = useDateStore((state) => state.setEndDate);
 
-    // const [startDate, setStartDate] = useState("");
-    // const [endDate, setEndDate] = useState("");
+    // 필터 검색의 날짜 범위 종료일
+    const endDate = useDateStore((state) => state.endDate);
+    const setEndDate = useDateStore((state) => state.setEndDate);
 
     const handleReset = () => {
         setFileType("");
@@ -110,7 +109,7 @@ const DataInput = memo(() => {
                         </Button>
                     </DialogTrigger>
                     <DialogContent className="sm:max-w-[500px]">
-                        <div className="max-h-165 overflow-y-auto scrollbar px-2 pb-2">
+                        <div className="pb-2">
                             <DialogHeader>
                                 <DialogTitle>고급 검색 기능</DialogTitle>
                                 <DialogDescription>
@@ -118,7 +117,8 @@ const DataInput = memo(() => {
                                 </DialogDescription>
                                 <Label className="text-sky-700 font-bold text-lg"> 파일 필터 </Label>
                             </DialogHeader>
-                            <div className="grid gap-4 py-4">
+                            <Separator className="my-2" />
+                            <div className="grid gap-4 px-2 py-4 max-h-147 overflow-y-auto scrollbar">
                                 <div className="grid grid-cols-4 items-center gap-2">
                                     <div className="col-span-4">
                                         <Label htmlFor="fileType" className="mb-2 block text-left ml-1 text-base">타입</Label>
