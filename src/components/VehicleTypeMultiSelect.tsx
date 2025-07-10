@@ -5,6 +5,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { ChevronDown } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { useVehicleSelectionStore } from "@/stores/useSelectionStore";
 
 const options = [
     { id: "kona", label: "KONA" },
@@ -17,22 +18,12 @@ const options = [
     { id: "casper", label: "CASPER" },
 ];
 
-interface VehicleTypeMultiSelectProps {
-    selected: string[];
-    setSelected: (selected: string[]) => void;
-}
-
-const VehicleTypeMultiSelect = memo(({ selected, setSelected }: VehicleTypeMultiSelectProps) => {
-    const toggleOption = (id: string) => {
-        setSelected(
-            selected.includes(id) ? selected.filter((item) => item !== id) : [...selected, id]
-        );
-    };
-
+const VehicleTypeMultiSelect = memo(() => {
+    const selected = useVehicleSelectionStore((state) => state.selected);
+    const setSelected = useVehicleSelectionStore((state) => state.setSelected);
     const selectAll = () => {
         setSelected(selected.length === options.length ? [] : options.map(option => option.id));
     };
-
     return (
         <Popover>
             <PopoverTrigger asChild>
@@ -47,7 +38,8 @@ const VehicleTypeMultiSelect = memo(({ selected, setSelected }: VehicleTypeMulti
             <PopoverContent className="w-[200px] p-2">
                 <div className="flex flex-col space-y-1">
                     <div
-                        className={`flex items-center gap-3 px-2 py-1 rounded cursor-pointer transition-colors ${selected.length === options.length
+                        className={`flex items-center gap-3 px-2 py-1 rounded cursor-pointer transition-colors 
+                            ${selected.length === options.length
                                 ? "bg-primary/10"
                                 : "hover:bg-accent/50"
                             }`}
@@ -66,15 +58,24 @@ const VehicleTypeMultiSelect = memo(({ selected, setSelected }: VehicleTypeMulti
                             {options.map((option) => (
                                 <div
                                     key={option.id}
-                                    className={`flex items-center gap-3 px-2 py-1 rounded cursor-pointer transition-colors font-bold ${selected.includes(option.id)
+                                    className={`flex items-center gap-3 px-2 py-1 rounded cursor-pointer transition-colors font-bold 
+                                        ${selected.includes(option.id)
                                             ? "bg-primary/10"
                                             : "hover:bg-accent/50"
                                         }`}
-                                    onClick={() => toggleOption(option.id)}
+                                    onClick={() => 
+                                        setSelected(selected.includes(option.id) ? 
+                                                selected.filter((item) => item !== option.id) : 
+                                                [...selected, option.id]
+                                        )}
                                 >
                                     <Checkbox
                                         checked={selected.includes(option.id)}
-                                        onCheckedChange={() => toggleOption(option.id)}
+                                        onCheckedChange={() => 
+                                            setSelected(selected.includes(option.id) ? 
+                                                    selected.filter((item) => item !== option.id) : 
+                                                    [...selected, option.id]
+                                            )}
                                         className="pointer-events-none size-4"
                                     />
                                     <span className="text-base pl-1">{option.label}</span>

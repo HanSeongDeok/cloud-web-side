@@ -5,6 +5,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { ChevronDown } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { useStepSelectionStore } from "@/stores/useSelectionStore";
 
 const options = [
     { id: "step1", label: "Step 1" },
@@ -17,22 +18,12 @@ const options = [
     { id: "step8", label: "Step 8" },
 ];
 
-interface StepMultiSelectProps {
-    selected: string[];
-    setSelected: (selected: string[]) => void;
-}
-
-const StepMultiSelect = memo(({ selected, setSelected }: StepMultiSelectProps) => {
-    const toggleOption = (id: string) => {
-        setSelected(
-            selected.includes(id) ? selected.filter((item) => item !== id) : [...selected, id]
-        );
-    };
-
+const StepMultiSelect = memo(() => {
+    const selected = useStepSelectionStore((state) => state.selected);
+    const setSelected = useStepSelectionStore((state) => state.setSelected);
     const selectAll = () => {
         setSelected(selected.length === options.length ? [] : options.map(option => option.id));
     };
-
     return (
         <Popover>
             <PopoverTrigger asChild>
@@ -46,7 +37,8 @@ const StepMultiSelect = memo(({ selected, setSelected }: StepMultiSelectProps) =
             <PopoverContent className="w-[200px] p-2">
                 <div className="flex flex-col space-y-1">
                     <div
-                        className={`flex items-center gap-3 px-2 py-1 rounded cursor-pointer transition-colors ${selected.length === options.length
+                        className={`flex items-center gap-3 px-2 py-1 rounded cursor-pointer transition-colors 
+                            ${selected.length === options.length
                                 ? "bg-primary/10"
                                 : "hover:bg-accent/50"
                             }`}
@@ -65,15 +57,20 @@ const StepMultiSelect = memo(({ selected, setSelected }: StepMultiSelectProps) =
                             {options.map((option) => (
                                 <div
                                     key={option.id}
-                                    className={`flex items-center gap-3 px-2 py-1 rounded cursor-pointer transition-colors font-bold ${selected.includes(option.id)
+                                    className={`flex items-center gap-3 px-2 py-1 rounded cursor-pointer transition-colors font-bold 
+                                        ${selected.includes(option.id)
                                             ? "bg-primary/10"
                                             : "hover:bg-accent/50"
                                         }`}
-                                    onClick={() => toggleOption(option.id)}
+                                    onClick={() => setSelected(selected.includes(option.id) ? 
+                                        selected.filter((item) => item !== option.id) : 
+                                        [...selected, option.id])}
                                 >
                                     <Checkbox
                                         checked={selected.includes(option.id)}
-                                        onCheckedChange={() => toggleOption(option.id)}
+                                        onCheckedChange={() => setSelected(selected.includes(option.id) ? 
+                                            selected.filter((item) => item !== option.id) : 
+                                            [...selected, option.id])}
                                         className="pointer-events-none size-4"
                                     />
                                     <span className="text-base pl-1">{option.label}</span>

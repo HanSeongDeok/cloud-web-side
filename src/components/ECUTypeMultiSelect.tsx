@@ -6,6 +6,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { ChevronDown } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { useEcuSelectionStore } from "@/stores/useSelectionStore";
 
 const options = [
     { id: "ems", label: "EMS" },
@@ -18,22 +19,12 @@ const options = [
     { id: "abs", label: "ABS" },
 ];
 
-interface ECUTypeMultiSelectProps {
-    selected: string[];
-    setSelected: (selected: string[]) => void;
-}
-
-const ECUTypeMultiSelect = memo(({ selected, setSelected }: ECUTypeMultiSelectProps) => {
-    const toggleOption = (id: string) => {
-        setSelected(
-            selected.includes(id) ? selected.filter((item) => item !== id) : [...selected, id]
-        );
-    };
-
+const ECUTypeMultiSelect = memo(() => {
+    const selected = useEcuSelectionStore((state) => state.selected);
+    const setSelected = useEcuSelectionStore((state) => state.setSelected);
     const selectAll = () => {
         setSelected(selected.length === options.length ? [] : options.map(option => option.id));
     };
-
     return (
         <Popover>
             <PopoverTrigger asChild>
@@ -70,11 +61,15 @@ const ECUTypeMultiSelect = memo(({ selected, setSelected }: ECUTypeMultiSelectPr
                                         ? "bg-primary/10"
                                         : "hover:bg-accent/50"
                                         }`}
-                                    onClick={() => toggleOption(option.id)}
+                                    onClick={() => setSelected(selected.includes(option.id) ? 
+                                        selected.filter((item) => item !== option.id) : 
+                                        [...selected, option.id])}
                                 >
                                     <Checkbox
                                         checked={selected.includes(option.id)}
-                                        onCheckedChange={() => toggleOption(option.id)}
+                                        onCheckedChange={() => setSelected(selected.includes(option.id) ? 
+                                            selected.filter((item) => item !== option.id) : 
+                                            [...selected, option.id])}
                                         className="pointer-events-none size-4"
                                     />
                                     <span className="text-base pl-1">{option.label}</span>

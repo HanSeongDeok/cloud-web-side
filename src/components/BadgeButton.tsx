@@ -2,6 +2,7 @@ import { memo, useRef } from "react";
 import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
 import { X } from "lucide-react";
+import { useEcuSelectionStore, useStepSelectionStore, useVehicleSelectionStore } from "@/stores/useSelectionStore";
 
 // 각 MultiSelect의 옵션 정의
 const vehicleOptions = [
@@ -37,183 +38,167 @@ const stepOptions = [
     { id: "step8", label: "Step 8" },
 ];
 
-interface BadgeButtonsProps {
-    selected: string[];
-    setSelected: (selected: string[]) => void;
-}
+const BadgeButtons = memo(() => {
+    const vehicleSelected = useVehicleSelectionStore((state) => state.selected);
+    const vehicleSetSelected = useVehicleSelectionStore((state) => state.setSelected);
+    const vehicleClearAll = useVehicleSelectionStore((state) => state.clearAll);
 
-interface BadgeButtonsPropsArr {
-    /**
-     * 1: vehicle
-     * 2: ecu
-     * 3: step
-     */
-    props: BadgeButtonsProps[];
-}
+    const ecuSelected = useEcuSelectionStore((state) => state.selected);
+    const ecuSetSelected = useEcuSelectionStore((state) => state.setSelected);
+    const ecuClearAll = useEcuSelectionStore((state) => state.clearAll);
 
-const BadgeButtons = memo(({props}: BadgeButtonsPropsArr) => {
-    // useRef를 사용해서 상태 참조
+    const stepSelected = useStepSelectionStore((state) => state.selected);
+    const stepSetSelected = useStepSelectionStore((state) => state.setSelected);
+    const stepClearAll = useStepSelectionStore((state) => state.clearAll);
 
     // 선택된 항목들을 배지로 표시하기 위한 함수들
     const getSelectedVehicleLabels = () => {
-        return vehicleOptions.filter(opt => props[0].selected.includes(opt.id)).map(opt => opt.label);
+        return vehicleOptions.filter(opt => vehicleSelected.includes(opt.id)).map(opt => opt.label);
     };
 
     const getSelectedECULabels = () => {
-        return ecuOptions.filter(opt => props[1].selected.includes(opt.id)).map(opt => opt.label);
+        return ecuOptions.filter(opt => ecuSelected.includes(opt.id)).map(opt => opt.label);
     };
 
     const getSelectedStepLabels = () => {
-        return stepOptions.filter(opt => props[2].selected.includes(opt.id)).map(opt => opt.label);
+        return stepOptions.filter(opt => stepSelected.includes(opt.id)).map(opt => opt.label);
     };
 
     // 개별 항목 제거 함수들
     const removeVehicle = (vehicleId: string) => {
-        const newSelected = props[0].selected.filter((id: string) => id !== vehicleId);
-        props[0].setSelected(newSelected);
+        const newSelected = vehicleSelected.filter((id: string) => id !== vehicleId);
+        vehicleSetSelected(newSelected);
     };
 
     const removeECU = (ecuId: string) => {
-        const newSelected = props[1].selected.filter((id: string) => id !== ecuId);
-        props[1].setSelected(newSelected);
+        const newSelected = ecuSelected.filter((id: string) => id !== ecuId);
+        ecuSetSelected(newSelected);
     };
 
     const removeStep = (stepId: string) => {
-        const newSelected = props[2].selected.filter((id: string) => id !== stepId);
-        props[2].setSelected(newSelected);
+        const newSelected = stepSelected.filter((id: string) => id !== stepId);
+        stepSetSelected(newSelected);
     };
 
     // 전체 선택 해제 함수들
     const clearAll = () => {
-        props[0].setSelected([]);
-        props[1].setSelected([]);
-        props[2].setSelected([]);
-    };
-
-    const clearAllVehicles = () => {
-        props[0].setSelected([]);
-    };
-    
-    const clearAllECUs = () => {
-        props[1].setSelected([]);
-    };
-    
-    const clearAllSteps = () => {
-        props[2].setSelected([]);
+        vehicleClearAll();
+        ecuClearAll();
+        stepClearAll();
     };
 
     // 모든 선택된 항목들
     const allSelectedVehicles = getSelectedVehicleLabels();
     const allSelectedECUs = getSelectedECULabels();
     const allSelectedSteps = getSelectedStepLabels();
-    
+
     return (
         <div>
-        {(allSelectedVehicles.length > 0 || allSelectedECUs.length > 0 || allSelectedSteps.length > 0) && 
-            <div className="flex flex-wrap gap-2 mt-2 mb-2">
-                {/* 차량 선택 배지들 */}
-                {allSelectedVehicles.map((vehicle) => (
-                    <Badge
-                        key={vehicle}
-                        variant="secondary"
-                        className="text-sm px-2 py-1 flex items-center gap-1"
-                    >
-                        <span className="text-blue-400 font-bold">차량:</span> {vehicle}
-                        <Button
-                            onClick={() => removeVehicle(vehicleOptions.find(opt => opt.label === vehicle)?.id || "")}
-                            className="ml-1 p-0 h-3 w-3 min-w-0 min-h-0 hover:bg-transparent"
-                            variant="ghost"
-                            size="sm"
+            {(allSelectedVehicles.length > 0 || allSelectedECUs.length > 0 || allSelectedSteps.length > 0) &&
+                <div className="flex flex-wrap gap-2 mt-2 mb-2">
+                    {/* 차량 선택 배지들 */}
+                    {allSelectedVehicles.map((vehicle) => (
+                        <Badge
+                            key={vehicle}
+                            variant="secondary"
+                            className="text-sm px-2 py-1 flex items-center gap-1"
                         >
-                            <X className="w-2 h-2" />
-                        </Button>
-                    </Badge>
-                ))}
+                            <span className="text-blue-400 font-bold">차량:</span> {vehicle}
+                            <Button
+                                onClick={() => removeVehicle(vehicleOptions.find(opt => opt.label === vehicle)?.id || "")}
+                                className="ml-1 p-0 h-3 w-3 min-w-0 min-h-0 hover:bg-transparent"
+                                variant="ghost"
+                                size="sm"
+                            >
+                                <X className="w-2 h-2" />
+                            </Button>
+                        </Badge>
+                    ))}
 
-                {/* ECU 선택 배지들 */}
-                {allSelectedECUs.map((ecu) => (
-                    <Badge
-                        key={ecu}
-                        variant="secondary"
-                        className="text-sm px-2 py-1 flex items-center gap-1"
-                    >
-                        <span className="text-green-400 font-bold">ECU:</span> {ecu}
-                        <Button
-                            onClick={() => removeECU(ecuOptions.find(opt => opt.label === ecu)?.id || "")}
-                            className="ml-1 p-0 h-3 w-3 min-w-0 min-h-0 hover:bg-transparent"
-                            variant="ghost"
-                            size="sm"
+                    {/* ECU 선택 배지들 */}
+                    {allSelectedECUs.map((ecu) => (
+                        <Badge
+                            key={ecu}
+                            variant="secondary"
+                            className="text-sm px-2 py-1 flex items-center gap-1"
                         >
-                            <X className="w-2 h-2" />
-                        </Button>
-                    </Badge>
-                ))}
+                            <span className="text-green-400 font-bold">ECU:</span> {ecu}
+                            <Button
+                                onClick={() => removeECU(ecuOptions.find(opt => opt.label === ecu)?.id || "")}
+                                className="ml-1 p-0 h-3 w-3 min-w-0 min-h-0 hover:bg-transparent"
+                                variant="ghost"
+                                size="sm"
+                            >
+                                <X className="w-2 h-2" />
+                            </Button>
+                        </Badge>
+                    ))}
 
-                {/* 단계 선택 배지들 */}
-                {allSelectedSteps.map((step) => (
-                    <Badge
-                        key={step}
-                        variant="secondary"
-                        className="text-sm px-2 py-1 flex items-center gap-1"
-                    >
-                        <span className="text-purple-400 font-bold">단계:</span> {step}
-                        <Button
-                            onClick={() => removeStep(stepOptions.find(opt => opt.label === step)?.id || "")}
-                            className="ml-1 p-0 h-3 w-3 min-w-0 min-h-0 hover:bg-transparent"
-                            variant="ghost"
-                            size="sm"
+                    {/* 단계 선택 배지들 */}
+                    {allSelectedSteps.map((step) => (
+                        <Badge
+                            key={step}
+                            variant="secondary"
+                            className="text-sm px-2 py-1 flex items-center gap-1"
                         >
-                            <X className="w-2 h-2" />
-                        </Button>
+                            <span className="text-purple-400 font-bold">단계:</span> {step}
+                            <Button
+                                onClick={() => removeStep(stepOptions.find(opt => opt.label === step)?.id || "")}
+                                className="ml-1 p-0 h-3 w-3 min-w-0 min-h-0 hover:bg-transparent"
+                                variant="ghost"
+                                size="sm"
+                            >
+                                <X className="w-2 h-2" />
+                            </Button>
+                        </Badge>
+                    ))}
+
+                    {/* 전체 해제 버튼 */}
+                    <Badge
+                        variant="destructive"
+                        className="text-sm px-2 py-1 cursor-pointer"
+                        onClick={clearAll}
+                    >
+                        모든 필터 해제
                     </Badge>
-                ))}
 
-                {/* 전체 해제 버튼 */}
-                <Badge
-                    variant="destructive"
-                    className="text-sm px-2 py-1 cursor-pointer"
-                    onClick={clearAll}
-                >
-                    모든 필터 해제
-                </Badge>
-
-                {/* 해제 라벨과 버튼들 */}
-                {(allSelectedVehicles.length > 0 || allSelectedECUs.length > 0 || allSelectedSteps.length > 0) && (
-                    <div> 
-                        {/* 해제 버튼들 */}
-                        <div className="flex gap-2 mt-1">
-                            {allSelectedVehicles.length > 0 && (
-                                <Badge
-                                    variant="destructive"
-                                    className="text-sm px-2 py-1 cursor-pointer"
-                                    onClick={clearAllVehicles}
-                                >
-                                    차량 해제
-                                </Badge>
-                            )}
-                            {allSelectedECUs.length > 0 && (
-                                <Badge
-                                    variant="destructive"
-                                    className="text-sm px-2 py-1 cursor-pointer"
-                                    onClick={clearAllECUs}
-                                >
-                                    ECU 해제
-                                </Badge>
-                            )}
-                            {allSelectedSteps.length > 0 && (
-                                <Badge
-                                    variant="destructive"
-                                    className="text-sm px-2 py-1 cursor-pointer"
-                                    onClick={clearAllSteps}
-                                >
-                                    단계 해제
-                                </Badge>
-                            )}
+                    {/* 섹션 별 전체 해제 버튼 */}
+                    {/* {(allSelectedVehicles.length > 0 || allSelectedECUs.length > 0 || allSelectedSteps.length > 0) && (
+                        <div className="flex flex-wrap gap-2 mt-2 mb-2">
+                            <div className="flex flex-wrap gap-2 mt-2 mb-2">
+                                {allSelectedVehicles.length > 0 && (
+                                    <Badge
+                                        variant="destructive"
+                                        className="text-sm px-2 py-1 cursor-pointer"
+                                        onClick={clearAllVehicles}
+                                    >
+                                        차량 전체 해제
+                                    </Badge>
+                                )}
+                                {allSelectedECUs.length > 0 && (
+                                    <Badge
+                                        variant="destructive"
+                                        className="text-sm px-2 py-1 cursor-pointer"
+                                        onClick={clearAllECUs}
+                                    >
+                                        ECU 전체 해제
+                                    </Badge>
+                                )}
+                                {allSelectedSteps.length > 0 && (
+                                    <Badge
+                                        variant="destructive"
+                                        className="text-sm px-2 py-1 cursor-pointer"
+                                        onClick={clearAllSteps}
+                                    >
+                                        단계 전체 해제
+                                    </Badge>
+                                )}
+                            </div>
                         </div>
-                    </div>
-                )}
-            </div>
-        }
+                    )}
+                )} */}
+                </div>
+            }
         </div>
     )
 });
