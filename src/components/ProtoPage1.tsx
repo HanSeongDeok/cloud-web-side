@@ -23,13 +23,12 @@ const ProtoPage1 = memo(() => {
                     welcome to the CTM storage
                 </p>
             </div>
+            
+            {/* 필터 검색 영역 */}
             <div className="flex justify-center w-full mb-25">
                 <div className="flex flex-col items-start w-[1000px]">
-                    {/* 배지 버튼 컴포넌트*/}
                     <BadgeButtons/>
-                    {/* 필터 검색 컴포넌트 */}
                     <DataInput />
-                    {/* 필터 검색 컴포넌트 그룹 */}
                     <div className="flex flex-row gap-x-4 mt-2">
                         <VehicleTypeMultiSelect/>
                         <ECUTypeMultiSelect/>
@@ -38,7 +37,7 @@ const ProtoPage1 = memo(() => {
                 </div>
             </div>
 
-            {/* 기존 테이블/업로드 영역 */}
+            {/* 테이블 컬럼 / 업로드 영역 */}
             <div className="table-container">
                 <div className="flex gap-2 ml-auto">
                     <input
@@ -61,6 +60,7 @@ const ProtoPage1 = memo(() => {
                 </div>
             </div>
 
+            {/* 테이블 영역 */}
             <div className="space-y-8">
                 <DataTable />
             </div>

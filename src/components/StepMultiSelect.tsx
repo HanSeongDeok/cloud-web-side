@@ -6,23 +6,13 @@ import { ChevronDown } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useStepSelectionStore } from "@/stores/useSelectionStore";
-
-const options = [
-    { id: "step1", label: "Step 1" },
-    { id: "step2", label: "Step 2" },
-    { id: "step3", label: "Step 3" },
-    { id: "step4", label: "Step 4" },
-    { id: "step5", label: "Step 5" },
-    { id: "step6", label: "Step 6" },
-    { id: "step7", label: "Step 7" },
-    { id: "step8", label: "Step 8" },
-];
+import { stepOptions } from "@/models/multiSelectModel";
 
 const StepMultiSelect = memo(() => {
     const selected = useStepSelectionStore((state) => state.selected);
     const setSelected = useStepSelectionStore((state) => state.setSelected);
     const selectAll = () => {
-        setSelected(selected.length === options.length ? [] : options.map(option => option.id));
+        setSelected(selected.length === stepOptions.length ? [] : stepOptions.map(option => option.id));
     };
     return (
         <Popover>
@@ -38,14 +28,14 @@ const StepMultiSelect = memo(() => {
                 <div className="flex flex-col space-y-1">
                     <div
                         className={`flex items-center gap-3 px-2 py-1 rounded cursor-pointer transition-colors 
-                            ${selected.length === options.length
+                            ${selected.length === stepOptions.length
                                 ? "bg-primary/10"
                                 : "hover:bg-accent/50"
                             }`}
                         onClick={selectAll}
                     >
                         <Checkbox
-                            checked={selected.length === options.length}
+                            checked={selected.length === stepOptions.length}
                             onCheckedChange={selectAll}
                             className="pointer-events-none size-4"
                         />
@@ -54,7 +44,7 @@ const StepMultiSelect = memo(() => {
                     <Separator />
                     <ScrollArea className="h-[150px]">
                         <div className="flex flex-col space-y-1 font-bold">
-                            {options.map((option) => (
+                            {stepOptions.map((option) => (
                                 <div
                                     key={option.id}
                                     className={`flex items-center gap-3 px-2 py-1 rounded cursor-pointer transition-colors font-bold 

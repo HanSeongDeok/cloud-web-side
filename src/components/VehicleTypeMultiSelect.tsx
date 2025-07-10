@@ -6,23 +6,16 @@ import { ChevronDown } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useVehicleSelectionStore } from "@/stores/useSelectionStore";
+import { vehicleOptions } from "@/models/multiSelectModel";
 
-const options = [
-    { id: "kona", label: "KONA" },
-    { id: "avante", label: "AVANTE" },
-    { id: "ioniq", label: "IONIQ" },
-    { id: "sonata", label: "SONATA" },
-    { id: "grandeur", label: "GRANDEUR" },
-    { id: "porter", label: "PORTER" },
-    { id: "staria", label: "STARIA" },
-    { id: "casper", label: "CASPER" },
-];
 
 const VehicleTypeMultiSelect = memo(() => {
     const selected = useVehicleSelectionStore((state) => state.selected);
     const setSelected = useVehicleSelectionStore((state) => state.setSelected);
     const selectAll = () => {
-        setSelected(selected.length === options.length ? [] : options.map(option => option.id));
+        setSelected(selected.length === vehicleOptions.length ? 
+            [] : 
+            vehicleOptions.map(option => option.id));
     };
     return (
         <Popover>
@@ -39,14 +32,14 @@ const VehicleTypeMultiSelect = memo(() => {
                 <div className="flex flex-col space-y-1">
                     <div
                         className={`flex items-center gap-3 px-2 py-1 rounded cursor-pointer transition-colors 
-                            ${selected.length === options.length
+                            ${selected.length === vehicleOptions.length
                                 ? "bg-primary/10"
                                 : "hover:bg-accent/50"
                             }`}
                         onClick={selectAll}
                     >
                         <Checkbox
-                            checked={selected.length === options.length}
+                            checked={selected.length === vehicleOptions.length}
                             onCheckedChange={selectAll}
                             className="pointer-events-none size-4"
                         />
@@ -55,7 +48,7 @@ const VehicleTypeMultiSelect = memo(() => {
                     <Separator />
                     <ScrollArea className="h-[150px]">
                         <div className="flex flex-col space-y-1 font-bold">
-                            {options.map((option) => (
+                            {vehicleOptions.map((option) => (
                                 <div
                                     key={option.id}
                                     className={`flex items-center gap-3 px-2 py-1 rounded cursor-pointer transition-colors font-bold 

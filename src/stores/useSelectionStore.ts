@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { ecuOptions, stepOptions, vehicleOptions, type MultiSelectOption } from "@/models/multiSelectModel";
 
 interface SelectionState {
   selectedMap: Map<string, boolean>;
@@ -10,8 +11,9 @@ interface SelectionState {
 interface MultiSelectState {
   selected: string[];
   setSelected: (selected: string[]) => void;
+  isAllSelected: () => boolean;
   clearAll: () => void;
-  changeAll: (options: object[]) => void;
+  changeAll: (options: MultiSelectOption[]) => void;
 }
 
 interface VehicleSelectionState extends MultiSelectState {}
@@ -36,8 +38,9 @@ export const useSelectionStore = create<SelectionState>((set, get) => ({
 export const useVehicleSelectionStore = create<VehicleSelectionState>((set, get) => ({
   selected: [],
   setSelected: (selected) => set({ selected }),
+  isAllSelected: () => get().selected.length === vehicleOptions.length,
   clearAll: () => set({ selected: [] }),
-  changeAll: (options: object[]) => set({ selected: [] }),
+  changeAll: (options: MultiSelectOption[]) => set({ selected: [] }),
 }));
 
 /**
@@ -46,8 +49,9 @@ export const useVehicleSelectionStore = create<VehicleSelectionState>((set, get)
 export const useEcuSelectionStore = create<EcuSelectionState>((set, get) => ({
   selected: [],
   setSelected: (selected) => set({ selected }),
+  isAllSelected: () => get().selected.length === ecuOptions.length,
   clearAll: () => set({ selected: [] }),
-  changeAll: (options: object[]) => set({ selected: [] }),
+  changeAll: (options: MultiSelectOption[]) => set({ selected: [] }),
 }));
 
 /**
@@ -56,8 +60,9 @@ export const useEcuSelectionStore = create<EcuSelectionState>((set, get) => ({
 export const useStepSelectionStore = create<StepSelectionState>((set, get) => ({
   selected: [],
   setSelected: (selected) => set({ selected }),
+  isAllSelected: () => get().selected.length === stepOptions.length,
   clearAll: () => set({ selected: [] }),
-  changeAll: (options: object[]) => set({ selected: [] }),
+  changeAll: (options: MultiSelectOption[]) => set({ selected: [] }),
 }));
 
 

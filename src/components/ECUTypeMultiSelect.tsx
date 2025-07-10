@@ -7,23 +7,15 @@ import { ChevronDown } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useEcuSelectionStore } from "@/stores/useSelectionStore";
-
-const options = [
-    { id: "ems", label: "EMS" },
-    { id: "tcu", label: "TCU" },
-    { id: "hvac", label: "HVAC" },
-    { id: "bcm", label: "BCM" },
-    { id: "mcu", label: "MCU" },
-    { id: "eps", label: "EPS" },
-    { id: "srs", label: "SRS" },
-    { id: "abs", label: "ABS" },
-];
+import { ecuOptions } from "@/models/multiSelectModel";
 
 const ECUTypeMultiSelect = memo(() => {
     const selected = useEcuSelectionStore((state) => state.selected);
     const setSelected = useEcuSelectionStore((state) => state.setSelected);
     const selectAll = () => {
-        setSelected(selected.length === options.length ? [] : options.map(option => option.id));
+        setSelected(selected.length === ecuOptions.length ? 
+            [] : 
+            ecuOptions.map(option => option.id));
     };
     return (
         <Popover>
@@ -38,14 +30,15 @@ const ECUTypeMultiSelect = memo(() => {
             <PopoverContent className="w-[200px] p-2">
                 <div className="flex flex-col space-y-1">
                     <div
-                        className={`flex items-center gap-3 px-2 py-1 rounded cursor-pointer transition-colors ${selected.length === options.length
-                            ? "bg-primary/10"
-                            : "hover:bg-accent/50"
+                        className={`flex items-center gap-3 px-2 py-1 rounded cursor-pointer transition-colors 
+                            ${selected.length === ecuOptions.length
+                                ? "bg-primary/10"
+                                : "hover:bg-accent/50"
                             }`}
                         onClick={selectAll}
                     >
                         <Checkbox
-                            checked={selected.length === options.length}
+                            checked={selected.length === ecuOptions.length}
                             onCheckedChange={selectAll}
                             className="pointer-events-none size-4"
                         />
@@ -54,12 +47,13 @@ const ECUTypeMultiSelect = memo(() => {
                     <Separator />
                     <ScrollArea className="h-[150px]">
                         <div className="flex flex-col space-y-1 font-bold">
-                            {options.map((option) => (
+                            {ecuOptions.map((option) => (
                                 <div
                                     key={option.id}
-                                    className={`flex items-center gap-3 px-2 py-1 rounded cursor-pointer transition-colors font-bold ${selected.includes(option.id)
-                                        ? "bg-primary/10"
-                                        : "hover:bg-accent/50"
+                                    className={`flex items-center gap-3 px-2 py-1 rounded cursor-pointer transition-colors font-bold 
+                                        ${selected.includes(option.id)
+                                            ? "bg-primary/10"
+                                            : "hover:bg-accent/50"
                                         }`}
                                     onClick={() => setSelected(selected.includes(option.id) ? 
                                         selected.filter((item) => item !== option.id) : 
