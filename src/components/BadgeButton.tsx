@@ -151,7 +151,6 @@ const AllStepBadge = memo(({ stepClearAll }: {
 
 const BadgeButtons = memo(() => {
     // TODO 나중에 Handler로 추출
-
     const vehicleSelected = useVehicleSelectionStore((state) => state.selected);
     const vehicleSetSelected = useVehicleSelectionStore((state) => state.setSelected);
     const vehicleClearAll = useVehicleSelectionStore((state) => state.clearAll);

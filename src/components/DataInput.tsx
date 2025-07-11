@@ -12,7 +12,7 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@components/ui/dialog";
-import { useIsOpenStore } from "@/stores/useIsOpenStore";
+import { useFilterIsOpenStore } from "@/stores/useIsDialogOpenStore";
 import {
     Select,
     SelectTrigger,
@@ -36,43 +36,43 @@ import { useDateStore } from "@/stores/useDateStore";
  * @returns 데이터 입력 컴포넌트
  */
 const DataInput = memo(() => {
-    // 다이얼로그 열기 닫기
-    const isOpen = useIsOpenStore((state) => state.isOpen);
-    const setIsOpen = useIsOpenStore((state) => state.setIsOpen);
+    // 필터 다이얼로그 열기 닫기
+    const isOpen = useFilterIsOpenStore((state) => state.isOpen);
+    const setIsOpen = useFilterIsOpenStore((state) => state.setIsOpen);
 
-    // 검색 키워드
+    // 검색 키워드 상태
     const searchKeyword = useSearchKeywordStore((state) => state.searchKeyword);
     const setSearchKeyword = useSearchKeywordStore((state) => state.setSearchKeyword);
 
-    // 필터 검색의 업로더 이름
+    // 필터 검색의 업로더 이름 상태
     const uploader = useFilterUploaderStore((state) => state.uploader);
     const setUploader = useFilterUploaderStore((state) => state.setUploader);
 
-    // 필터 검색의 파일 타입
+    // 필터 검색의 파일 타입 상태
     const fileType = useFileTypeStore((state) => state.filetype);
     const setFileType = useFileTypeStore((state) => state.setFileType);
 
-    // 필터 검색의 파일 이름
+    // 필터 검색의 파일 이름 상태
     const fileName = useFileNameStore((state) => state.fileName);
     const setFileName = useFileNameStore((state) => state.setFileName);
 
-    // 필터 검색의 차량
+    // 필터 검색의 차량 상태
     const vehicle = useVehicleStore((state) => state.vehicle);
     const setVehicle = useVehicleStore((state) => state.setVehicle);
 
-    // 필터 검색의 단계
+    // 필터 검색의 단계 상태
     const step = useStepStore((state) => state.step);
     const setStep = useStepStore((state) => state.setStep);
 
-    // 필터 검색의 테스트 결과
+    // 필터 검색의 테스트 결과 상태
     const result = useResultStore((state) => state.result);
     const setResult = useResultStore((state) => state.setResult);
 
-    // 필터 검색의 날짜 범위 시작일
+    // 필터 검색의 날짜 범위 시작일 상태
     const startDate = useDateStore((state) => state.startDate);
     const setStartDate = useDateStore((state) => state.setStartDate);
 
-    // 필터 검색의 날짜 범위 종료일
+    // 필터 검색의 날짜 범위 종료일 상태
     const endDate = useDateStore((state) => state.endDate);
     const setEndDate = useDateStore((state) => state.setEndDate);
 

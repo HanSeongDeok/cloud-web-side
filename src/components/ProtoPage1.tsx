@@ -9,12 +9,9 @@ import VehicleTypeMultiSelect from "./VehicleTypeMultiSelect";
 import ECUTypeMultiSelect from "./ECUTypeMultiSelect";
 import StepMultiSelect from "./StepMultiSelect";
 import BadgeButtons from "./BadgeButton";
+import UploadButton from "./UploadButton";
 
 const ProtoPage1 = memo(() => {
-    const fileInput = useRef<HTMLInputElement>(null);
-    const handleFileUpload = (fileInputRef: React.RefObject<HTMLInputElement>) => {
-        fileInputRef.current?.click();
-    };
     return (
         <div className="w-full px-6 py-8">
             <div className="mb-4">
@@ -40,22 +37,7 @@ const ProtoPage1 = memo(() => {
             {/* 테이블 컬럼 / 업로드 영역 */}
             <div className="table-container">
                 <div className="flex gap-2 ml-auto">
-                    <input
-                        ref={fileInput}
-                        type="file"
-                        onChange={handleFileSelect}
-                        className="hidden-file-input"
-                        accept="*/*"
-                        aria-label="파일 선택"
-                    />
-                    <Button
-                        variant="outline"
-                        size="default"
-                        onClick={() => handleFileUpload(fileInput)}
-                    >
-                        <Upload className="w-4 h-4 mr-2" />
-                        Upload
-                    </Button>
+                    <UploadButton/>
                     <TableDropDownMenu />
                 </div>
             </div>
