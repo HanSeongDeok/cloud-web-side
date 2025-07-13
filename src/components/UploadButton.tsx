@@ -16,6 +16,7 @@ import { useFileInputStore, useFileToggleStore } from "@/stores/useFileInputStor
 import { Label } from "@components/ui/label";
 import { Switch } from "@components/ui/switch";
 
+
 const UploadButton = memo(() => {
     // 업로드 다이얼로그 열기 닫기
     const isOpen = useUploadIsOpenStore((state) => state.isOpen);
@@ -34,6 +35,27 @@ const UploadButton = memo(() => {
         setSelectedFiles([...selectedFiles, ...files]);
     };
 
+    const collectFilesFromDirectory = (dirEntry: any): File[] => {
+        const files: File[] = [];
+        const reader = dirEntry.createReader();
+        const readEntries = () => {
+            reader.readEntries(async (entries: any[]) => {
+                for (const entry of entries) {
+                    if (entry.isFile) {
+                        entry.file((file: File) => {
+                            files.push(file);
+                        });
+                    } else if (entry.isDirectory) {
+                        const subFiles = collectFilesFromDirectory(entry);
+                        files.push(...subFiles);
+                    }
+                }
+            });
+        };
+        readEntries();
+        return files;
+    };
+
     const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
         e.preventDefault();
 
@@ -41,7 +63,8 @@ const UploadButton = memo(() => {
         Array.from(e.dataTransfer.items).forEach((item) => {
             const entry = item.webkitGetAsEntry?.();
             if (entry?.isDirectory) {
-                console.log("폴더입니다:", entry.name);
+                const subFiles = collectFilesFromDirectory(entry);
+                files.push(...subFiles);
             } else {
                 const file = item.getAsFile();
                 if (file) files.push(file);
