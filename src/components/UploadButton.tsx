@@ -11,7 +11,7 @@ import {
 } from "@components/ui/dialog";
 import { Separator } from "@components/ui/separator";
 import { useUploadIsOpenStore } from "@/stores/useIsDialogOpenStore";
-import { useFileInputStore, useFileToggleStore } from "@/stores/useFileInputStore";
+import { useFileToggleStore, useFileUploadStore } from "@/stores/useFileInputStore";
 import { Switch } from "@components/ui/switch";
 import FileUploadResizablePanel from "./FileUploadResizablePanel";
 import { UploadBox } from "./UploadBox";
@@ -22,8 +22,8 @@ const UploadButton = memo(() => {
     const setIsOpen = useUploadIsOpenStore((state) => state.setIsOpen);
 
     // 선택된 파일 상태
-    const selectedFiles = useFileInputStore((state) => state.selectedFiles);
-    const clearFiles = useFileInputStore((state) => state.clearFiles);
+    const selectedFiles = useFileUploadStore((state) => state.selectedFiles);
+    const clearFiles = useFileUploadStore((state) => state.clearFiles);
 
     const isFolderMode = useFileToggleStore((state) => state.isFolderMode);
     const setIsFolderMode = useFileToggleStore((state) => state.setIsFolderMode);

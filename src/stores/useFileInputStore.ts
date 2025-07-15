@@ -1,6 +1,6 @@
 import { create } from "zustand";
 
-interface FileInputState {
+interface FileUploadState {
     selectedFiles: File[];
     setSelectedFiles: (files: File[]) => void;
     clearFiles: () => void;
@@ -11,7 +11,7 @@ interface FileToggleState {
     setIsFolderMode: (isFolderMode: boolean) => void;
 }
 
-export const useFileInputStore = create<FileInputState>((set) => ({
+export const useFileUploadStore = create<FileUploadState>((set) => ({
     selectedFiles: [],
     setSelectedFiles: (files) => set({ selectedFiles: files }),
     clearFiles: () => set({ selectedFiles: [] }),

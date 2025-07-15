@@ -1,7 +1,7 @@
 import { UploadCloud } from "lucide-react";
 import { Input } from "./ui/input";
 import { memo } from "react";
-import { useFileInputStore } from "@/stores/useFileInputStore";
+import { useFileUploadStore } from "@/stores/useFileInputStore";
 
 /**
  * 순서 보장이 되지 않는 가장 빠른 병렬 비동기 처리 방식
@@ -88,8 +88,8 @@ const collectFilesFromDirectory = async (dirEntry: any): Promise<File[]> => {
  * 파일 업로드 박스
  */
 export const UploadBox = memo(({ className }: { className?: string }) => {
-    const selectedFiles = useFileInputStore((state) => state.selectedFiles);
-    const setSelectedFiles = useFileInputStore((state) => state.setSelectedFiles);
+    const selectedFiles = useFileUploadStore((state) => state.selectedFiles);
+    const setSelectedFiles = useFileUploadStore((state) => state.setSelectedFiles);
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const files = Array.from(e.target.files || []);
