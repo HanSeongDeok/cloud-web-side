@@ -13,6 +13,15 @@ import { useFileSelectionStore } from "@/stores/useFileSelectionStore";
 import { Separator } from "./ui/separator";
 import { usePannelResizableStore } from "@/stores/usePannelResizableStroe";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./ui/tooltip";
+import {
+    ContextMenu,
+    ContextMenuContent,
+    ContextMenuItem,
+    ContextMenuSeparator,
+    ContextMenuTrigger,
+    ContextMenuLabel,
+    ContextMenuShortcut,
+} from "./ui/context-menu";
 import { 
     vehicleOptions, 
     deliverableTypeOptions, 
@@ -25,6 +34,7 @@ import {
     memTypeOptions 
 } from "@/models/multiSelectModel";
 import { useFileMetaDataStore } from "@/stores/useFileMetaDataStore";
+import { RotateCcw } from "lucide-react";
 
 const FileMetaEditor = memo(() => {
     const file = useFileUploadStore((state) => state.selectedFiles);
@@ -32,8 +42,12 @@ const FileMetaEditor = memo(() => {
     const fileMetadata = useFileMetaDataStore((state) => state.fileMetadata);
     const setFileMetadata = useFileMetaDataStore((state) => state.setFileMetadata);
 
+    const handleResetDeliverableType = () => {
+        setFileMetadata(selectedFileIndex, { deliverableType: "" });
+    };
+
     return (
-        <div className="flex flex-col h-full w-full">
+        <div className="flex flex-col h-full w-full" onContextMenu={(e) => {e.preventDefault()}}>
             <div className="mb-2 flex items-center gap-2">
                 <Label className="mt-1 font-bold text-blue-500 text-left text-lg whitespace-nowrap">메타데이터 편집: </Label>
                 <TooltipProvider>
@@ -57,20 +71,34 @@ const FileMetaEditor = memo(() => {
                     <div className="space-y-4">
                         <div>
                             <Label className="text-left font-bold text-lg mb-1">DeliverableType</Label>
-                            <Select 
-                                value={fileMetadata[selectedFileIndex]?.deliverableType || ""} 
-                                onValueChange={(value) => setFileMetadata(selectedFileIndex, { deliverableType : value })}>
-                                <SelectTrigger className="w-full">
-                                    <SelectValue placeholder= "Select DeliverableType" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <ScrollArea className="h-[100px]">
-                                        {deliverableTypeOptions.map((option) => (
-                                            <SelectItem key={option.id} value={option.id}>{option.label}</SelectItem>
-                                        ))}
-                                    </ScrollArea>
-                                </SelectContent>
-                            </Select>
+                            <ContextMenu>
+                                <ContextMenuTrigger asChild>
+                                    <div>
+                                        <Select 
+                                            value={fileMetadata[selectedFileIndex]?.deliverableType || ""} 
+                                            onValueChange={(value) => setFileMetadata(selectedFileIndex, { deliverableType: value })}>
+                                            <SelectTrigger className="w-full">
+                                                <SelectValue placeholder="Select DeliverableType" />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                <ScrollArea className="h-[100px]">
+                                                    {deliverableTypeOptions.map((option) => (
+                                                        <SelectItem key={option.id} value={option.id}>{option.label}</SelectItem>
+                                                    ))}
+                                                </ScrollArea>
+                                            </SelectContent>
+                                        </Select>
+                                    </div>
+                                </ContextMenuTrigger>
+                                <ContextMenuContent>
+                                    <ContextMenuLabel>DeliverableType</ContextMenuLabel>
+                                    <ContextMenuSeparator />
+                                    <ContextMenuItem onClick={handleResetDeliverableType}>
+                                        <RotateCcw className="mr-2 h-4 w-4" />
+                                        초기화
+                                    </ContextMenuItem>
+                                </ContextMenuContent>
+                            </ContextMenu>
                         </div>
                         <div>
                             <Label className="text-left font-bold text-lg mb-1">TestClassification</Label>
