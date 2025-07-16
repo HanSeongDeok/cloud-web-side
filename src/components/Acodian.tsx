@@ -6,7 +6,6 @@ import {
 } from "@/components/ui/accordion"
 import { memo } from "react";
 import "@styles/Acodian.css";
-import SelectCombo from "@components/SelectCombo";
 import LabelBase from "@/components/Label1";
 import LabelCondition from "./Label2";
 import { useAccordionStore } from "@/stores/useAccordionStore";
@@ -28,17 +27,13 @@ const AccordionLayout = memo(() => {
                         <div className="filterSection">
                             <LabelBase />
                             <div className="filterRow">
-                                <SelectCombo />
-                                <SelectCombo />
-                                <SelectCombo />
-                                <SelectCombo />
+                         
                             </div>
                         </div>
                         <div className="filterSection">
                             <LabelCondition />
                             <div className="filterRow">
-                                <SelectCombo />
-                                <SelectCombo />
+         
                             </div>
                         </div>
                         <p>

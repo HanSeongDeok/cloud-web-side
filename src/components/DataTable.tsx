@@ -18,9 +18,10 @@ const DataTable = React.memo(() => {
           animateRows={true}
           domLayout="autoHeight"
           rowSelection="multiple"
-          suppressRowClickSelection={true}
-          onRowClicked={onRowClicked}
-          onSelectionChanged={onSelectionChanged}
+          rowMultiSelectWithClick={true}
+          // suppressRowClickSelection={true}
+          // onRowClicked={onRowClicked}
+          // onSelectionChanged={onSelectionChanged}
           defaultColDef={{
             sortable: true,
             resizable: true

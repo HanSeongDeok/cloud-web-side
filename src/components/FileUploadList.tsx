@@ -6,42 +6,46 @@ import { Separator } from "./ui/separator";
 import { Trash2 } from "lucide-react";
 import { memo } from "react";
 import { UploadBox } from "./UploadBox";
-import { useFileSelectionStore } from "@/stores/useFileSelectionStore";
-import { useResizeObserver } from "@/hooks/useResizeObserver";
-import { usePannelResizableStore } from "@/stores/usePannelResizableStroe";
+import { useFileMultiSelectionStore, useFileSelectionStore } from "@/stores/useFileSelectionStore";
 
 
 const FileUploadList = memo(() => {
   const files = useFileUploadStore((state) => state.selectedFiles);
-  const { ref, width } = useResizeObserver();
-
+  
   const selectedFileIndex = useFileSelectionStore((state) => state.selectedFileIndex);
   const setSelectedFileIndex = useFileSelectionStore((state) => state.setSelectedFileIndex);
-  const leftButtonWidth = usePannelResizableStore((state) => state.getLeftButtonWidth());
+
+  const selectedFileIndices = useFileMultiSelectionStore((state) => state.selectedFileIndices);
+  const setSelectedFileIndices = useFileMultiSelectionStore((state) => state.setSelectedFileIndices);
   
+  const isSelected = (index: number) => {
+    return selectedFileIndices.includes(index);
+  }
+
   return (
     <div className="w-full h-full flex flex-col">
       <div className="font-bold text-sm mb-2">파일 ({files.length})</div>
-      <ScrollArea className="w-full h-100 mb-2 pr-4">
+      <ScrollArea className="w-full h-120 mb-2 pr-4">
         {files.map((file, index) => (
-          <div key={`${file.name}-${file.lastModified}-${file.size}-${index}`} className="mb-1">
+          <div key={`${file.name}-${file.lastModified}-${file.size}-${index}`} className="mb-1 grid">
             <Button
-              variant={selectedFileIndex === index ? "secondary" : "outline"}
+              variant={isSelected(index) ? "secondary" : "outline"}
               className={`h-18 flex justify-between items-center p-2 overflow-hidden transition-colors ${
-                selectedFileIndex === index ? 
+                isSelected(index) ? 
                   'text-blue-500 font-extrabold hover:text-blue-500 bg-gray-900 hover:bg-gray-900': 
                   'bg-muted'
               }`}
-              style={{ width: `${leftButtonWidth}px` }}
-              // style={{ width: `${width - 16}px` }}
-              onClick={() => setSelectedFileIndex(index)}
+              onClick={(e) => {
+                setSelectedFileIndex(index);
+                setSelectedFileIndices(e);
+              }}
             >
               <div className="flex-1 min-w-0 flex flex-col items-start overflow-hidden">
                 <div className="text-sm text-left truncate w-full">{file.name}</div>
                 <div className={`text-xs text-left truncate w-full ${
-                  selectedFileIndex === index ? 'text-blue-100' : 'text-gray-500'
+                  isSelected(index) ? 'text-blue-100' : 'text-gray-500'
                 }`}>
-                  {file.lastModified} / {(file.size / (1024 * 1024)).toFixed(2)} MB
+                  {new Date(file.lastModified).toLocaleDateString()} / {(file.size / (1024 * 1024)).toFixed(2)} MB
                 </div>
               </div>
               <div 

@@ -23,41 +23,83 @@ export const vehicleOptions: MultiSelectOption[] = [
     { id: "grandeurev", label: "GRANDEUREV" },
     { id: "porterev", label: "PORTEREV" },
     { id: "stariasev", label: "STARIASEV" },
+    { id: "rg3", label: "RG3" },
+    { id: "sp2pe", label: "SP2PE" },
+    { id: "mx5", label: "MX5" },
+    { id: "ka4pe", label: "KA4PE" },
 ];
 
 export const ecuOptions: MultiSelectOption[] = [
-    { id: "ems", label: "EMS" },
-    { id: "tcu", label: "TCU" },
-    { id: "hvac", label: "HVAC" },
-    { id: "bcm", label: "BCM" },
-    { id: "mcu", label: "MCU" },
-    { id: "eps", label: "EPS" },
-    { id: "srs", label: "SRS" },
-    { id: "abs", label: "ABS" },
-    { id: "mcu", label: "MCU" },
-    { id: "vpc", label: "VPC" },
-    { id: "vector", label: "VECTOR" },
+    { id: "r-mdps", label: "R-MDPS" },
+    { id: "c-mdps", label: "C-MDPS" },
+    { id: "sbw", label: "SbW" },
+    { id: "ieb", label: "IEB" },
+    { id: "esc", label: "ESC" },
+    { id: "epb", label: "EPB" },
+    { id: "ecs", label: "ECS" },
+    { id: "awd", label: "AWD" },
 ];
 
 export const stepOptions: MultiSelectOption[] = [
-    { id: "step1", label: "Step 1" },
-    { id: "step2", label: "Step 2" },
-    { id: "step3", label: "Step 3" },
-    { id: "step4", label: "Step 4" },
-    { id: "step5", label: "Step 5" },
-    { id: "step6", label: "Step 6" },
-    { id: "step7", label: "Step 7" },
-    { id: "step8", label: "Step 8" },
-    { id: "step9", label: "Step 9" },
-    { id: "step10", label: "Step 10" },
-    { id: "step11", label: "Step 11" },
-    { id: "step12", label: "Step 12" },
-    { id: "step13", label: "Step 13" },
-    { id: "step14", label: "Step 14" },
-    { id: "step15", label: "Step 15" },
-    { id: "step16", label: "Step 16" },
-    { id: "step17", label: "Step 17" },
-    { id: "step18", label: "Step 18" },
-    { id: "step19", label: "Step 19" },
-    { id: "step20", label: "Step 20" },
+    { id: "t-car", label: "T-Car" },
+    { id: "proto", label: "Proto" },
+    { id: "m-car", label: "M/Car" },
+    { id: "p1", label: "P1" },
+    { id: "p2", label: "P2" },
+    { id: "sp1", label: "SP1" },
+    { id: "sp2", label: "SP2" },
+    { id: "m", label: "M" },
+];
+
+export const deliverableTypeOptions: MultiSelectOption[] = [
+    { id: "test-report", label: "시험보고서" },
+    { id: "vehicle-data", label: "차량데이터" },
+    { id: "evidence-data", label: "증적자료" },
+];
+
+export const testClassificationOptions: MultiSelectOption[] = [
+    { id: "vehicle-compliance", label: "실차적합성" },
+    { id: "cyber-security", label: "사이버보안" },
+    { id: "ota", label: "OTA" },
+    { id: "campaign", label: "캠페인" },
+    { id: "real-road-driving", label: "실도로주행" },
+];
+
+export const driveTypeOptions: MultiSelectOption[] = [
+    { id: "ice", label: "ICE" },
+    { id: "hev", label: "HEV" },
+    { id: "phev", label: "PHEV" },
+    { id: "ev", label: "EV" },
+    { id: "erev", label: "EREV" },
+];
+
+export const testItemOptions: MultiSelectOption[] = [
+    { id: "layout-review", label: "레이아웃검토" },
+    { id: "io-signal", label: "입출력신호" },
+    { id: "dark-current", label: "암전류" },
+    { id: "esd-impact", label: "정전기영향성" },
+    { id: "basic-control", label: "기본제어" },
+    { id: "system-interface", label: "시스템인터페이스" },
+    { id: "malicious-test", label: "악의시험" },
+    { id: "past-vehicle-issues", label: "과거차문제점" },
+    { id: "high-speed-can", label: "고속CAN통신" },
+    { id: "secure-flash", label: "Secure Flash" },
+    { id: "prevent-sw-downgrade", label: "Prevent SW Downgrade" },
+    { id: "advanced-seedkey", label: "Advanced SeedKey" },
+    { id: "uds-security-func", label: "UDS security Fucn" },
+    { id: "normal-update", label: "NormalUpdate" },
+    { id: "rollback", label: "Rollback" },
+    { id: "final-fail", label: "FinalFail" },
+];
+
+export const resultOptions: MultiSelectOption[] = [
+    { id: "pass", label: "PASS" },
+    { id: "fail", label: "FAIL" },
+    { id: "ok", label: "OK" },
+    { id: "ng", label: "NG" },
+];
+
+export const memTypeOptions: MultiSelectOption[] = [
+    { id: "single", label: "단일" },
+    { id: "dual", label: "이중화" },
 ];
