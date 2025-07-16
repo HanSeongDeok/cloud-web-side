@@ -56,7 +56,7 @@ const UploadButton = memo(() => {
                     Upload
                 </Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-5xl">
+                            <DialogContent className="sm:max-w-5xl">
                 <DialogHeader>
                     <DialogTitle>파일 업로드</DialogTitle>
                     <DialogDescription>

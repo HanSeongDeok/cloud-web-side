@@ -119,7 +119,9 @@ export const UploadBox = memo(({ className }: { className?: string }) => {
     };
 
     return (
-        <div className={className}>
+        <div 
+            className={className}
+        >
             <UploadCloud className="h-8 w-8 text-muted-foreground mb-2" />
             <p className="text-sm text-muted-foreground text-center">
                 파일 선택 또는 파일 및 폴더 드래그

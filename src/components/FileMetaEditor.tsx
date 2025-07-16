@@ -47,7 +47,7 @@ const FileMetaEditor = memo(() => {
     };
 
     return (
-        <div className="flex flex-col h-full w-full" onContextMenu={(e) => {e.preventDefault()}}>
+        <div className="flex flex-col h-full w-full">
             <div className="mb-2 flex items-center gap-2">
                 <Label className="mt-1 font-bold text-blue-500 text-left text-lg whitespace-nowrap">메타데이터 편집: </Label>
                 <TooltipProvider>

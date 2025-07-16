@@ -14,7 +14,10 @@ const FileUploadResizablePanel = memo(() => {
         setRightPanelWidth(sizes[1]);
     };
     return (
-        <ResizablePanelGroup direction="horizontal" onLayout={handleResize}>
+        <ResizablePanelGroup 
+            direction="horizontal" 
+            onLayout={handleResize} 
+        >
             <ResizablePanel defaultSize={leftPanelWidth} minSize={28} maxSize={50} className="p-2 border-r">
                 <FileUploadList />
             </ResizablePanel>

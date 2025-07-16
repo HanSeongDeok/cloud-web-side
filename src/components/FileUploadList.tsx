@@ -3,7 +3,7 @@ import { useFileUploadStore } from "@/stores/useFileInputStore";
 import { Button } from "./ui/button";
 import { ScrollArea } from "./ui/scroll-area";
 import { Separator } from "./ui/separator";
-import { Trash2 } from "lucide-react";
+import { Trash2, FolderOpen, Info, Settings, FileX } from "lucide-react";
 import { memo } from "react";
 import { UploadBox } from "./UploadBox";
 import { useFileMultiSelectionStore, useFileSelectionStore } from "@/stores/useFileSelectionStore";
@@ -24,22 +24,26 @@ const FileUploadList = memo(() => {
 
   const selectedFileIndices = useFileMultiSelectionStore((state) => state.selectedFileIndices);
   const setSelectedFileIndices = useFileMultiSelectionStore((state) => state.setSelectedFileIndices);
-  
+
   const isSelected = (index: number) => {
     return selectedFileIndices.includes(index);
   }
 
   return (
-    <div className="w-full h-full flex flex-col">
+    <div 
+      className="w-full h-full flex flex-col"
+    >
       <div className="font-bold text-sm mb-2">파일 ({files.length})</div>
-      <ScrollArea className="w-full h-120 mb-2 pr-4">
+      <ScrollArea 
+        className="w-full h-120 mb-2 pr-4"
+      >
         {files.map((file, index) => (
           <div key={`${file.name}-${file.lastModified}-${file.size}-${index}`} className="mb-1 grid">
             <ContextMenu>
               <ContextMenuTrigger asChild>
                 <Button
                   variant={isSelected(index) ? "secondary" : "outline"}
-                  className={`h-18 flex justify-between items-center p-2 overflow-hidden transition-colors ${
+                  className={`h-18 flex justify-between items-center p-2 overflow-hidden transition-colors cursor-pointer ${
                     isSelected(index) ? 
                       'text-blue-500 font-extrabold hover:text-blue-500 bg-gray-900 hover:bg-gray-900': 
                       'bg-muted'
@@ -68,9 +72,23 @@ const FileUploadList = memo(() => {
                   </div>
                 </Button>
               </ContextMenuTrigger>
-              <ContextMenuContent className="w-40 truncate max-w-full text-left">
-                <ContextMenuItem>
-                  삭제
+              <ContextMenuContent className="w-60 truncate max-w-full text-left">
+                <ContextMenuItem className="h-11 cursor-pointer font-bold text-sm flex items-center gap-2 px-3">
+                  <FolderOpen className="w-4 h-4" />
+                  파일 열기
+                </ContextMenuItem>
+                <ContextMenuItem className="h-11 cursor-pointer font-bold text-sm flex items-center gap-2 px-3">
+                  <Info className="w-4 h-4 " />
+                  파일 정보 보기
+                </ContextMenuItem>
+                <ContextMenuItem className="h-11 cursor-pointer font-bold text-sm flex items-center gap-2 px-3">
+                  <Settings className="w-4 h-4" />
+                  선택 파일 옵션 일괄 적용
+                </ContextMenuItem>
+                <ContextMenuSeparator />
+                <ContextMenuItem className="h-11 cursor-pointer font-bold text-sm flex items-center gap-2 px-3">
+                  <FileX className="w-4 h-4" />
+                  파일 삭제
                 </ContextMenuItem>
               </ContextMenuContent>
             </ContextMenu>
@@ -78,7 +96,9 @@ const FileUploadList = memo(() => {
           </div>
         ))}
       </ScrollArea>
-      <UploadBox className="mt-4 w-full h-20 flex flex-col items-center justify-center border border-dashed border-gray-300 rounded-md cursor-pointer bg-muted hover:bg-muted/50 relative"/>
+      <UploadBox className="mt-4 w-full h-20 flex flex-col items-center 
+          justify-center border border-dashed border-gray-300 
+          rounded-md cursor-pointer bg-muted hover:bg-muted/50 relative"/>
     </div>
   );
 });
