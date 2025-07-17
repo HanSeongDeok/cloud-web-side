@@ -3,7 +3,7 @@ import { useFileUploadStore } from "@/stores/useFileInputStore";
 import { Button } from "./ui/button";
 import { ScrollArea } from "./ui/scroll-area";
 import { Separator } from "./ui/separator";
-import { Trash2, FolderOpen, Info, Settings, FileX } from "lucide-react";
+import { Trash2, FolderOpen, Info, Settings, FileX, RotateCcw } from "lucide-react";
 import { memo } from "react";
 import { UploadBox } from "./UploadBox";
 import { useFileMultiSelectionStore, useFileSelectionStore } from "@/stores/useFileSelectionStore";
@@ -15,20 +15,57 @@ import {
     ContextMenuTrigger,
     ContextMenuLabel,
 } from "./ui/context-menu";
+import { useFileMetaDataStore } from "@/stores/useFileMetaDataStore";
 
 const FileUploadList = memo(() => {
+  /**
+   * 업로드된 파일 목록
+   */
   const files = useFileUploadStore((state) => state.selectedFiles);
-  
+  const setFiles = useFileUploadStore((state) => state.setSelectedFiles);
+
+  /**
+   * 선택된 파일 인덱스 목록
+   */
+  const selectedFileIndices = useFileMultiSelectionStore((state) => state.selectedFileIndices);
+  const setSelectedFileIndices = useFileMultiSelectionStore((state) => state.setSelectedFileIndices);
+
+  /**
+   * 현재 디스플레이 되는 파일 인덱스
+   */
   const selectedFileIndex = useFileSelectionStore((state) => state.selectedFileIndex);
   const setSelectedFileIndex = useFileSelectionStore((state) => state.setSelectedFileIndex);
 
-  const selectedFileIndices = useFileMultiSelectionStore((state) => state.selectedFileIndices);
-  const setSelectedFileIndices = useFileMultiSelectionStore((state) => state.setSelectedFileIndices);
+  /**
+   * 파일 메타데이터
+   */
+  const fileMetadata = useFileMetaDataStore((state) => state.fileMetadata);
+  const setFileMetadata = useFileMetaDataStore((state) => state.setFileMetadata);
+  const clearFileMetadata = useFileMetaDataStore((state) => state.clearFileMetadata);
+
+  /**
+   * 선택된 파일에 일괄 옵션 적용
+   */
+  const applyOptionsToSelectedFiles = () => {
+    const selectedFiles = files.filter((_, i) => selectedFileIndices.includes(i));
+    const baseFileMetadata = fileMetadata[selectedFileIndex];
+
+    if(baseFileMetadata) {
+      selectedFiles.forEach((_, index) => {
+        setFileMetadata(index, baseFileMetadata);
+      });
+    }
+  }
+
+  const clearSelectedFiles = () => {
+    selectedFileIndices.forEach((index) => {
+      clearFileMetadata(index);
+    });
+  }
 
   const isSelected = (index: number) => {
     return selectedFileIndices.includes(index);
   }
-
   return (
     <div 
       className="w-full h-full flex flex-col"
@@ -49,6 +86,8 @@ const FileUploadList = memo(() => {
                       'bg-muted'
                   }`}
                   onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
                     setSelectedFileIndex(index);
                     setSelectedFileIndices(e);
                   }}
@@ -62,33 +101,50 @@ const FileUploadList = memo(() => {
                     </div>
                   </div>
                   <div 
-                    className="ml-2 flex-shrink-0 p-1 rounded cursor-pointer transition-colors text-red-500"
+                    className="ml-2 flex-shrink-0 p-1 rounded transition-colors text-red-500 cursor-pointer"
                     onClick={(e) => {
-                      e.stopPropagation();
                       e.preventDefault();
+                      e.stopPropagation();
+                      setFiles(files.filter((_, i) => i !== index));
+                      clearFileMetadata(index);
                     }}
                   >
                     <Trash2 className="w-4 h-4" />
                   </div>
                 </Button>
               </ContextMenuTrigger>
-              <ContextMenuContent className="w-60 truncate max-w-full text-left">
-                <ContextMenuItem className="h-11 cursor-pointer font-bold text-sm flex items-center gap-2 px-3">
-                  <FolderOpen className="w-4 h-4" />
-                  파일 열기
-                </ContextMenuItem>
+              <ContextMenuContent className="w-58 truncate max-w-full text-left">
                 <ContextMenuItem className="h-11 cursor-pointer font-bold text-sm flex items-center gap-2 px-3">
                   <Info className="w-4 h-4 " />
                   파일 정보 보기
                 </ContextMenuItem>
-                <ContextMenuItem className="h-11 cursor-pointer font-bold text-sm flex items-center gap-2 px-3">
+                <ContextMenuItem 
+                  className="h-11 cursor-pointer font-bold text-sm flex items-center gap-2 px-3"
+                  onClick={applyOptionsToSelectedFiles}
+                >
                   <Settings className="w-4 h-4" />
                   선택 파일 옵션 일괄 적용
                 </ContextMenuItem>
                 <ContextMenuSeparator />
-                <ContextMenuItem className="h-11 cursor-pointer font-bold text-sm flex items-center gap-2 px-3">
+                <ContextMenuItem 
+                  className="h-11 cursor-pointer font-bold text-sm flex items-center gap-2 px-3"
+                  onClick={clearSelectedFiles}
+                >
+                  <RotateCcw className="w-4 h-4" />
+                  선택 파일 초기화
+                </ContextMenuItem>
+                <ContextMenuSeparator />
+                <ContextMenuItem 
+                  className="h-11 cursor-pointer font-bold text-sm flex items-center gap-2 px-3"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    setFiles(files.filter((_, i) => !selectedFileIndices.includes(i)));
+                    clearFileMetadata(index);  
+                  }}
+                >
                   <FileX className="w-4 h-4" />
-                  파일 삭제
+                  선택 파일 삭제
                 </ContextMenuItem>
               </ContextMenuContent>
             </ContextMenu>

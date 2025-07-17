@@ -1,18 +1,22 @@
+import { get } from "lodash";
 import { create } from "zustand";
 
 interface FileSelectionState {
   selectedFileIndex: number;
   setSelectedFileIndex: (index: number) => void;
+  clearSelectedFileIndex: () => void;
 }
 
 interface FileMultiSelectionState {
   selectedFileIndices: number[];
   setSelectedFileIndices: (e: React.MouseEvent) => void;
+  clearSelectedFileIndices: () => void;
 }
 
-export const useFileSelectionStore = create<FileSelectionState>((set) => ({
+export const useFileSelectionStore = create<FileSelectionState>((set, get) => ({
   selectedFileIndex: 0,
   setSelectedFileIndex: (index) => set({ selectedFileIndex: index }),
+  clearSelectedFileIndex: () => set({ selectedFileIndex: 0 }),
 }));
 
 export const useFileMultiSelectionStore = create<FileMultiSelectionState>((set, get) => ({
@@ -40,6 +44,9 @@ export const useFileMultiSelectionStore = create<FileMultiSelectionState>((set, 
     } 
     
     set({ selectedFileIndices: [index] });
-  }
+  },
+  clearSelectedFileIndices: () => {
+    set({ selectedFileIndices: [0] });
+  },
 }));
 

@@ -15,6 +15,8 @@ import { useFileToggleStore, useFileUploadStore } from "@/stores/useFileInputSto
 import { Switch } from "@components/ui/switch";
 import FileUploadResizablePanel from "./FileUploadResizablePanel";
 import { UploadBox } from "./UploadBox";
+import { useFileMetaDataStore } from "@/stores/useFileMetaDataStore";
+import { useFileMultiSelectionStore, useFileSelectionStore } from "@/stores/useFileSelectionStore";
 
 const UploadButton = memo(() => {
     // 업로드 다이얼로그 열기 닫기
@@ -28,16 +30,20 @@ const UploadButton = memo(() => {
     const isFolderMode = useFileToggleStore((state) => state.isFolderMode);
     const setIsFolderMode = useFileToggleStore((state) => state.setIsFolderMode);
 
+    // 파일 메타데이터 초기화
+    const clearAllMetadata = useFileMetaDataStore((state) => state.clearAllMetadata);
+    const clearSelectedFileIndex = useFileSelectionStore((state) => state.clearSelectedFileIndex);
+    const clearSelectedFileIndices = useFileMultiSelectionStore((state) => state.clearSelectedFileIndices);
+
     const handleReset = () => {
         clearFiles();
-        const fileInput = document.getElementById('fileInput') as HTMLInputElement | null;
-        if (fileInput) {
-            fileInput.value = "";
-        }
+        clearAllMetadata();
+        clearSelectedFileIndex();
+        clearSelectedFileIndices();
     }
     // TODO 업로드 로직 추가
     const handleUpload = () => {
-    
+
     }
 
     const handleCancel = () => {
@@ -56,7 +62,7 @@ const UploadButton = memo(() => {
                     Upload
                 </Button>
             </DialogTrigger>
-                            <DialogContent className="sm:max-w-5xl">
+            <DialogContent className="sm:max-w-5xl">
                 <DialogHeader>
                     <DialogTitle>파일 업로드</DialogTitle>
                     <DialogDescription>
@@ -77,9 +83,9 @@ const UploadButton = memo(() => {
                 </div>
                 <Separator />
 
-                {selectedFiles.length > 0 ? 
-                    <FileUploadResizablePanel/> : 
-                    <UploadBox className="mt-2 w-full h-120 flex flex-col items-center justify-center border border-dashed border-gray-300 rounded-md cursor-pointer bg-muted hover:bg-muted/50 relative"/>}
+                {selectedFiles.length > 0 ?
+                    <FileUploadResizablePanel /> :
+                    <UploadBox className="mt-2 w-full h-120 flex flex-col items-center justify-center border border-dashed border-gray-300 rounded-md cursor-pointer bg-muted hover:bg-muted/50 relative" />}
 
                 <div className="flex justify-between items-center gap-2 mt-4">
                     <Button variant="outline" onClick={handleReset}>

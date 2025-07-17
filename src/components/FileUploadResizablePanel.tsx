@@ -22,7 +22,7 @@ const FileUploadResizablePanel = memo(() => {
                 <FileUploadList />
             </ResizablePanel>
             <ResizableHandle />
-            <ResizablePanel defaultSize={rightPanelWidth} minSize={50} className="p-6">
+            <ResizablePanel defaultSize={rightPanelWidth} minSize={50} className="p-6 ">
                 <FileMetaEditor />
             </ResizablePanel>
         </ResizablePanelGroup>

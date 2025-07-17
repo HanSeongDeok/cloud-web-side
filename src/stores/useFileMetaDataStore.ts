@@ -9,7 +9,11 @@ export interface FileMetadata {
     ecu: string;
     testItem: string;
     result: string;
+    tcNumber: string;
+    swVersion: string;
+    description: string;
     memType: string;
+    deparr: string;
 }
 
 interface FileMetaDataStore {
@@ -45,7 +49,11 @@ export const useFileMetaDataStore = create<FileMetaDataStore>((set, get) => ({
             ecu: "",
             testItem: "",
             result: "",
+            tcNumber: "",
+            swVersion: "",
+            description: "",
             memType: "",
+            deparr: "",
         };
     },
     
@@ -56,6 +64,7 @@ export const useFileMetaDataStore = create<FileMetaDataStore>((set, get) => ({
             return { fileMetadata: newFileMetadata };
         });
     },
+
     clearAllMetadata: () => {
         set({ fileMetadata: {} });
     },

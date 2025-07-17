@@ -10,6 +10,15 @@ document.addEventListener('contextmenu', (e) => {
   e.preventDefault();
 });
 
+// 파일 드래그 기본 동작 차단
+document.addEventListener('dragover', (e) => {
+  e.preventDefault();
+});
+
+document.addEventListener('drop', (e) => {
+  e.preventDefault();
+});
+
 ModuleRegistry.registerModules([AllCommunityModule])
 createRoot(document.getElementById('root')!).render(
   <BrowserRouter>
