@@ -16,6 +16,7 @@ import {
     ContextMenuLabel,
 } from "./ui/context-menu";
 import { useFileMetaDataStore } from "@/stores/useFileMetaDataStore";
+import { handleDrop, handleFileChange } from "@/handlers/file.drop.handler";
 
 const FileUploadList = memo(() => {
   /**
@@ -73,6 +74,8 @@ const FileUploadList = memo(() => {
       <div className="font-bold text-sm mb-2">파일 ({files.length})</div>
       <ScrollArea 
         className="w-full h-120 mb-2 pr-4"
+        onDrop={handleDrop}
+        onDragOver={(e) => e.preventDefault()}
       >
         {files.map((file, index) => (
           <div key={`${file.name}-${file.lastModified}-${file.size}-${index}`} className="mb-1 grid">
