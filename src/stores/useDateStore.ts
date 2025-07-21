@@ -7,7 +7,6 @@ interface DateState {
   setEndDate: (date: string) => void;
 }
 
-// version 1
 export const useDateStore = create<DateState>((set) => ({
   startDate: "",
   endDate: "",

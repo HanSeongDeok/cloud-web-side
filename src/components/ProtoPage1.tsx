@@ -1,10 +1,7 @@
 import { memo, useRef, useState } from "react";
 import DataTable from "@/components/DataTable";
 import DataInput from "./DataInput";
-import { Button } from "./ui/button";
-import { Upload } from "lucide-react";
 import { TableDropDownMenu } from "./DropDownMenu";
-import { handleFileSelect } from "@/handlers/file.upload.handler";
 import VehicleTypeMultiSelect from "./VehicleTypeMultiSelect";
 import ECUTypeMultiSelect from "./ECUTypeMultiSelect";
 import StepMultiSelect from "./StepMultiSelect";

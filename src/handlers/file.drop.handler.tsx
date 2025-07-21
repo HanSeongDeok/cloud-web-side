@@ -18,21 +18,33 @@ export const handleDrop = async (e: React.DragEvent<HTMLDivElement>) => {
 
     const files: File[] = [];
     const items = Array.from(e.dataTransfer.items || []);
+    const fileList = Array.from(e.dataTransfer.files || []);
+    const folderInfo: { name: string, size: number }[] = [];
 
     for (const item of items) {
         const entry = item.webkitGetAsEntry?.();
         if (entry?.isDirectory) {
+
+            folderInfo.push({ name: entry.name, size: 0 });
+
             const subFiles = await collectFilesFromDirectory(entry);
             const filteredFiles = subFiles.filter((file) => !selectedFiles.some((f) => f.name === file.name));
             files.push(...filteredFiles);
-        } else {
-            const file = item.getAsFile();
-            if (file && !selectedFiles.some((f) => f.name === file.name)) {
-                files.push(file);
-            }
+        }
+    }
+    
+    const tempFiles: File[] = [];
+    for (const file of fileList) {
+        const isFolder = folderInfo.some((folder) => 
+            folder.name === file.name && folder.size === file.size
+        );
+        
+        if (!isFolder && !selectedFiles.some((f) => f.name === file.name)) {
+            tempFiles.push(file);
         }
     }
 
+    files.unshift(...tempFiles);
     if (files.length > 0) {
         setSelectedFiles([...selectedFiles, ...files]);
     }
