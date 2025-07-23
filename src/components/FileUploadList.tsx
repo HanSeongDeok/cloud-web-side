@@ -16,7 +16,7 @@ import {
     ContextMenuLabel,
 } from "./ui/context-menu";
 import { useFileMetaDataStore } from "@/stores/useFileMetaDataStore";
-import { handleDrop, handleFileChange } from "@/handlers/file.drop.handler";
+import { handleDrop, handleFileChange } from "@/handlers/events/file.drop.handler";
 
 const FileUploadList = memo(() => {
   /**

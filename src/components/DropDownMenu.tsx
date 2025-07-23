@@ -1,4 +1,4 @@
-import type { Payment } from "@/handlers/dataTable.config.handler"
+import type { Payment } from "@/handlers/events/dataTable.config.handler"
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,

@@ -1,8 +1,8 @@
-import type { Payment } from "@/handlers/dataTable.config.handler";
+import type { Payment } from "@/handlers/events/dataTable.config.handler";
 import { create } from "zustand";
 import type { ColDef } from "ag-grid-community";
-import { columnDefs, type Column } from "@/handlers/dataTable.config.handler";
-import { fetchColumns, fetchData } from "@/handlers/dataTable.service.handler";
+import { columnDefs, type Column } from "@/handlers/events/dataTable.config.handler";
+import { fetchColumns, fetchData } from "@/handlers/services/dataTable.service.handler";
 
 const tableData: Payment[] = [
     {
@@ -281,9 +281,13 @@ export const useDataTableStore = create<DataTableStore>((set, get) => ({
     fetchData: async () => {
         try {
             const data = await fetchData();
-            data.map((item) => {
+            data.forEach((item) => {
                 item.testResult = item.testResult ? "PASS" : "FAIL";
+                Object.entries(item.customColumns).forEach(([key, value]) => {
+                    item[key] = value;
+                });
             });
+
             get().setData(data);
         } catch (error) {
             console.error('Failed to fetch columns:', error);
@@ -291,4 +295,3 @@ export const useDataTableStore = create<DataTableStore>((set, get) => ({
     }
 }));
 
-    

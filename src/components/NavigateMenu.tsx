@@ -11,7 +11,7 @@ import { SidebarTrigger, useSidebar, SidebarProvider } from "./ui/sidebar";
 import Layout from "@/layout";
 import { usePageStore } from "@/stores/useNavigateStore";
 import "@styles/NavMenu.css";
-import { PageRenderer } from "@/handlers/protoPage.renderer.handler";
+import { PageRenderer } from "@/handlers/events/protoPage.renderer.handler";
 import ProtoPage1 from "@/components/ProtoPage1";
 import ProtoPage3 from "@/components/ProtoPage3";
 import ProtoPage2 from "@/components/ProtoPage2";

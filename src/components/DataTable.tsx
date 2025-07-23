@@ -1,7 +1,7 @@
 import * as React from "react"
 import { AgGridReact } from "ag-grid-react"
 import "@/styles/DataTable.css"
-import { columnDefs, onRowClicked, onSelectionChanged } from "@/handlers/dataTable.config.handler"
+import { columnDefs, onRowClicked, onSelectionChanged } from "@/handlers/events/dataTable.config.handler"
 import { themeMaterial } from "ag-grid-community"
 import { useTableDataStore } from "@/stores/useTableDataStore"
 import { useColumnsStore } from "@/stores/useColumnsStore"

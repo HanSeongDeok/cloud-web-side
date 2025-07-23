@@ -6,24 +6,24 @@ export const API_CONFIG = {
     },
   } as const;
   
-export const DataTable = {
+
+/**
+ * 개별 API EndPoint
+ */
+export const DATA_TABLE = {
   columns: '/api/data-table/columns',
   data: '/api/data-table/all-data',
+  search: '/api/data-table/search',
 } as const;
 
-export const File = {
-  upload: '/file/upload',
-  download: '/file/download',
-} as const;
 
+/**
+ * 전체 API EndPoint 모음 객체
+ */
 export const API_ENDPOINTS = {
     dataTable: {
       columns: '/data-table/columns',
       data: '/data-table/all-data',
-    },
-    file: {
-      upload: '/file/upload',
-      download: '/file/download',
     },
   } as const; 
 

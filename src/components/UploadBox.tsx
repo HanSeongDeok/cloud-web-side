@@ -1,7 +1,7 @@
 import { UploadCloud } from "lucide-react";
 import { Input } from "./ui/input";
 import { memo } from "react";
-import { handleDrop, handleFileChange } from "@/handlers/file.drop.handler";
+import { handleDrop, handleFileChange } from "@/handlers/events/file.drop.handler";
 
 /**
  * 파일 업로드 박스

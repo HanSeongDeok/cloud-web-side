@@ -43,6 +43,7 @@ const DataInput = memo(() => {
     // 검색 키워드 상태
     const searchKeyword = useSearchKeywordStore((state) => state.searchKeyword);
     const setSearchKeyword = useSearchKeywordStore((state) => state.setSearchKeyword);
+    const searchData = useSearchKeywordStore((state) => state.searchData);
 
     // 필터 검색의 업로더 이름 상태
     const uploader = useFilterUploaderStore((state) => state.uploader);
@@ -95,6 +96,11 @@ const DataInput = memo(() => {
                     value={searchKeyword}
                     onChange={(e) => {
                         setSearchKeyword(e.target.value);
+                    }}
+                    onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                            searchData(searchKeyword);
+                        }
                     }}
                     className="w-full h-14 text-lg px-6 pr-12"
                 />
