@@ -1,4 +1,4 @@
-import ProtoPage1 from "@/components/ProtoPage1";
+import MainPage from "@/components/pages/MainPage";
 import { create } from "zustand";
 
 interface PageStore {
@@ -7,6 +7,6 @@ interface PageStore {
 }
 
 export const usePageStore = create<PageStore>((set) => ({
-  activePage: ProtoPage1,
+  activePage: MainPage,
   setActivePage: (page) => set({ activePage: page }),
 }));

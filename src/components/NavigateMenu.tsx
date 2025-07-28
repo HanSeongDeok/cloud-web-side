@@ -12,9 +12,9 @@ import Layout from "@/layout";
 import { usePageStore } from "@/stores/useNavigateStore";
 import "@styles/NavMenu.css";
 import { PageRenderer } from "@/handlers/events/protoPage.renderer.handler";
-import ProtoPage1 from "@/components/ProtoPage1";
-import ProtoPage3 from "@/components/ProtoPage3";
-import ProtoPage2 from "@/components/ProtoPage2";
+import ProtoPage1 from "@/components/pages/MainPage";
+import ProtoPage3 from "@/components/pages/ProtoPage3";
+import ProtoPage2 from "@/components/pages/ProtoPage2";
 
 const sidebarStyle = (open: boolean): React.CSSProperties => ({
     transform: `translateX(${open ? '380px' : '0px'})`,

@@ -7,6 +7,7 @@ import { RowDropDownMenu } from "@/components/DropDownMenu"
 import { useSelectionStore } from "@/stores/useSelectionStore"
 import { useSearchKeywordStore } from "@/stores/useSearchKeywordStore";
 import { debounce, throttle } from "lodash";  
+import { API_CONFIG, DATA_TABLE } from "@/api/api.config";
 
 export type Column = {
   fileName: string
@@ -285,8 +286,6 @@ export const columnDefs = (columns: Column): ColDef<Column>[] => {
     createUpdatedAtColumn(columns.updatedAt),
   ]
 }
-
-
 
 // 선택 변경 이벤트 핸들러
 export const onSelectionChanged = (event: SelectionChangedEvent) => {

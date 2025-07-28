@@ -13,6 +13,7 @@ export const API_CONFIG = {
 export const DATA_TABLE = {
   columns: '/api/data-table/columns',
   data: '/api/data-table/all-data',
+  dataTotalCount: '/api/data-table/total-count',
   search: '/api/data-table/search',
 } as const;
 
