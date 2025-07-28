@@ -9,6 +9,8 @@ import {
 } from "@/components/ui/pagination"
 import { usePaginationStore } from "@/stores/usePaginationState ";
 import { memo } from "react";
+import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from "lucide-react";
+import { Button } from "./ui/button";
 
 const PaginationComponent = memo(() => {
   const pageSize = usePaginationStore((state) => state.pageSize);
@@ -36,14 +38,29 @@ const PaginationComponent = memo(() => {
   return (
     <Pagination className="flex justify-center scale-150">
       <PaginationContent className="flex justify-center gap-x-1">
+        {/* << 처음으로 */}
+        <PaginationItem>
+          <Button
+            onClick={() => goToPage(1)}
+            variant="outline"
+            className="w-8 h-8 p-0 flex bg-gray-500 border-gray-600 hover:bg-gray-600 cursor-pointer"
+          >
+            <ChevronsLeft className="h-4 w-4 text-white" />
+          </Button>
+        </PaginationItem>
+        {/* < 이전 */}
         <PaginationItem>
           <PaginationPrevious
             href="#"
             onClick={(e) => {
               e.preventDefault();
               goToPage(currentPage - 1);
-            }} />
+            }}
+            className="w-8 h-8 p-0 flex bg-gray-500 border-gray-600 hover:bg-gray-600"
+          >
+          </PaginationPrevious>
         </PaginationItem>
+        {/* 페이지 번호 */}
         {pages.map((page) => (
           <PaginationItem key={page}>
             <PaginationLink
@@ -58,6 +75,7 @@ const PaginationComponent = memo(() => {
             </PaginationLink>
           </PaginationItem>
         ))}
+        {/* 페이지 번호 끝 */}
         {endPage < totalPages && (
           <>
             <PaginationItem className="mr-3">
@@ -76,12 +94,27 @@ const PaginationComponent = memo(() => {
             </PaginationItem>
           </>
         )}
+        {/* > 다음  */}
         <PaginationItem>
-          <PaginationNext href="#"
+          <PaginationNext
+            href="#"
             onClick={(e) => {
               e.preventDefault();
               goToPage(currentPage + 1);
-            }} />
+            }}
+            className="w-8 h-8 p-0 flex bg-gray-500 border-gray-600 hover:bg-gray-600 text-white"
+          >
+          </PaginationNext>
+        </PaginationItem>
+        {/* > 마지막으로 */}
+        <PaginationItem>
+          <Button
+            onClick={() => goToPage(totalPages)}
+            variant="outline"
+            className="w-8 h-8 p-0 flex bg-gray-500 border-gray-600 hover:bg-gray-600 cursor-pointer"
+          >
+            <ChevronsRight className="h-4 w-4 text-white" />
+          </Button>
         </PaginationItem>
       </PaginationContent>
     </Pagination>
@@ -89,5 +122,6 @@ const PaginationComponent = memo(() => {
 });
 
 export default PaginationComponent;
+
 
 

@@ -6,6 +6,7 @@ import { useColumnsStore } from "@/stores/useColumnsStore"
 import { useDataTableStore } from "@/stores/useTableDataStore"
 import type { PaginationInfo } from "@/stores/usePaginationState "
 import { usePaginationStore } from "@/stores/usePaginationState "
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 
 const DataTable = React.memo(() => {
   const columns = useColumnsStore((state) => state.columns);
@@ -24,6 +25,9 @@ const DataTable = React.memo(() => {
 
   const setPageSize = usePaginationStore((state) => state.setPageSize);
   const fetchTotalRows = usePaginationStore((state) => state.fetchTotalRows);
+
+  // 페이지 사이즈 옵션
+  const pageSizeOptions = [10, 20, 50, 100];
 
   const setPaginationInfo = (): void => {
     if (gridRef.current) {
@@ -68,17 +72,23 @@ const DataTable = React.memo(() => {
     fetchColumns();
   };
 
+  const handlePageSizeChange = (newPageSize: string) => {
+    const size = parseInt(newPageSize);
+    setPageSize(size);
+    fetchTotalRows();
+  };
+
   return (
+    <div className="w-full">
       <div className="ag-theme-custom ag-grid-container">
         <AgGridReact
           ref={gridRef}
           theme={themeMaterial}
           rowData={data}
           columnDefs={columns}
-          pagination={true}
+          pagination={false}
           paginationPageSize={pageSize}
-          paginationPageSizeSelector={[10, 20, 50, 100]}
-          suppressPaginationPanel={false}
+          suppressPaginationPanel={true} // 기본 페이지네이션 패널 숨기기
           animateRows={true}
           domLayout="normal"
           rowSelection="multiple"
@@ -91,7 +101,25 @@ const DataTable = React.memo(() => {
           onPaginationChanged={handlePaginationChanged}
         />
       </div>
-    )
+      {/* 커스텀 페이지 사이즈 선택기 */}
+      <div className="flex items-center justify-end gap-2 mt-2 pr-2">
+        <span className="text-sm text-gray-600">페이지당 행 수:</span>
+        <Select value={pageSize.toString()} onValueChange={handlePageSizeChange}>
+          <SelectTrigger className="w-20">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            {pageSizeOptions.map((size) => (
+              <SelectItem key={size} value={size.toString()}>
+                {size}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+
+    </div>
+  )
 });
 
 export default DataTable;
