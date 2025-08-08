@@ -14,4 +14,4 @@ export const useSearchKeywordStore = create<SearchKeywordState>((set) => ({
         const data = await searchData(keyword);
         return data;
     }
-})); 
+}));

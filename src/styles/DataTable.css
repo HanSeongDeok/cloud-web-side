@@ -6,7 +6,7 @@
 
 .ag-grid-container {
     width: 100%;
-    min-width: 1400px;
+    min-width: 1500px;
 }
 
 /* 숨겨진 파일 input */
@@ -16,7 +16,7 @@
 
 /* ag-grid 컨테이너 */
 .ag-grid-container {
-    height: 600px;
+    height: 670px;
     width: 100%;
 }
 
@@ -59,15 +59,18 @@
 
 /* Material 테마 헤더 폰트 색상 커스터마이징 */
 .ag-theme-custom .ag-header-cell {
-    color: #9ca3af !important; /* 옅은 회색 */
+    color: #9ca3af !important;
+    /* 옅은 회색 */
 }
 
 .ag-theme-custom .ag-header-cell-label {
-    color: #9ca3af !important; /* 옅은 회색 */
+    color: #9ca3af !important;
+    /* 옅은 회색 */
 }
 
 .ag-theme-custom .ag-header-cell-text {
-    color: #9ca3af !important; /* 옅은 회색 */
+    color: #9ca3af !important;
+    /* 옅은 회색 */
 }
 
 
@@ -90,31 +93,6 @@
     text-align: center !important;
 }
 
-.ag-cell {
-    text-align: center !important;
-}
-
 .ag-header-cell-label {
     justify-content: center !important;
-}
-
-/* 체크박스 가운데 정렬 */
-.ag-cell[col-id="checkbox"] {
-    display: flex !important;
-    justify-content: center !important;
-    align-items: center !important;
-}
-
-.ag-header-cell[col-id="checkbox"] {
-    display: flex !important;
-    justify-content: center !important;
-    align-items: center !important;
-}
-
-.ag-header-cell[col-id="checkbox"] .ag-checkbox {
-    margin: 0 auto 0 7px !important;
-}
-
-.ag-cell[col-id="checkbox"] .ag-checkbox {
-    margin: 0 auto 0 7px !important;
 }

@@ -1,7 +1,7 @@
 import { memo, useState } from "react";
 import { Input } from "@components/ui/input";
 import { Button } from "@components/ui/button";
-import { Filter } from "lucide-react";
+import { Filter, Search } from "lucide-react";
 import { RefreshCcw } from "lucide-react";
 import { useSearchKeywordStore } from "@/stores/useSearchKeywordStore";
 import {
@@ -12,7 +12,6 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@components/ui/dialog";
-import { useFilterIsOpenStore } from "@/stores/useIsDialogOpenStore";
 import {
     Select,
     SelectTrigger,
@@ -21,61 +20,27 @@ import {
     SelectItem,
 } from "@components/ui/select";
 import { Label } from "@components/ui/label";
-import { useFilterUploaderStore } from "@/stores/useUploaderStore";
-import { useFileTypeStore } from "@/stores/useFileTypeStore";
-import { useFileNameStore } from "@/stores/useFileNameStore";
 import { Separator } from "@components/ui/separator";
-import { useVehicleStore } from "@/stores/useVehicleStore";
-import { useStepStore } from "@/stores/useStepStore";
 import { ScrollArea } from "@components/ui/scroll-area";
-import useResultStore from "@/stores/useResultStore";
-import { useDateStore } from "@/stores/useDateStore";
 
 /**
  * 데이터 입력 컴포넌트 - ag-grid용
  * @returns 데이터 입력 컴포넌트
  */
 const DataInput = memo(() => {
-    // 필터 다이얼로그 열기 닫기
-    const isOpen = useFilterIsOpenStore((state) => state.isOpen);
-    const setIsOpen = useFilterIsOpenStore((state) => state.setIsOpen);
-
-    // 검색 키워드 상태
     const searchKeyword = useSearchKeywordStore((state) => state.searchKeyword);
     const setSearchKeyword = useSearchKeywordStore((state) => state.setSearchKeyword);
     const searchData = useSearchKeywordStore((state) => state.searchData);
 
-    // 필터 검색의 업로더 이름 상태
-    const uploader = useFilterUploaderStore((state) => state.uploader);
-    const setUploader = useFilterUploaderStore((state) => state.setUploader);
-
-    // 필터 검색의 파일 타입 상태
-    const fileType = useFileTypeStore((state) => state.filetype);
-    const setFileType = useFileTypeStore((state) => state.setFileType);
-
-    // 필터 검색의 파일 이름 상태
-    const fileName = useFileNameStore((state) => state.fileName);
-    const setFileName = useFileNameStore((state) => state.setFileName);
-
-    // 필터 검색의 차량 상태
-    const vehicle = useVehicleStore((state) => state.vehicle);
-    const setVehicle = useVehicleStore((state) => state.setVehicle);
-
-    // 필터 검색의 단계 상태
-    const step = useStepStore((state) => state.step);
-    const setStep = useStepStore((state) => state.setStep);
-
-    // 필터 검색의 테스트 결과 상태
-    const result = useResultStore((state) => state.result);
-    const setResult = useResultStore((state) => state.setResult);
-
-    // 필터 검색의 날짜 범위 시작일 상태
-    const startDate = useDateStore((state) => state.startDate);
-    const setStartDate = useDateStore((state) => state.setStartDate);
-
-    // 필터 검색의 날짜 범위 종료일 상태
-    const endDate = useDateStore((state) => state.endDate);
-    const setEndDate = useDateStore((state) => state.setEndDate);
+    const [isOpen, setIsOpen] = useState(false);
+    const [fileType, setFileType] = useState("");
+    const [uploader, setUploader] = useState("");
+    const [fileName, setFileName] = useState("");
+    const [vehicle, setVehicle] = useState("");
+    const [step, setStep] = useState("");
+    const [result, setResult] = useState("");
+    const [startDate, setStartDate] = useState("");
+    const [endDate, setEndDate] = useState("");
 
     const handleReset = () => {
         setFileType("");
@@ -88,9 +53,21 @@ const DataInput = memo(() => {
         setEndDate("");
     };
 
+    const handleSearch = () => {
+        searchData(searchKeyword);
+    };
+
     return (
         <div className="flex justify-center w-full mb-6">
-            <div className="relative w-[1000px]">
+            <div className="relative w-[1200px]">
+                <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={(e) => e.preventDefault()}
+                    className="absolute left-2 top-1/2 transform -translate-y-1/2 h-10 w-10 p-0 hover:bg-gray-100"
+                >
+                    <Search className="!h-5 !w-5" />
+                </Button>
                 <Input
                     placeholder="Filter data..."
                     value={searchKeyword}
@@ -99,10 +76,10 @@ const DataInput = memo(() => {
                     }}
                     onKeyDown={(e) => {
                         if (e.key === 'Enter') {
-                            searchData(searchKeyword);
+                            handleSearch();
                         }
                     }}
-                    className="w-full h-14 text-lg px-6 pr-12"
+                    className="w-full h-15 !text-lg pl-13 pr-13"
                 />
                 <Dialog open={isOpen} onOpenChange={setIsOpen}>
                     <DialogTrigger asChild>
@@ -111,7 +88,7 @@ const DataInput = memo(() => {
                             size="sm"
                             className="absolute right-2 top-1/2 transform -translate-y-1/2 h-10 w-10 p-0 hover:bg-gray-100"
                         >
-                            <Filter className="h-6 w-6" />
+                            <Filter className="!h-5 !w-5" />
                         </Button>
                     </DialogTrigger>
                     <DialogContent className="sm:max-w-[500px]">

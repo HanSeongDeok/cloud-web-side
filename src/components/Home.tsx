@@ -21,8 +21,11 @@ const Home = memo(() => {
         <button className="btn" onClick={() => setCount((count) => count + 1)}>
           count is {count}
         </button>
-        <NavLink to="/prototype">
-          <button className="btn">Prototype</button>
+        <NavLink to="/login">
+          <button className="btn">Login</button>
+        </NavLink>
+        <NavLink to="/storage">
+          <button className="btn">VTDM</button>
         </NavLink>
       </div>
       <p className="testTitle">

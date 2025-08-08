@@ -43,6 +43,7 @@ const createFileNameColumn = (fileName: string): ColDef<Column> => {
   return {
     headerName: fileName, 
     field: 'fileName', 
+    tooltipValueGetter: (params) => params.value,
     width: 150, 
     cellStyle: { textAlign: 'center' } 
   }
@@ -52,6 +53,7 @@ const createTestItemColumn = (testItem: string): ColDef<Column> => {
   return {
     headerName: testItem, 
     field: 'testItem', 
+    tooltipValueGetter: (params) => params.value,
     width: 150, 
     cellStyle: { textAlign: 'center' } 
   }
@@ -62,6 +64,7 @@ const createDriveTypeColumn = (driveType: string): ColDef<Column> => {
   return {
     headerName: driveType, 
     field: 'driveType', 
+    tooltipValueGetter: (params) => params.value,
     width: 150, 
     cellStyle: { textAlign: 'center' } 
   }
@@ -72,6 +75,7 @@ const createTcNumColumn = (tcNum: string): ColDef<Column> => {
   return {
     headerName: tcNum, 
     field: 'tcNum', 
+    tooltipValueGetter: (params) => params.value,
     width: 150, 
     cellStyle: { textAlign: 'center' } 
   }
@@ -82,6 +86,7 @@ const createMemTypeColumn = (memType: string): ColDef<Column> => {
   return {
     headerName: memType, 
     field: 'memType', 
+    tooltipValueGetter: (params) => params.value,
     width: 150, 
     cellStyle: { textAlign: 'center' } 
   }
@@ -92,6 +97,7 @@ const createFilePathColumn = (filePath: string): ColDef<Column> => {
   return {
     headerName: filePath, 
     field: 'filePath', 
+    tooltipValueGetter: (params) => params.value,
     width: 150, 
     cellStyle: { textAlign: 'center' } 
   }
@@ -102,6 +108,7 @@ const createTestTypeColumn = (testType: string): ColDef<Column> => {
   return {
     headerName: testType, 
     field: 'testType', 
+    tooltipValueGetter: (params) => params.value,
     width: 150, 
     cellStyle: { textAlign: 'center' } 
   }
@@ -111,6 +118,7 @@ const createDescriptionColumn = (description: string): ColDef<Column> => {
   return {
     headerName: description, 
     field: 'description', 
+    tooltipValueGetter: (params) => params.value,
     width: 150, 
     cellStyle: { textAlign: 'center' } 
   }
@@ -120,6 +128,7 @@ const createFileModifiedDateColumn = (fileModifiedDate: string): ColDef<Column> 
   return {
     headerName: fileModifiedDate, 
     field: 'fileModifiedDate', 
+    tooltipValueGetter: (params) => params.value,
     width: 150, 
     cellStyle: { textAlign: 'center' } 
   }
@@ -129,6 +138,7 @@ const createDevStepColumn = (devStep: string): ColDef<Column> => {
   return {
     headerName: devStep, 
     field: 'devStep', 
+    tooltipValueGetter: (params) => params.value,
     width: 150, 
     cellStyle: { textAlign: 'center' } 
   }
@@ -138,6 +148,7 @@ const createVehicleColumn = (vehicle: string): ColDef<Column> => {
   return {
     headerName: vehicle, 
     field: 'vehicle', 
+    tooltipValueGetter: (params) => params.value,
     width: 150, 
     cellStyle: { textAlign: 'center' } 
   }
@@ -147,6 +158,7 @@ const createCreatedAtColumn = (createdAt: string): ColDef<Column> => {
   return {
     headerName: createdAt, 
     field: 'createdAt', 
+    tooltipValueGetter: (params) => params.value,
     width: 150, 
     cellStyle: { textAlign: 'center' } 
   }
@@ -156,6 +168,7 @@ const createSwVerColumn = (swVer: string): ColDef<Column> => {
   return {
     headerName: swVer, 
     field: 'swVer', 
+    tooltipValueGetter: (params) => params.value,
     width: 150, 
     cellStyle: { textAlign: 'center' } 
   }
@@ -165,6 +178,7 @@ const createDepArrColumn = (depArr: string): ColDef<Column> => {
   return {
     headerName: depArr, 
     field: 'depArr', 
+    tooltipValueGetter: (params) => params.value,
     width: 150, 
     cellStyle: { textAlign: 'center' } 
   }
@@ -174,6 +188,7 @@ const createFileSizeColumn = (fileSize: string): ColDef<Column> => {
   return {
     headerName: fileSize, 
     field: 'fileSize', 
+    tooltipValueGetter: (params) => params.value,
     width: 150, 
     cellStyle: { textAlign: 'center' } 
   }
@@ -183,6 +198,7 @@ const createEcuColumn = (ecu: string): ColDef<Column> => {
   return {
     headerName: ecu, 
     field: 'ecu', 
+    tooltipValueGetter: (params) => params.value,
     width: 150, 
     cellStyle: { textAlign: 'center' } 
   }
@@ -192,6 +208,7 @@ const createTableNumberColumn = (tableNumber: string): ColDef<Column> => {
   return {
     headerName: tableNumber, 
     field: 'tableNumber', 
+    tooltipValueGetter: (params) => params.value,
     width: 150, 
     cellStyle: { textAlign: 'center' } 
   }
@@ -201,6 +218,7 @@ const createDeliverableTypeColumn = (deliverableType: string): ColDef<Column> =>
   return {
     headerName: deliverableType, 
     field: 'deliverableType', 
+    tooltipValueGetter: (params) => params.value,
     width: 150, 
     cellStyle: { textAlign: 'center' } 
   }
@@ -210,6 +228,7 @@ const createTestResultColumn = (testResult: string): ColDef<Column> => {
   return {
     headerName: testResult, 
     field: 'testResult', 
+    tooltipValueGetter: (params) => params.value,
     width: 150, 
     cellStyle: { textAlign: 'center' } 
   }
@@ -219,6 +238,7 @@ const createFileCreatedAtColumn = (fileCreatedAt: string): ColDef<Column> => {
   return {
     headerName: fileCreatedAt, 
     field: 'updatedAt', 
+    tooltipValueGetter: (params) => params.value,
     width: 150, 
     cellStyle: { textAlign: 'center' } 
   }
@@ -228,6 +248,7 @@ const createFileFormatColumn = (fileFormat: string): ColDef<Column> => {
   return {
     headerName: fileFormat, 
     field: 'fileFormat', 
+    tooltipValueGetter: (params) => params.value,
     width: 150, 
     cellStyle: { textAlign: 'center' } 
   }
@@ -237,6 +258,7 @@ const createFileCreatorColumn = (fileCreator: string): ColDef<Column> => {
   return {
     headerName: fileCreator, 
     field: 'fileCreator', 
+    tooltipValueGetter: (params) => params.value,
     width: 150, 
     cellStyle: { textAlign: 'center' } 
   }
@@ -246,6 +268,7 @@ const createUpdatedAtColumn = (updatedAt: string): ColDef<Column> => {
   return {
     headerName: updatedAt, 
     field: 'updatedAt', 
+    tooltipValueGetter: (params) => params.value,
     width: 150, 
     cellStyle: { textAlign: 'center' } 
   }
@@ -255,6 +278,7 @@ export const createCustomColumn = (headerName: string, field: string): ColDef<Co
   return {
     headerName: headerName, 
     field: field, 
+    tooltipValueGetter: (params) => params.value,
     width: 150, 
     cellStyle: { textAlign: 'center' } 
   }

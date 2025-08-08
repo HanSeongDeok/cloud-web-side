@@ -8,6 +8,8 @@ import StepMultiSelect from "../StepMultiSelect";
 import BadgeButtons from "../BadgeButton";
 import UploadButton from "../UploadButton";
 import PaginationComponent from "../Pagination";
+import { Button } from "../ui/button";
+import { Search } from "lucide-react";
 
 const MainPage = memo(() => {
     return (
@@ -21,7 +23,7 @@ const MainPage = memo(() => {
 
             {/* 필터 검색 영역 */}
             <div className="flex justify-center w-full mb-25">
-                <div className="flex flex-col items-start w-[1000px]">
+                <div className="flex flex-col items-start w-[1200px]">
                     <BadgeButtons />
                     <DataInput />
                     <div className="flex flex-row gap-x-4 mt-2">
@@ -45,7 +47,7 @@ const MainPage = memo(() => {
                 <div>
                     <DataTable />
                 </div>
-                <div className="mt-8 mb-20">
+                <div className="mt-2 mb-10">
                     <PaginationComponent />
                 </div>
             </div>

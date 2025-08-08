@@ -35,6 +35,14 @@ const PaginationComponent = memo(() => {
     setCurrentPage(page);
   };
 
+  const getPageWidthClass = () => {
+    if (endPage >= 100000) return "min-w-[4rem] ";
+    if (endPage >= 10000) return "min-w-[3rem] ";
+    if (endPage >= 1000) return "min-w-[2rem] ";
+    if (endPage >= 100) return "min-w-[1.5rem] ";
+    return "min-w-[1rem] ";
+  };
+
   return (
     <Pagination className="flex justify-center scale-150">
       <PaginationContent className="flex justify-center gap-x-1">
@@ -42,8 +50,8 @@ const PaginationComponent = memo(() => {
         <PaginationItem>
           <Button
             onClick={() => goToPage(1)}
-            variant="outline"
-            className="w-8 h-8 p-0 flex bg-gray-500 border-gray-600 hover:bg-gray-600 cursor-pointer"
+            variant="ghost"
+            className="w-8 h-8 p-0 cursor-pointer border border-gray-300 rounded-sm"
           >
             <ChevronsLeft className="h-4 w-4 text-white" />
           </Button>
@@ -56,7 +64,7 @@ const PaginationComponent = memo(() => {
               e.preventDefault();
               goToPage(currentPage - 1);
             }}
-            className="w-8 h-8 p-0 flex bg-gray-500 border-gray-600 hover:bg-gray-600"
+            className="w-8 h-8 p-0 cursor-pointer mr-3 border border-gray-300 rounded-sm"
           >
           </PaginationPrevious>
         </PaginationItem>
@@ -70,6 +78,7 @@ const PaginationComponent = memo(() => {
                 e.preventDefault();
                 goToPage(page);
               }}
+              className={`${getPageWidthClass()} text-center w-8 h-8 p-0 `}
             >
               {page}
             </PaginationLink>
@@ -88,6 +97,7 @@ const PaginationComponent = memo(() => {
                   e.preventDefault();
                   goToPage(totalPages);
                 }}
+                className={`${getPageWidthClass()} text-center w-8 h-8 p-0 `}
               >
                 {totalPages}
               </PaginationLink>
@@ -102,16 +112,16 @@ const PaginationComponent = memo(() => {
               e.preventDefault();
               goToPage(currentPage + 1);
             }}
-            className="w-8 h-8 p-0 flex bg-gray-500 border-gray-600 hover:bg-gray-600 text-white"
-          >
+            className="w-8 h-8 p-0 cursor-pointer ml-3 border border-gray-300 rounded-sm"
+          > 
           </PaginationNext>
         </PaginationItem>
         {/* > 마지막으로 */}
         <PaginationItem>
           <Button
             onClick={() => goToPage(totalPages)}
-            variant="outline"
-            className="w-8 h-8 p-0 flex bg-gray-500 border-gray-600 hover:bg-gray-600 cursor-pointer"
+            variant="ghost"
+            className="w-8 h-8 p-0 cursor-pointer border border-gray-300 rounded-sm"
           >
             <ChevronsRight className="h-4 w-4 text-white" />
           </Button>
