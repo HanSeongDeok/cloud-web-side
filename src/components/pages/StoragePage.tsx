@@ -41,7 +41,7 @@ const StoragePage = memo(() => {
       </div>
 
       {/* 테이블 영역 */}
-      <div className="flex flex-col w-full">
+      <div className="flex flex-col w-full h-[700px]">
         <div>
           <DataTable />
         </div>

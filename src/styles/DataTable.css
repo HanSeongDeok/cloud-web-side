@@ -4,22 +4,6 @@
     @apply w-full flex items-center py-4;
 }
 
-.ag-grid-container {
-    width: 100%;
-    min-width: 1500px;
-}
-
-/* 숨겨진 파일 input */
-.hidden-file-input {
-    display: none;
-}
-
-/* ag-grid 컨테이너 */
-.ag-grid-container {
-    height: 670px;
-    width: 100%;
-}
-
 .ag-theme-custom .ag-cell:focus,
 .ag-theme-custom .ag-cell-focus {
     outline: none !important;

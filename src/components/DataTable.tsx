@@ -83,7 +83,7 @@ const DataTable = React.memo(() => {
 
   return (
     <div className="w-full">
-      <div className="ag-theme-custom ag-grid-container">
+      <div className="ag-theme-custom ag-grid-container h-[670px]">
         <AgGridReact
           ref={gridRef}
           enableBrowserTooltips={true}
