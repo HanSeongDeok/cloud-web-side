@@ -13,6 +13,19 @@ interface ErrorResponse {
   traceId: string | null;
 }
 
+interface CheckResponse {
+  success: boolean;
+  data: PermissionStatusResponse;
+}
+
+interface PermissionStatusResponse {
+  id: number;
+  name: string;
+  email: string;
+  role: string;
+  isWhitelisted: boolean;
+}
+
 export function SSOLoginVerifyPage() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
@@ -40,20 +53,33 @@ export function SSOLoginVerifyPage() {
       const response = await permissionPage()
 
       if (response.ok) {
-        const data: PermissionData = await response.json()
-        if (data.hasPermission) {
+        // const data: PermissionData = await response.json()
+        // if (data.hasPermission) {
+        //   setPermissionData({ hasPermission: true, isRequesting: false })
+        //   navigate('/storage', { replace: true })
+        //   return;
+        // }
+
+        const checkResponse: CheckResponse = await response.json()
+        const checkData = checkResponse.data
+        console.log(checkData)
+
+        if (checkData.isWhitelisted) {
           setPermissionData({ hasPermission: true, isRequesting: false })
           navigate('/storage', { replace: true })
           return;
         }
+
       } else {
         const errorData: ErrorResponse = await response.json()
-        if (errorData.code.startsWith('AUTH_')) {
-          navigate('/login', { replace: true })
+
+        if (errorData.code === 'AUTH_007' || errorData.code === 'AUTH_008' || errorData.code === 'AUTH_004') {
+          setPermissionData({ hasPermission: false, isRequesting: false })
+          navigate('/permission', { replace: true })
           return;
         }
 
-        if (errorData.code.startsWith('COMMON_')) {
+        if (errorData.code.startsWith('AUTH_') || errorData.code.startsWith('COMMON_')) {
           navigate('/login', { replace: true })
           return;
         }

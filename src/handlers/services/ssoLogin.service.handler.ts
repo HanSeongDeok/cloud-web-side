@@ -42,17 +42,15 @@ export const permissionPageDev = async () => {
  */
 export const requestPermission = async () => {
   const response = await fetch(`${API_CONFIG.baseURL}${PERMISSION.requestPermission}`, {
-    method: 'PUT',
-    headers: {
-      'Content-Type': 'application/json',
-    },
+    method: 'POST',
+    credentials: 'include',
   });
   return response;
 }
 
 export const requestPermissionDev = async () => {
   const response = await fetch(`${API_CONFIG_DEV.baseURL}${PERMISSION_DEV.requestPermission}`, {
-    method: 'POST',
+    method: 'PUT',
     credentials: 'include',
   });
   return response;

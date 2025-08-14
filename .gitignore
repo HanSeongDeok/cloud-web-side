@@ -22,3 +22,18 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+.env.local
+<<<<<<< HEAD
+<<<<<<< HEAD
+.dockerfile
+=======
+=======
+>>>>>>> f03bfeb42b07b341b9672eb6a26a08ec6ad07cdf
+localhost-key.pem
+localhost.pem
+
+.dockerfile
+<<<<<<< HEAD
+>>>>>>> bdc4dd4 ([SQUASH] base to 2ce5ffe 까지 스쿼시)
+=======
+>>>>>>> f03bfeb42b07b341b9672eb6a26a08ec6ad07cdf

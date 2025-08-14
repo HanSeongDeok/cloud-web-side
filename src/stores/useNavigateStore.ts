@@ -1,4 +1,4 @@
-import MainPage from "@/components/pages/MainPage";
+import MainPage from "@/components/pages/StoragePage";
 import { create } from "zustand";
 
 interface PageStore {

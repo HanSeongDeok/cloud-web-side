@@ -1,0 +1,16 @@
+version: '3.8'
+
+name: vdtm-web
+
+# 개발 환경 테스트용
+services:
+  vdtm-web:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    ports:
+      - "5173:5173"
+    environment:
+      - NODE_ENV=development
+    restart: unless-stopped
+    container_name: vdtm_web_app
