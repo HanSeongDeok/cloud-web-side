@@ -16,7 +16,6 @@ import ManagersTab from "@/components/pages/ManagersTab";
 import { SSOLoginPage } from "@/components/pages/SSOLoginPage";
 import PermissionPage from "@/components/pages/PermissionPage";
 import { SSOLoginVerifyPage } from "@/components/pages/SSOLoginVerifyPage";
-import ProtectedRoute from "@/components/ProtestedRoute";
 import Home from "@/components/Home";
 
 const Router: React.FC = () => {

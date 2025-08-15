@@ -11,12 +11,12 @@ import PaginationComponent from "../Pagination";
 
 const StoragePage = memo(() => {
   return (
-    <main className="min-h-screen p-8">
-      <div className="mb-4">
-        <h1 className="text-3xl font-bold mb-6">
+    <main className="min-h-screen p-8 mt-10">
+      <div className="mb-6">
+        <h1 className="text-4xl font-bold mb-4">
           중앙 집중형관리 시스템 저장소
         </h1>
-        <p className="text-muted-foreground">welcome to the CTM storage</p>
+        <p className="text-muted-foreground mb-10">welcome to the CTM storage</p>
       </div>
 
       {/* 필터 검색 영역 */}

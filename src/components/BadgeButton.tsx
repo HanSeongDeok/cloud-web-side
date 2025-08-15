@@ -15,16 +15,16 @@ const VehicleBadge = memo(({ allSelectedVehicles, removeVehicle }: {
                 <Badge
                     key={vehicle}
                     variant="secondary"
-                    className="text-sm px-2 py-1 flex items-center gap-1"
+                    className="text-sm px-3 py-1.5 flex items-center gap-1 bg-blue-50 border-blue-200 text-blue-800 hover:bg-blue-100 transition-colors"
                 >
-                    <span className="text-blue-400 font-bold">차량:</span> {vehicle}
+                    <span className="text-blue-600 font-bold">차량:</span> {vehicle}
                     <Button
                         onClick={() => removeVehicle(vehicleOptions.find(opt => opt.label === vehicle)?.id || "")}
-                        className="ml-1 p-0 h-3 w-3 min-w-0 min-h-0 hover:bg-transparent"
+                        className="ml-1 p-0 h-4 w-4 min-w-0 min-h-0 hover:bg-blue-200 rounded-full transition-colors"
                         variant="ghost"
                         size="sm"
                     >
-                        <X className="w-2 h-2" />
+                        <X className="w-3 h-3 text-blue-600" />
                     </Button>
                 </Badge>
             ))}
@@ -42,16 +42,16 @@ const ECUBadge = memo(({ allSelectedECUs, removeECU }: {
                 <Badge
                     key={ecu}
                     variant="secondary"
-                    className="text-sm px-2 py-1 flex items-center gap-1"
+                    className="text-sm px-3 py-1.5 flex items-center gap-1 bg-green-50 border-green-200 text-green-800 hover:bg-green-100 transition-colors"
                 >
-                    <span className="text-green-400 font-bold">ECU:</span> {ecu}
+                    <span className="text-green-600 font-bold">ECU:</span> {ecu}
                     <Button
                         onClick={() => removeECU(ecuOptions.find(opt => opt.label === ecu)?.id || "")}
-                        className="ml-1 p-0 h-3 w-3 min-w-0 min-h-0 hover:bg-transparent"
+                        className="ml-1 p-0 h-4 w-4 min-w-0 min-h-0 hover:bg-green-200 rounded-full transition-colors"
                         variant="ghost"
                         size="sm"
                     >
-                        <X className="w-2 h-2" />
+                        <X className="w-3 h-3 text-green-600" />
                     </Button>
                 </Badge>
             ))}
@@ -69,16 +69,16 @@ const StepBadge = memo(({ allSelectedSteps, removeStep }: {
                 <Badge
                     key={step}
                     variant="secondary"
-                    className="text-sm px-2 py-1 flex items-center gap-1"
+                    className="text-sm px-3 py-1.5 flex items-center gap-1 bg-purple-50 border-purple-200 text-purple-800 hover:bg-purple-100 transition-colors"
                 >
-                    <span className="text-purple-400 font-bold">단계:</span> {step}
+                    <span className="text-purple-600 font-bold">단계:</span> {step}
                     <Button
                         onClick={() => removeStep(stepOptions.find(opt => opt.label === step)?.id || "")}
-                        className="ml-1 p-0 h-3 w-3 min-w-0 min-h-0 hover:bg-transparent"
+                        className="ml-1 p-0 h-4 w-4 min-w-0 min-h-0 hover:bg-purple-200 rounded-full transition-colors"
                         variant="ghost"
                         size="sm"
                     >
-                        <X className="w-2 h-2" />
+                        <X className="w-3 h-3 text-purple-600" />
                     </Button>
                 </Badge>
             ))}
@@ -92,16 +92,16 @@ const AllVehicleBadge = memo(({ vehicleClearAll }: {
     return (
         <Badge
             variant="secondary"
-            className="text-sm px-2 py-1 flex items-center gap-1"
+            className="text-sm px-3 py-1.5 flex items-center gap-1 bg-blue-50 border-blue-200 text-blue-800 hover:bg-blue-100 transition-colors"
         >
-            <span className="text-blue-400 font-bold">차량:</span> All
+            <span className="text-blue-600 font-bold">차량:</span> All
             <Button
                 onClick={() => vehicleClearAll()}
-                className="ml-1 p-0 h-3 w-3 min-w-0 min-h-0 hover:bg-transparent"
+                className="ml-1 p-0 h-4 w-4 min-w-0 min-h-0 hover:bg-blue-200 rounded-full transition-colors"
                 variant="ghost"
                 size="sm"
             >
-                <X className="w-2 h-2" />
+                <X className="w-3 h-3 text-blue-600" />
             </Button>
         </Badge>
     )
@@ -113,16 +113,16 @@ const AllECUBadge = memo(({ ecuClearAll }: {
     return (
         <Badge
             variant="secondary"
-            className="text-sm px-2 py-1 flex items-center gap-1"
+            className="text-sm px-3 py-1.5 flex items-center gap-1 bg-green-50 border-green-200 text-green-800 hover:bg-green-100 transition-colors"
         >
-            <span className="text-green-400 font-bold">ECU:</span> All
+            <span className="text-green-600 font-bold">ECU:</span> All
             <Button
                 onClick={() => ecuClearAll()}
-                className="ml-1 p-0 h-3 w-3 min-w-0 min-h-0 hover:bg-transparent"
+                className="ml-1 p-0 h-4 w-4 min-w-0 min-h-0 hover:bg-green-200 rounded-full transition-colors"
                 variant="ghost"
                 size="sm"
             >
-                <X className="w-2 h-2" />
+                <X className="w-3 h-3 text-green-600" />
             </Button>
         </Badge>
     )
@@ -134,16 +134,16 @@ const AllStepBadge = memo(({ stepClearAll }: {
     return (
         <Badge
             variant="secondary"
-            className="text-sm px-2 py-1 flex items-center gap-1"
+            className="text-sm px-3 py-1.5 flex items-center gap-1 bg-purple-50 border-purple-200 text-purple-800 hover:bg-purple-100 transition-colors"
         >
-            <span className="text-purple-400 font-bold">단계:</span> All
+            <span className="text-purple-600 font-bold">단계:</span> All
             <Button
                 onClick={() => stepClearAll()}
-                className="ml-1 p-0 h-3 w-3 min-w-0 min-h-0 hover:bg-transparent"
+                className="ml-1 p-0 h-4 w-4 min-w-0 min-h-0 hover:bg-purple-200 rounded-full transition-colors"
                 variant="ghost"
                 size="sm"
             >
-                <X className="w-2 h-2" />
+                <X className="w-3 h-3 text-purple-600" />
             </Button>
         </Badge>
     )
@@ -220,7 +220,7 @@ const BadgeButtons = memo(() => {
                     {/* 전체 해제 버튼 */}
                     <Badge
                         variant="destructive"
-                        className="text-sm px-2 py-1 cursor-pointer"
+                        className="text-sm px-3 font-bold py-1.5 cursor-pointer bg-red-500 border-red-700 text-white hover:bg-red-700 hover:border-red-800 transition-colors"
                         onClick={clearAll}
                     >
                         모든 필터 해제
