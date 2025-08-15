@@ -20,18 +20,18 @@ const VehicleTypeMultiSelect = memo(() => {
     return (
         <Popover>
             <PopoverTrigger asChild>
-                <Button variant="outline" className="w-[200px] h-12 justify-between">
-                    <span className="text-base font-bold">
+                <Button variant="outline" className="w-full sm:w-[180px] lg:w-[200px] h-10 sm:h-11 lg:h-12 justify-between text-sm sm:text-base">
+                    <span className="font-bold truncate">
                         차량 선택
                     </span>
-                    <ChevronDown className="ml-2 h-4 w-4 opacity-50" />
+                    <ChevronDown className="ml-2 h-4 w-4 opacity-50 flex-shrink-0" />
                 </Button>
             </PopoverTrigger>
 
-            <PopoverContent className="w-[200px] p-2">
+            <PopoverContent className="w-[calc(100vw-2rem)] sm:w-[180px] lg:w-[200px] p-2">
                 <div className="flex flex-col space-y-1">
                     <div
-                        className={`flex items-center gap-3 px-2 py-1 rounded cursor-pointer transition-colors 
+                        className={`flex items-center gap-2 sm:gap-3 px-2 py-1 rounded cursor-pointer transition-colors 
                             ${selected.length === vehicleOptions.length
                                 ? "bg-primary/10"
                                 : "hover:bg-accent/50"
@@ -41,17 +41,17 @@ const VehicleTypeMultiSelect = memo(() => {
                         <Checkbox
                             checked={selected.length === vehicleOptions.length}
                             onCheckedChange={selectAll}
-                            className="pointer-events-none size-4"
+                            className="pointer-events-none size-3 sm:size-4"
                         />
-                        <span className="text-base font-bold pl-1">All</span>
+                        <span className="text-sm sm:text-base font-bold pl-1">All</span>
                     </div>
                     <Separator />
-                    <ScrollArea className="h-[150px]">
+                    <ScrollArea className="h-[120px] sm:h-[150px]">
                         <div className="flex flex-col space-y-1 font-bold">
                             {vehicleOptions.map((option) => (
                                 <div
                                     key={option.id}
-                                    className={`flex items-center gap-3 px-2 py-1 rounded cursor-pointer transition-colors font-bold 
+                                    className={`flex items-center gap-2 sm:gap-3 px-2 py-1 rounded cursor-pointer transition-colors font-bold 
                                         ${selected.includes(option.id)
                                             ? "bg-primary/10"
                                             : "hover:bg-accent/50"
@@ -69,9 +69,9 @@ const VehicleTypeMultiSelect = memo(() => {
                                                     selected.filter((item) => item !== option.id) : 
                                                     [...selected, option.id]
                                             )}
-                                        className="pointer-events-none size-4"
+                                        className="pointer-events-none size-3 sm:size-4"
                                     />
-                                    <span className="text-base pl-1">{option.label}</span>
+                                    <span className="text-sm sm:text-base pl-1">{option.label}</span>
                                 </div>
                             ))}
                         </div>

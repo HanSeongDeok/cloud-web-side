@@ -1,5 +1,0 @@
-@import "../index.css";
-
-.labelText {
-    @apply text-base text-gray-300 font-bold;
-} 

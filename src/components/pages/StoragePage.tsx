@@ -20,11 +20,11 @@ const StoragePage = memo(() => {
       </div>
 
       {/* 필터 검색 영역 */}
-      <div className="flex justify-center w-full mb-25">
-        <div className="flex flex-col items-start w-[1200px]">
+      <div className="w-full mb-10">
+        <div className="flex flex-col items-start w-full">
           <BadgeButtons />
           <DataInput />
-          <div className="flex flex-row gap-x-4 mt-2">
+          <div className="flex flex-row gap-x-4 mt-2 w-full">
             <VehicleTypeMultiSelect />
             <ECUTypeMultiSelect />
             <StepMultiSelect />

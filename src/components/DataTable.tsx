@@ -7,7 +7,6 @@ import { useDataTableStore } from "@/stores/useTableDataStore"
 import type { PaginationInfo } from "@/stores/usePaginationState "
 import { usePaginationStore } from "@/stores/usePaginationState "
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@radix-ui/react-tooltip"
 
 const DataTable = React.memo(() => {
   const columns = useColumnsStore((state) => state.columns);

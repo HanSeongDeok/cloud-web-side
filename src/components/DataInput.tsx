@@ -59,7 +59,7 @@ const DataInput = memo(() => {
 
     return (
         <div className="flex justify-center w-full mb-6">
-            <div className="relative w-[1200px]">
+            <div className="relative w-full">
                 <Button
                     variant="ghost"
                     size="sm"
