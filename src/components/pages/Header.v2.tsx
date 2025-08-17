@@ -14,12 +14,13 @@ import {
     DropdownMenuSeparator,
     DropdownMenuLabel,
 } from "@/components/ui/dropdown-menu";
-import { CircleHelpIcon, CircleIcon, CircleCheckIcon, ChevronDownIcon } from "lucide-react";
-import ProtoPage3 from "@/components/pages/ProtoPage3";
-import StoragePage from "@/components/pages/StoragePage";
+import { ChevronDownIcon, ClipboardList } from "lucide-react";
+import { useNavigate, useLocation, NavLink } from "react-router-dom";
+import { ROUTE_PATH } from "@/api/path.config";
 
 const HeaderV2 = memo(() => {
-    const [activePage, setActivePage] = useState(() => StoragePage);
+    const navigate = useNavigate();
+    const location = useLocation();
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
     return (
@@ -27,7 +28,7 @@ const HeaderV2 = memo(() => {
             <nav className="flex items-center justify-between mx-auto">
                 {/* 로고 */}
                 <div className="flex items-center">
-                    <a href="/" className="text-xl sm:text-2xl font-bold tracking-tight hover:text-blue-400 transition-colors">
+                    <a href="/" className="text-3xl sm:text-3xl font-bold tracking-tight hover:text-blue-400 transition-colors">
                         VTDM
                     </a>
                 </div>
@@ -36,28 +37,28 @@ const HeaderV2 = memo(() => {
                 <NavigationMenu className="hidden sm:flex ml-auto">
                     <NavigationMenuList className="flex items-center gap-4 lg:gap-4">
                         {/* 저장소 */}
-                        <NavigationMenuItem>
+                        <NavigationMenuItem className="mr-2">
                             <NavigationMenuLink
                                 className={`text-xl sm:text-xl font-semibold cursor-pointer transition-colors
-                  ${activePage === StoragePage
+                                    ${location.pathname === ROUTE_PATH.STORAGE
                                         ? "text-blue-400"
                                         : "text-gray-700 hover:text-blue-400"
                                     }`}
-                                onClick={() => setActivePage(StoragePage)}
+                                onClick={() => navigate(ROUTE_PATH.STORAGE)}
                             >
                                 저장소
                             </NavigationMenuLink>
                         </NavigationMenuItem>
 
                         {/* 대시보드 */}
-                        <NavigationMenuItem>
+                        <NavigationMenuItem className="mr-2">
                             <NavigationMenuLink
                                 className={`text-xl sm:text-xl font-semibold cursor-pointer transition-colors
-                  ${activePage === ProtoPage3
+                                    ${location.pathname === ROUTE_PATH.DASHBOARD
                                         ? "text-blue-400"
                                         : "text-gray-700 hover:text-blue-400"
                                     }`}
-                                onClick={() => setActivePage(ProtoPage3)}
+                                onClick={() => navigate(ROUTE_PATH.DASHBOARD)}
                             >
                                 대시보드
                             </NavigationMenuLink>
@@ -67,16 +68,17 @@ const HeaderV2 = memo(() => {
                         <div className="h-10 w-px bg-gray-300"></div>
 
                         {/* 프로필 */}
-                        <NavigationMenuItem className="ml-3">
-                            <DropdownMenu 
+                        <NavigationMenuItem className="ml-3 h-10">
+                            <DropdownMenu
                                 modal={false}
-                                onOpenChange={(open) => {
-                                    setIsDropdownOpen(open);
-                                }}
+                                open={isDropdownOpen}
+                                onOpenChange={setIsDropdownOpen}
                             >
                                 <DropdownMenuTrigger asChild>
-                                    <button 
+                                    <button
                                         className="flex items-center gap-2 sm:gap-2 outline-none cursor-pointer"
+                                        onMouseEnter={() => setIsDropdownOpen(true)}
+                                        onMouseLeave={() => setIsDropdownOpen(false)}
                                         onClick={(e) => {
                                             e.preventDefault();
                                             e.stopPropagation();
@@ -90,15 +92,15 @@ const HeaderV2 = memo(() => {
                                         </Avatar>
                                         <div className="flex flex-col leading-tight">
                                             <span className="text-lg sm:text-lg font-bold flex items-center">
-                                                제어안전성능 1팀 / 홍길동
-                                                <ChevronDownIcon 
-                                                    className={`w-4 h-4 ml-1 text-gray-400 transition-transform duration-200 ${
-                                                        isDropdownOpen ? 'rotate-180' : ''
-                                                    }`}
+                                                차량솔루션2팀 / 홍길동
+                                                <ChevronDownIcon
+                                                    className={`w-4 h-4 ml-1 text-gray-400 transition-transform duration-200 ${isDropdownOpen ? 'rotate-180' : ''
+                                                        }`}
                                                 />
                                             </span>
                                             <span className="text-xs sm:text-sm text-blue-400">
                                                 admin <span className="text-gray-400 ml-1">(관리자)</span>
+                                                &nbsp;
                                             </span>
                                         </div>
                                     </button>
@@ -106,20 +108,48 @@ const HeaderV2 = memo(() => {
                                 <DropdownMenuContent
                                     side="bottom"
                                     align="end"
-                                    sideOffset={10}
+                                    sideOffset={1}
                                     avoidCollisions={false}
-                                    className="w-[200px] bg-white border border-gray-200 shadow-lg"
+                                    className="w-[250px] bg-white border border-gray-200 shadow-xl rounded-xl overflow-hidden"
+                                    onMouseEnter={() => setIsDropdownOpen(true)}
+                                    onMouseLeave={() => setIsDropdownOpen(false)}
                                 >
-                                    <DropdownMenuLabel className="text-xs text-muted-foreground">Tasks</DropdownMenuLabel>
-                                    <DropdownMenuSeparator />
-                                    <DropdownMenuItem className="flex items-center gap-2">
-                                        <CircleHelpIcon className="h-4 w-4" /> Backlog
+                                    <DropdownMenuLabel className="flex justify-center">
+                                        <ClipboardList className="w-5 h-5 inline-block text-gray-400" />
+                                    </DropdownMenuLabel>
+                                    <DropdownMenuSeparator className="h-0.5 bg-gray-100 opacity-100" />
+                                    <NavLink to={ROUTE_PATH.ADMIN_LOGGING}>
+                                        <DropdownMenuItem className="flex justify-center py-2 text-base font-medium hover:bg-blue-50 cursor-pointer">
+                                            로그 관리
+                                        </DropdownMenuItem>
+                                    </NavLink>
+                                    {/* <DropdownMenuSeparator className="h-0.5 bg-gray-100 opacity-100" /> */}
+                                    <NavLink to={ROUTE_PATH.WHITELIST_ROOT}>
+                                        <DropdownMenuItem className="flex justify-center py-2 text-base font-medium hover:bg-blue-50 cursor-pointer">
+                                        화이트리스트
                                     </DropdownMenuItem>
-                                    <DropdownMenuItem className="flex items-center gap-2">
-                                        <CircleIcon className="h-4 w-4" /> To Do
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem className="flex items-center gap-2">
-                                        <CircleCheckIcon className="h-4 w-4" /> Done
+                                    </NavLink>
+                                    {/* <DropdownMenuSeparator className="h-0.5 bg-gray-100 opacity-100" /> */}
+                                    <NavLink to={ROUTE_PATH.ADMIN_DB_CONFIG}>
+                                        <DropdownMenuItem className="flex justify-center py-2 text-base font-medium hover:bg-blue-50 cursor-pointer">
+                                            DB 관리
+                                        </DropdownMenuItem>
+                                    </NavLink>
+                                    <DropdownMenuSeparator className="h-1 bg-gray-200 opacity-100" />
+                                    <NavLink to={ROUTE_PATH.MY_PAGE}>
+                                        <DropdownMenuItem className="flex justify-center py-2 text-base font-medium hover:bg-blue-50 cursor-pointer">
+                                            마이페이지
+                                        </DropdownMenuItem>
+                                    </NavLink>
+                                    {/* <DropdownMenuSeparator className="h-0.5 bg-gray-100 opacity-100" /> */}
+                                    <NavLink to={ROUTE_PATH.TRASH}>
+                                        <DropdownMenuItem className="flex justify-center py-2 text-base font-medium hover:bg-blue-50 cursor-pointer">
+                                            휴지통
+                                        </DropdownMenuItem>
+                                    </NavLink>
+                                    {/* <DropdownMenuSeparator className="h-0.5 bg-gray-100 opacity-100" /> */}
+                                    <DropdownMenuItem className="flex justify-center py-2 text-base font-medium hover:bg-blue-50 text-red-600 cursor-pointer">
+                                        로그아웃
                                     </DropdownMenuItem>
                                 </DropdownMenuContent>
                             </DropdownMenu>
