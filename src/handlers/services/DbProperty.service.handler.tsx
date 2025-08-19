@@ -261,7 +261,6 @@ export const getMockDbColumns = (): ColDef<PartialDbProperty>[] => {
   // columnDefs 함수를 사용하여 기본 컬럼 생성
   const baseColumns = columnDefs(columnHeaders);
 
-  // DbProperty 타입에 맞게 추가 컬럼들과 함께 반환
   return [
     ...(baseColumns.map((col) => ({
       ...col,

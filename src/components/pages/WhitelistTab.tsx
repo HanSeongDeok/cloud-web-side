@@ -1,25 +1,5 @@
-import React, { useState, useEffect } from "react";
-import {
-  ChevronDown,
-  ChevronRight,
-  Search,
-  Plus,
-  Edit,
-  Trash2,
-  Users,
-  Mail,
-  User,
-  RotateCcw,
-  Crown,
-  UserCheck,
-} from "lucide-react";
+import React, { useState, useEffect, useMemo } from "react";
 import { toast } from "sonner";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-} from "@/components/ui/select";
 import type {
   WhitelistCollection,
   WhitelistGroup,
@@ -36,9 +16,10 @@ import {
   demoteAdmin,
 } from "@/handlers/services/whitelist.service.handler";
 import { useAlert } from "@/hooks/useAlert";
-import { cn } from "@/lib/utils";
 import AlertModal from "@/components/ui/AlertModal";
 import TeamEditModal from "../whitelist-team/TeamEditModal";
+import WhitelistTeamList from "../whitelist-team/WhitelistTeamList";
+import WhitelistTeamHeader from "../whitelist-team/WhitelistTeamHeader";
 
 const WhitelistTab: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -51,7 +32,7 @@ const WhitelistTab: React.FC = () => {
   // 모달 관련 상태
   const [teamModalOpen, setTeamModalOpen] = useState(false);
   const [editingTeam, setEditingTeam] = useState<WhitelistGroup | null>(null);
-  //커스텀 훅 - 구조 분해 할당으로 필요 함수만 추출
+
   const { showError, isOpen, config, hideAlert } = useAlert();
 
   // 컴포넌트 마운트 시 데이터 로딩
@@ -82,6 +63,7 @@ const WhitelistTab: React.FC = () => {
 
     loadData();
   }, [showError]);
+
   /**
    * ==========================
    *   whitelist 팀구조 관련 핸들러
@@ -103,6 +85,7 @@ const WhitelistTab: React.FC = () => {
    *   - filteredGroups: 검색어에 따라 필터링된 그룹 목록
    */
   //TODO : 그룹삭제 및 사용자 삭제 모달 추가 필요
+
   const loadWhitelistData = async () => {
     setLoading(true);
     try {
@@ -298,224 +281,40 @@ const WhitelistTab: React.FC = () => {
       );
     }
   };
+
   // 팀명, 팀 코드 , 사용자 이름, 이메일 에 대해서 대응
-  const filteredGroups = whitelistData.groups.filter(
-    (group) =>
-      group.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      group.users.some(
-        (user) =>
-          user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          user.email.toLowerCase().includes(searchTerm.toLowerCase())
-      ) ||
-      group.code.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredGroups = useMemo(() => {
+    return whitelistData.groups.filter(
+      (group) =>
+        group.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        group.users.some(
+          (user) =>
+            user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            user.email.toLowerCase().includes(searchTerm.toLowerCase())
+        ) ||
+        group.code.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  }, [whitelistData.groups, searchTerm]);
 
   return (
     <div className="max-w-7xl mx-auto p-6 bg-gray-50 min-h-screen">
-      {/* Header */}
-      <div className="flex justify-between items-center mb-6">
-        <div className="flex items-center space-x-4 flex-1 mr-4">
-          <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-            <input
-              type="text"
-              placeholder="전체 검색..."
-              className="pl-10 pr-4 py-2 w-full border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-          </div>
-        </div>
-        <div className="flex items-center space-x-2">
-          <button
-            onClick={loadWhitelistData}
-            disabled={loading}
-            className="bg-gray-600 text-white px-3 py-3 rounded-lg flex items-center justify-center hover:bg-gray-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)]"
-          >
-            <RotateCcw className={`w-4 h-4 ${loading ? "animate-spin" : ""}`} />
-          </button>
-          <button
-            onClick={() => handleOpenTeamModal()}
-            className="bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center space-x-2 hover:bg-blue-700 transition-colors shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)]"
-          >
-            <Plus className="w-4 h-4" />
-            <span>팀 코드 등록</span>
-          </button>
-        </div>
-      </div>
-
-      {/* Teams List */}
-      <div className="bg-white rounded-lg shadow-sm max-h-[40rem] overflow-y-auto">
-        {filteredGroups.map((group) => (
-          <div
-            key={group.id}
-            className="border-b border-gray-200 last:border-b-0"
-          >
-            {/* Team Header */}
-            <div className="flex items-center justify-between p-4 hover:bg-gray-50">
-              <div className="flex items-center space-x-3">
-                <button
-                  onClick={() => toggleTeamExpansion(group.id)}
-                  className="p-1 hover:bg-gray-200 rounded transition-colors"
-                >
-                  {expandedGroups.has(group.id) ? (
-                    <ChevronDown className="w-4 h-4 text-gray-600" />
-                  ) : (
-                    <ChevronRight className="w-4 h-4 text-gray-600" />
-                  )}
-                </button>
-                <Users className="w-5 h-5 text-blue-600" />
-                <div>
-                  <span className="font-semibold text-gray-900">
-                    {group.name}
-                  </span>
-                  <span className="ml-6 text-sm text-gray-500">
-                    #{group.code}
-                  </span>
-                  <span className="ml-3 text-sm text-gray-500">
-                    ({group.users.length}명)
-                  </span>
-                </div>
-              </div>
-              <div
-                className="flex items-center space-x-4
-              "
-              >
-                <button
-                  onClick={() => handleOpenTeamModal(group)}
-                  className="p-1 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded transition-colors"
-                >
-                  <Edit className="w-4 h-4" />
-                </button>
-                <button
-                  onClick={() => handleDeleteTeam(group.id)}
-                  className="p-1 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded transition-colors"
-                >
-                  <Trash2 className="w-4 h-4" />
-                </button>
-              </div>
-            </div>
-
-            {/* Team Members */}
-            {expandedGroups.has(group.id) && (
-              <div className="bg-gray-50">
-                {group.users.map((user) => (
-                  <div
-                    key={user.id}
-                    className="flex items-center justify-between py-2 px-4 pl-16 hover:bg-gray-100 border-t border-gray-200"
-                  >
-                    <div className="flex items-center space-x-3">
-                      <User className="w-4 h-4 text-green-600" />
-                      <div className="flex items-center space-x-4">
-                        <span className="font-medium text-gray-900">
-                          {user.name}
-                        </span>
-                        <span className="text-sm text-gray-500">
-                          #{user.employeeId}
-                        </span>
-                        <div className="flex items-center space-x-1 text-sm text-gray-600">
-                          <Mail className="w-3 h-3" />
-                          <span>{user.email}</span>
-                        </div>
-                        <span className="px-2 py-1 text-xs bg-green-100 text-green-800 rounded-full">
-                          {user.team}
-                        </span>
-                      </div>
-                    </div>
-                    {user.role !== "ROLE_SUPER_ADMIN" ? (
-                      <div className="flex items-center space-x-14">
-                        <Select
-                          value={user.role || "ROLE_USER"}
-                          onValueChange={(newRole) => {
-                            if (
-                              newRole === "ROLE_ADMIN" &&
-                              user.role !== "ROLE_ADMIN"
-                            ) {
-                              handlePromoteUser(user.id, user.name);
-                            } else if (
-                              newRole === "ROLE_USER" &&
-                              user.role === "ROLE_ADMIN"
-                            ) {
-                              handleDemoteUser(user.id, user.name);
-                            }
-                          }}
-                        >
-                          {/* TODO 해당 Selecter가 '마스터 관리자'일 때만 활성화되도록 해야함*/}
-                          <SelectTrigger
-                            size="sm"
-                            className={cn(
-                              "w-35 rounded-full transition-all duration-200 text-xs", // 세로폭(h) 줄이고 글씨 크기(text-xs)도 줄임
-                              user.role === "ROLE_ADMIN"
-                                ? "border-orange-300 bg-orange-50 text-orange-700 hover:border-orange-400 hover:bg-orange-100"
-                                : "border-blue-300 bg-blue-50 text-blue-700 hover:border-blue-400 hover:bg-blue-100"
-                            )}
-                          >
-                            <div className="flex items-center space-x-1">
-                              {user.role === "ROLE_ADMIN" ? (
-                                <>
-                                  <UserCheck className="w-3 h-3" />{" "}
-                                  {/* 아이콘도 작게 */}
-                                  <span className="text-xs">서브 관리자</span>
-                                </>
-                              ) : (
-                                <>
-                                  <User className="w-3 h-3" />
-                                  <span className="text-xs">사용자</span>
-                                </>
-                              )}
-                            </div>
-                          </SelectTrigger>
-                          <SelectContent className="bg-white border border-gray-200 shadow-lg">
-                            <SelectItem value="ROLE_ADMIN">
-                              <div className="flex items-center space-x-2">
-                                <UserCheck className="w-4 h-4" />
-                                <span>서브 관리자</span>
-                              </div>
-                            </SelectItem>
-                            <SelectItem value="ROLE_USER">
-                              <div className="flex items-center space-x-2">
-                                <User className="w-4 h-4" />
-                                <span>사용자</span>
-                              </div>
-                            </SelectItem>
-                          </SelectContent>
-                        </Select>
-                        <button
-                          onClick={() => handleDeleteUser(user.id)}
-                          className="p-1 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded transition-colors"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </button>
-                      </div>
-                    ) : (
-                      <div className="flex items-center space-x-14">
-                        <div className="flex items-center space-x-2 w-35 h-8 px-3 py-2 rounded-full border border-purple-300 bg-purple-50 text-purple-700">
-                          <Crown className="w-4 h-4" />
-                          <span className="text-xs font-medium">
-                            마스터 관리자
-                          </span>
-                        </div>
-                        <div className="w-6"></div> {/* 삭제 버튼 공간 확보 */}
-                      </div>
-                    )}
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-        ))}
-      </div>
-
-      {/* Empty State */}
-      {filteredGroups.length === 0 && (
-        <div className="text-center py-12">
-          <Users className="w-12 h-12 text-gray-300 mx-auto mb-4" />
-          <h3 className="text-lg font-medium text-gray-900 mb-2">
-            검색 결과가 없습니다
-          </h3>
-          <p className="text-gray-500">다른 검색어로 시도해보세요.</p>
-        </div>
-      )}
+      <WhitelistTeamHeader
+        searchTerm={searchTerm}
+        onSearchChange={setSearchTerm}
+        onRefresh={loadWhitelistData}
+        onAddTeam={handleOpenTeamModal}
+        loading={loading}
+      />
+      <WhitelistTeamList
+        filteredGroups={filteredGroups}
+        expandedGroups={expandedGroups}
+        onToggleTeamExpansion={toggleTeamExpansion}
+        onOpenTeamModal={handleOpenTeamModal}
+        onDeleteTeam={handleDeleteTeam}
+        onDeleteUser={handleDeleteUser}
+        onPromoteUser={handlePromoteUser}
+        onDemoteUser={handleDemoteUser}
+      />
 
       <TeamEditModal
         editingItem={editingTeam}
@@ -529,7 +328,6 @@ const WhitelistTab: React.FC = () => {
         onUpdateTeam={handleUpdateTeam}
       />
 
-      {/* Alert Modal */}
       <AlertModal
         isOpen={isOpen}
         onClose={hideAlert}

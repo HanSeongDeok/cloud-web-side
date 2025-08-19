@@ -24,12 +24,9 @@ export const PropertyMinusButton: React.FC<PropertyMinusButtonProps> = ({
     <Button
       onClick={handleClick}
       disabled={disabled}
-      className={`shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] ${
-        disabled
-          ? "bg-gray-400 cursor-not-allowed text-gray-600"
-          : "bg-red-500 hover:bg-red-600 text-white"
-      }`}
+      variant={disabled ? "ghost" : "destructive"}
       size="default"
+      className="shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)]"
       title={
         disabled ? "BUILT_IN 속성은 삭제할 수 없습니다" : "선택된 속성 삭제"
       }

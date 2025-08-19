@@ -47,6 +47,15 @@ export const PERMISSION = {
   requestPermission: "/api/users/permission-request",
 } as const;
 
+/**
+ * 파일 프로퍼티 API EndPoint
+ */
+export const FILE_PROPERTY = {
+  files: "/api/v1/files",
+  properties: "/api/v1/files/properties",
+} as const;
+
+
 export const DB_PROPERTY = {
   columns: "/api/v1/admin/db/file-properties/columns",
   list: "/api/v1/admin/db/file-properties",
@@ -70,7 +79,6 @@ export const LUT_ITEM = {
 } as const;
 
 export const WHITELIST = {
-  //TODO: 추후 검색 API ENDPOINT 추가 필요
   list: `/api/v1/admin/whitelist/team`,
   createGroup: `/api/v1/admin/whitelist/groups`,
   updateGroup: (groupId: number) => `/api/v1/admin/whitelist/groups/${groupId}`,
@@ -78,6 +86,9 @@ export const WHITELIST = {
   deleteUser: (userId: number) => `/api/v1/admin/whitelist/users/${userId}`,
   promoteAdmin: `/api/v1/super-admin/whitelist/roles/users/promote`,
   demoteAdmin: `/api/v1/super-admin/whitelist/roles/users/demote`,
+  permissionRequests: `/api/v1/admin/whitelist/permission-requests`,
+  approveRequests: `/api/v1/admin/whitelist/permission-requests/approve`,
+  rejectRequests: `/api/v1/admin/whitelist/permission-requests/reject`,
 } as const;
 
 /**

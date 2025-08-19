@@ -7,7 +7,6 @@ import { RowDropDownMenu } from "@/components/DropDownMenu"
 import { useSelectionStore } from "@/stores/useSelectionStore"
 import { useSearchKeywordStore } from "@/stores/useSearchKeywordStore";
 import { debounce, throttle } from "lodash";  
-import { API_CONFIG, DATA_TABLE } from "@/api/api.config";
 
 export type Column = {
   fileName: string

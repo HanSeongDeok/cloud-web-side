@@ -7,7 +7,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { decodeJWT } from "@/handlers/events/jwt.config.handler";
 import {
   permissionPage,
   requestPermission,

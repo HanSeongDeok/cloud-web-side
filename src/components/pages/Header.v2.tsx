@@ -18,6 +18,8 @@ import { ChevronDownIcon, ClipboardList } from "lucide-react";
 import { useNavigate, useLocation, NavLink } from "react-router-dom";
 import { ROUTE_PATH } from "@/api/path.config";
 
+// TODO 리팩토링 필요
+// XXX 컴포넌트 별 세분화 및 기능별 파일 분리 필요 
 const HeaderV2 = memo(() => {
     const navigate = useNavigate();
     const location = useLocation();
@@ -110,7 +112,7 @@ const HeaderV2 = memo(() => {
                                     align="end"
                                     sideOffset={1}
                                     avoidCollisions={false}
-                                    className="w-[250px] bg-white border border-gray-200 shadow-xl rounded-xl overflow-hidden"
+                                    className="w-[250px] bg-white border border-gray-200 shadow-xl rounded-xl overflow-hidden translate-x-5"
                                     onMouseEnter={() => setIsDropdownOpen(true)}
                                     onMouseLeave={() => setIsDropdownOpen(false)}
                                 >

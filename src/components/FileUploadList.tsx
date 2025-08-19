@@ -3,7 +3,7 @@ import { useFileUploadStore } from "@/stores/useFileInputStore";
 import { Button } from "./ui/button";
 import { ScrollArea } from "./ui/scroll-area";
 import { Separator } from "./ui/separator";
-import { Trash2, FolderOpen, Info, Settings, FileX, RotateCcw } from "lucide-react";
+import { Trash2, Info, Settings, FileX, RotateCcw } from "lucide-react";
 import { memo } from "react";
 import { UploadBox } from "./UploadBox";
 import { useFileMultiSelectionStore, useFileSelectionStore } from "@/stores/useFileSelectionStore";
@@ -13,10 +13,9 @@ import {
     ContextMenuItem,
     ContextMenuSeparator,
     ContextMenuTrigger,
-    ContextMenuLabel,
 } from "./ui/context-menu";
 import { useFileMetaDataStore } from "@/stores/useFileMetaDataStore";
-import { handleDrop, handleFileChange } from "@/handlers/events/file.drop.handler";
+import { handleDrop } from "@/handlers/events/file.drop.handler";
 
 const FileUploadList = memo(() => {
   /**
@@ -73,7 +72,8 @@ const FileUploadList = memo(() => {
     >
       <div className="font-bold text-sm mb-2">파일 ({files.length})</div>
       <ScrollArea 
-        className="w-full h-120 mb-2 pr-4"
+        className="flex-1 overflow-auto mb-2 pr-4"
+        type="auto"
         onDrop={handleDrop}
         onDragOver={(e) => e.preventDefault()}
       >
@@ -85,7 +85,7 @@ const FileUploadList = memo(() => {
                   variant={isSelected(index) ? "secondary" : "outline"}
                   className={`h-18 flex justify-between items-center p-2 overflow-hidden transition-colors cursor-pointer ${
                     isSelected(index) ? 
-                      'text-blue-500 font-extrabold hover:text-blue-500 bg-gray-900 hover:bg-gray-900': 
+                      'text-sky-600 font-extrabold hover:text-sky-600 bg-sky-100 hover:bg-sky-200': 
                       'bg-muted'
                   }`}
                   onClick={(e) => {
@@ -98,7 +98,7 @@ const FileUploadList = memo(() => {
                   <div className="flex-1 min-w-0 flex flex-col items-start overflow-hidden">
                     <div className="text-sm text-left truncate w-full">{file.name}</div>
                     <div className={`text-xs text-left truncate w-full ${
-                      selectedFileIndices.includes(index) ? 'text-blue-100' : 'text-gray-500'
+                      selectedFileIndices.includes(index) ? 'text-gray-600' : 'text-gray-500'
                     }`}>
                       {new Date(file.lastModified).toLocaleDateString()} / {(file.size / (1024 * 1024)).toFixed(2)} MB
                     </div>

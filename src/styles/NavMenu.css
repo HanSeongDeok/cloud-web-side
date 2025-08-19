@@ -1,0 +1,47 @@
+@import "../index.css";
+
+.navContainer {
+    @apply fixed top-0 left-0 w-full bg-background shadow-md z-50 px-6 py-3 border-b border-border flex items-center;
+}
+
+.pageContainer {
+    @apply w-full max-w-[1600px] px-4 mt-8;
+}
+
+.sidebarTrigger {
+    @apply mr-4 w-11 h-11 z-90;
+}
+
+.serviceName {
+    @apply text-4xl font-bold text-sky-700;
+}
+
+.navMenu {
+    @apply ml-auto font-bold;
+}
+
+.navList {
+    @apply flex items-center gap-6;
+}
+
+.navLink {
+    @apply text-xl cursor-pointer font-bold;
+}
+
+.adminTrigger {
+    @apply font-medium px-2 py-1 hover:underline;
+}
+
+.userInfo {
+    @apply flex items-center gap-1 text-sm text-gray-300;
+}
+
+.avatar {
+    @apply w-6 h-6;
+}
+
+.mainContent {
+    @apply pt-20 px-2 w-full;
+}
+
+

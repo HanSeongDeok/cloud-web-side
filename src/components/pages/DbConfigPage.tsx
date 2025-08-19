@@ -1,5 +1,11 @@
 // src/pages/DbConfigPage.tsx
-import React, { useState, useEffect, useRef } from "react";
+import React, {
+  useState,
+  useEffect,
+  useRef,
+  useCallback,
+  useMemo,
+} from "react";
 import type { DbProperty, NewDbProperty } from "@/types/property";
 import DbConfigHeader from "@/components/dbconfig/DbConfigHeader";
 import type { AgGridReact } from "ag-grid-react";
@@ -24,8 +30,9 @@ import AlertModal from "@/components/ui/AlertModal";
 import { useAlert } from "@/hooks/useAlert";
 
 const DbConfigPage: React.FC = () => {
-  // 알림 모달 훅
+  // 알림 모달 훅 - 필요한 함수들만 구조분해
   const alertModal = useAlert();
+  const { showError, showSuccess, showWarning, showConfirm } = alertModal;
 
   //lut 관련 상태
   const [lutModalOpen, setLutModalOpen] = useState(false);
@@ -40,39 +47,23 @@ const DbConfigPage: React.FC = () => {
   ); // 현재 '수정중인' 속성 정보
   const [properties, setProperties] = useState<DbProperty[]>([]); //테이블 데이터
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [selectionKey, setSelectionKey] = useState(0); // 선택 변경을 감지하기 위한 키
+  const [selectedRows, setSelectedRows] = useState<DbProperty[]>([]); // 선택된 행들 상태로 관리
+
   // AG-Grid ref로 직접 접근
   const gridRef = useRef<AgGridReact>(null);
 
-  // 선택된 행들 중 BUILT_IN 타입이 있는지 확인하는 함수
-  const isRemoveDisabled = () => {
+  // 선택된 행들 중 BUILT_IN 타입이 있는지 확인하는 함수 - useMemo로 최적화
+  const isRemoveDisabled = useMemo(() => {
+    return selectedRows.some((row) => row.property_type === "BUILT_IN");
+  }, [selectedRows]);
+
+  // 선택 변경 핸들러 - 선택된 행들만 상태로 업데이트
+  const onSelectionChanged = useCallback(() => {
     const currentSelectedRows = gridRef.current?.api?.getSelectedRows() || [];
-    return currentSelectedRows.some(
-      (row: DbProperty) => row.property_type === "BUILT_IN"
-    );
-  };
-
-  // 선택 변경 핸들러 (리렌더링 트리거)
-  const onSelectionChanged = () => {
-    setSelectionKey((prev) => prev + 1); // 선택이 변경될 때마다 키 증가로 리렌더링 유도
-  };
-
-  // 컴포넌트 마운트 시 데이터 로드 + 주기적 새로고침(30초마다)
-  useEffect(() => {
-    // 초기 로드
-    loadProperties();
-
-    // 주기적 새로고침 (로딩 상태 표시)
-    const intervalId = setInterval(() => {
-      console.log("주기적 데이터 새로고침...");
-      loadProperties();
-    }, 30000);
-
-    return () => {
-      clearInterval(intervalId);
-    };
+    console.log("선택된 행들:", currentSelectedRows);
+    setSelectedRows(currentSelectedRows);
   }, []);
+
   /**
    * ==========================
    *   속성 관련 핸들러 (Property Handlers)
@@ -91,9 +82,8 @@ const DbConfigPage: React.FC = () => {
    * ⚠️ 이 주석 아래로 속성 관련 함수들을 배치하여 관리하세요.
    */
   // 🔄 데이터 로드/새로고침 통합 함수 (항상 로딩 상태 표시)
-  const loadProperties = async () => {
+  const loadProperties = useCallback(async () => {
     setLoading(true);
-    setError(null);
 
     try {
       console.log("속성 데이터 로딩/새로고침 시작...");
@@ -103,12 +93,28 @@ const DbConfigPage: React.FC = () => {
     } catch (err) {
       const errorMessage =
         err instanceof Error ? err.message : "데이터를 불러오는데 실패했습니다";
-      setError(errorMessage);
+      showError("데이터 로딩 실패", errorMessage);
       console.error("속성 데이터 로딩/새로고침 실패:", err);
     } finally {
       setLoading(false);
     }
-  };
+  }, [showError]);
+
+  // 컴포넌트 마운트 시 데이터 로드 + 주기적 새로고침(30초마다)
+  useEffect(() => {
+    // 초기 로드
+    loadProperties();
+
+    // 주기적 새로고침 (로딩 상태 표시)
+    const intervalId = setInterval(() => {
+      console.log("주기적 데이터 새로고침...");
+      loadProperties();
+    }, 30000);
+
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, [loadProperties]);
 
   //  속성 추가 모달 핸들러
   const handleAddProperty = () => {
@@ -142,27 +148,22 @@ const DbConfigPage: React.FC = () => {
       console.log("속성 저장 및 데이터 새로고침 완료");
     } catch (error) {
       console.error("속성 저장 실패:", error);
-      alertModal.showError(
-        "속성 저장 실패",
-        "속성 저장 중 오류가 발생했습니다."
-      );
+      showError("속성 저장 실패", "속성 저장 중 오류가 발생했습니다.");
     }
   };
 
   //  속성 제거 핸들러 (Pessimistic Update 방식)
   const handleRemoveProperty = async () => {
-    // AG-Grid에서 직접 선택된 행들 가져오기
-    const selectedRows = gridRef.current?.api?.getSelectedRows() || [];
-
+    // 상태로 관리되는 선택된 행들 사용
     if (selectedRows.length === 0) {
-      alertModal.showWarning("선택 항목 없음", "삭제할 속성을 선택해주세요.");
+      showWarning("선택 항목 없음", "삭제할 속성을 선택해주세요.");
       return;
     }
 
     const selectedIds = selectedRows.map((row: DbProperty) => row.id);
 
     // 확인 모달로 삭제 확인
-    alertModal.showConfirm(
+    showConfirm(
       "속성 삭제 확인",
       `선택된 ${selectedIds.length}개의 속성을 삭제하시겠습니까?\n삭제된 속성은 복구할 수 없습니다.`,
       async () => {
@@ -176,16 +177,13 @@ const DbConfigPage: React.FC = () => {
           await loadProperties();
 
           console.log("속성 삭제 완료:", selectedIds);
-          alertModal.showSuccess(
+          showSuccess(
             "삭제 완료",
             `${selectedIds.length}개의 속성이 삭제되었습니다.`
           );
         } catch (error) {
           console.error("속성 삭제 실패:", error);
-          alertModal.showError(
-            "삭제 실패",
-            "속성 삭제 중 오류가 발생했습니다."
-          );
+          showError("삭제 실패", "속성 삭제 중 오류가 발생했습니다.");
         }
       },
       "error"
@@ -237,7 +235,7 @@ const DbConfigPage: React.FC = () => {
       return true;
     } catch (error) {
       console.error("LUT 데이터 로딩 실패:", error);
-      alertModal.showError(
+      showError(
         "데이터 로딩 실패",
         "룩업테이블 데이터를 불러오는데 실패했습니다."
       );
@@ -249,7 +247,7 @@ const DbConfigPage: React.FC = () => {
   const handleAddLutItem = async (newItem: NewLutItem): Promise<void> => {
     try {
       if (lutPropertyId === null) {
-        alertModal.showError("오류", "속성 ID가 설정되지 않았습니다.");
+        showError("오류", "속성 ID가 설정되지 않았습니다.");
         return;
       }
 
@@ -260,16 +258,13 @@ const DbConfigPage: React.FC = () => {
       // 데이터 새로고침
       await refreshLUT();
 
-      alertModal.showSuccess(
+      showSuccess(
         "저장 완료",
         "룩업테이블 아이템이 성공적으로 저장되었습니다."
       );
     } catch (error) {
       console.error("룩업테이블 아이템 저장 실패:", error);
-      alertModal.showError(
-        "저장 실패",
-        "룩업테이블 아이템 저장 중 오류가 발생했습니다."
-      );
+      showError("저장 실패", "룩업테이블 아이템 저장 중 오류가 발생했습니다.");
     }
   };
 
@@ -277,7 +272,7 @@ const DbConfigPage: React.FC = () => {
   const handleDeleteLutItem = async (lutItemId: number): Promise<void> => {
     try {
       if (lutPropertyId === null) {
-        alertModal.showError("오류", "속성 ID가 설정되지 않았습니다.");
+        showError("오류", "속성 ID가 설정되지 않았습니다.");
         return;
       }
 
@@ -291,16 +286,13 @@ const DbConfigPage: React.FC = () => {
         setEditingLUT(null);
       }
 
-      alertModal.showSuccess(
+      showSuccess(
         "삭제 완료",
         "룩업테이블 아이템이 성공적으로 삭제되었습니다."
       );
     } catch (error) {
       console.error("룩업테이블 아이템 삭제 실패:", error);
-      alertModal.showError(
-        "삭제 실패",
-        "룩업테이블 아이템 삭제 중 오류가 발생했습니다."
-      );
+      showError("삭제 실패", "룩업테이블 아이템 삭제 중 오류가 발생했습니다.");
     }
   };
 
@@ -308,7 +300,7 @@ const DbConfigPage: React.FC = () => {
     try {
       if (editingLUT) {
         if (lutPropertyId === null) {
-          alertModal.showError("오류", "속성 ID가 설정되지 않았습니다.");
+          showError("오류", "속성 ID가 설정되지 않았습니다.");
           return;
         }
         // 기존 LUT 아이템 수정
@@ -317,123 +309,92 @@ const DbConfigPage: React.FC = () => {
         console.error("편집 중인 LUT 아이템이 없습니다.");
       }
       await refreshLUT();
-      alertModal.showSuccess(
+      showSuccess(
         "수정 완료",
         "룩업테이블 아이템이 성공적으로 저장되었습니다."
       );
     } catch (error) {
       console.error("룩업테이블 아이템 저장 실패:", error);
-      alertModal.showError(
-        "저장 실패",
-        "룩업테이블 아이템 저장 중 오류가 발생했습니다."
-      );
+      showError("저장 실패", "룩업테이블 아이템 저장 중 오류가 발생했습니다.");
     }
   };
   // LUT(룩업테이블) 순서 저장 핸들러
   const handleSaveLutOrder = async (updatedItems: LutItem[]): Promise<void> => {
     try {
       if (lutPropertyId === null) {
-        alertModal.showError("오류", "속성 ID가 설정되지 않았습니다.");
+        showError("오류", "속성 ID가 설정되지 않았습니다.");
         return;
       }
       await updateSortOrder(lutPropertyId, updatedItems);
       await refreshLUT();
-      alertModal.showSuccess(
-        "저장 완료",
-        "룩업테이블 순서가 성공적으로 저장되었습니다."
-      );
+      showSuccess("저장 완료", "룩업테이블 순서가 성공적으로 저장되었습니다.");
     } catch (error) {
       console.error("룩업테이블 순서 저장 실패:", error);
-      alertModal.showError(
-        "저장 실패",
-        "룩업테이블 순서 저장 중 오류가 발생했습니다."
-      );
+      showError("저장 실패", "룩업테이블 순서 저장 중 오류가 발생했습니다.");
     }
   };
   return (
-    <div className="min-h-screen bg-gray-100">
-      <div className="max-w-7xl mx-auto flex">
-        {/* Main Content */}
-        <div className="flex-1 p-6">
-          <DbConfigHeader
-            onAddProperty={handleAddProperty}
-            onRemoveProperty={handleRemoveProperty}
-            isRemoveDisabled={isRemoveDisabled()}
-          />
+    <div>
+      <h3 className="text-xl font-semibold mb-6">DB 속성 관리</h3>
+      <div className="min-h-screen bg-gray-100">
+        <div className="max-w-7xl mx-auto flex">
+          {/* Main Content */}
+          <div className="flex-1 p-6">
+            <DbConfigHeader
+              onAddProperty={handleAddProperty}
+              onRemoveProperty={handleRemoveProperty}
+              isRemoveDisabled={isRemoveDisabled}
+            />
 
-          {/* 시스템 속성 안내 정보 */}
-          <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
-            <div className="flex items-center">
-              <div className="flex-shrink-0">
-                <svg
-                  className="w-5 h-5 text-blue-400"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-              </div>
-              <div className="ml-3">
-                <p className="text-sm text-blue-700">
-                  <span className="font-medium">안내:</span> 시스템
-                  속성(BUILT_IN)은 삭제할 수 없습니다. 시스템 속성이 포함된 선택
-                  시 삭제 버튼이 비활성화됩니다.
-                </p>
-              </div>
-            </div>
+            <DbPropertyTable
+              ref={gridRef}
+              data={properties}
+              loading={loading}
+              onEditProperty={handleEditProperty}
+              onOpenLutModal={handleOpenLutModal}
+              onSelectionChanged={onSelectionChanged}
+            />
           </div>
-
-          <DbPropertyTable
-            ref={gridRef}
-            data={properties}
-            loading={loading}
-            error={error}
-            onEditProperty={handleEditProperty}
-            onOpenLutModal={handleOpenLutModal}
-            onSelectionChanged={onSelectionChanged}
-          />
         </div>
+
+        <PropertyEditModal
+          isOpen={editModalOpen}
+          onSave={handleSaveProperty}
+          onClose={() => setEditModalOpen(false)}
+          property={editingProperty}
+        />
+
+        <LutEditModal
+          initialItems={lutItems}
+          editingItem={editingLUT}
+          isOpen={lutModalOpen}
+          onClose={() => {
+            setLutModalOpen(false);
+            setEditingLUT(null);
+          }}
+          onEditItem={setEditingLUT}
+          onCreateItem={handleAddLutItem}
+          onDeleteItem={handleDeleteLutItem}
+          onUpdateItem={handleUpdateLUTItem}
+          onUpdateOrder={handleSaveLutOrder}
+          title={
+            properties.find((prop) => prop.id === lutPropertyId)?.name || ""
+          }
+        />
+
+        {/* 알림 모달 */}
+        <AlertModal
+          isOpen={alertModal.isOpen}
+          onClose={alertModal.hideAlert}
+          type={alertModal.config.type}
+          title={alertModal.config.title}
+          message={alertModal.config.message}
+          confirmText={alertModal.config.confirmText}
+          onConfirm={alertModal.config.onConfirm}
+          showCancel={alertModal.config.showCancel}
+          cancelText={alertModal.config.cancelText}
+        />
       </div>
-
-      <PropertyEditModal
-        isOpen={editModalOpen}
-        onSave={handleSaveProperty}
-        onClose={() => setEditModalOpen(false)}
-        property={editingProperty}
-      />
-
-      <LutEditModal
-        initialItems={lutItems}
-        editingItem={editingLUT}
-        isOpen={lutModalOpen}
-        onClose={() => {
-          setLutModalOpen(false);
-          setEditingLUT(null);
-        }}
-        onEditItem={setEditingLUT}
-        onCreateItem={handleAddLutItem}
-        onDeleteItem={handleDeleteLutItem}
-        onUpdateItem={handleUpdateLUTItem}
-        onUpdateOrder={handleSaveLutOrder}
-        title={properties.find((prop) => prop.id === lutPropertyId)?.name || ""}
-      />
-
-      {/* 알림 모달 */}
-      <AlertModal
-        isOpen={alertModal.isOpen}
-        onClose={alertModal.hideAlert}
-        type={alertModal.config.type}
-        title={alertModal.config.title}
-        message={alertModal.config.message}
-        confirmText={alertModal.config.confirmText}
-        onConfirm={alertModal.config.onConfirm}
-        showCancel={alertModal.config.showCancel}
-        cancelText={alertModal.config.cancelText}
-      />
     </div>
   );
 };

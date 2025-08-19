@@ -2,6 +2,10 @@ export interface MultiSelectOption {
     id: string;
     label: string;
 }
+export const typeOptions: MultiSelectOption[] = [
+    { id: "file", label: "FILE" },
+    { id: "folder", label: "FOLDER" },
+];
 
 // 각 MultiSelect의 옵션 정의
 export const vehicleOptions: MultiSelectOption[] = [

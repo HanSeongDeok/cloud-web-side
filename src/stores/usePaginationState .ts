@@ -29,7 +29,7 @@ export const usePaginationStore = create<PagnationState>((set, get) => ({
     fetchTotalRows: async () => {
         try {
             const response = await fetchDataTotalCount();
-            const totalRow = await response.json();
+            const totalRow = JSON.parse(response).totalCount;
             get().setTotalRow(totalRow);
         } catch (error) {
             console.error('Failed to fetch columns:', error);

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { X, AlertCircle, CheckCircle, XCircle, Info } from "lucide-react";
 import { Button } from "./button";
 
@@ -11,7 +11,7 @@ interface AlertModalProps {
   title: string;
   message: string;
   confirmText?: string;
-  onConfirm?: () => void;
+  onConfirm?: () => void | Promise<void>;
   showCancel?: boolean;
   cancelText?: string;
 }
@@ -27,13 +27,24 @@ const AlertModal: React.FC<AlertModalProps> = ({
   showCancel = false,
   cancelText = "취소",
 }) => {
+  const [isProcessing, setIsProcessing] = useState(false);
+
   if (!isOpen) return null;
 
-  const handleConfirm = () => {
-    if (onConfirm) {
-      onConfirm();
-    } else {
-      onClose();
+  const handleConfirm = async () => {
+    if (isProcessing) return; // 이미 처리 중이면 무시
+
+    setIsProcessing(true);
+    try {
+      if (onConfirm) {
+        await onConfirm();
+      } else {
+        onClose();
+      }
+    } catch (error) {
+      console.error("Modal confirm action failed:", error);
+    } finally {
+      setIsProcessing(false);
     }
   };
 
@@ -94,7 +105,6 @@ const AlertModal: React.FC<AlertModalProps> = ({
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div className="bg-white rounded-lg w-full max-w-md mx-4 shadow-xl">
-        {/* 헤더 */}
         <div className="flex items-center justify-between p-4 border-b">
           <div className="flex items-center gap-3">
             {getIcon()}
@@ -108,33 +118,33 @@ const AlertModal: React.FC<AlertModalProps> = ({
           </button>
         </div>
 
-        {/* 내용 */}
         <div className={`p-4 ${colors.bg} ${colors.border} border-t border-b`}>
           <p className={`text-sm ${colors.message} whitespace-pre-wrap`}>
             {message}
           </p>
         </div>
 
-        {/* 버튼 영역 */}
         <div className="flex gap-3 p-4">
+          <Button
+            type="button"
+            onClick={handleConfirm}
+            disabled={isProcessing}
+            className={`${showCancel ? "flex-1" : "w-full"} ${
+              colors.button
+            } text-white focus:ring-2 focus:ring-offset-2 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed`}
+          >
+            {isProcessing ? "처리 중..." : confirmText}
+          </Button>
           {showCancel && (
             <Button
               type="button"
               onClick={onClose}
-              className="flex-1 bg-gray-300 text-gray-700 hover:bg-gray-400 focus:ring-gray-500"
+              disabled={isProcessing}
+              className="flex-1 bg-gray-300 text-gray-700 hover:bg-gray-400 focus:ring-gray-500 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {cancelText}
             </Button>
           )}
-          <Button
-            type="button"
-            onClick={handleConfirm}
-            className={`${showCancel ? "flex-1" : "w-full"} ${
-              colors.button
-            } text-white focus:ring-2 focus:ring-offset-2 transition-colors font-medium`}
-          >
-            {confirmText}
-          </Button>
         </div>
       </div>
     </div>

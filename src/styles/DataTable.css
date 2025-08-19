@@ -42,24 +42,21 @@
 }
 
 /* Material 테마 헤더 폰트 색상 커스터마이징 */
-.ag-theme-custom .ag-header-cell {
+/* .ag-theme-custom .ag-header-cell {
     color: #9ca3af !important;
-    /* 옅은 회색 */
 }
 
 .ag-theme-custom .ag-header-cell-label {
     color: #9ca3af !important;
-    /* 옅은 회색 */
 }
 
 .ag-theme-custom .ag-header-cell-text {
     color: #9ca3af !important;
-    /* 옅은 회색 */
-}
+} */
 
 
 /* 🌙 스크롤바 다크 테마 */
-.ag-theme-custom ::-webkit-scrollbar {
+/* .ag-theme-custom ::-webkit-scrollbar {
     height: 10px;
     width: 10px;
 }
@@ -79,4 +76,4 @@
 
 .ag-header-cell-label {
     justify-content: center !important;
-}
+} */

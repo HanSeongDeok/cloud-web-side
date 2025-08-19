@@ -27,7 +27,7 @@ import { ScrollArea } from "@components/ui/scroll-area";
  * 데이터 입력 컴포넌트 - ag-grid용
  * @returns 데이터 입력 컴포넌트
  */
-const DataInput = memo(() => {
+const DataInput = () => {
     const searchKeyword = useSearchKeywordStore((state) => state.searchKeyword);
     const setSearchKeyword = useSearchKeywordStore((state) => state.setSearchKeyword);
     const searchData = useSearchKeywordStore((state) => state.searchData);
@@ -58,7 +58,7 @@ const DataInput = memo(() => {
     };
 
     return (
-        <div className="flex justify-center w-full mb-6">
+        <div className="flex justify-center w-full mb-4">
             <div className="relative w-full">
                 <Button
                     variant="ghost"
@@ -79,19 +79,31 @@ const DataInput = memo(() => {
                             handleSearch();
                         }
                     }}
-                    className="w-full h-15 !text-lg pl-13 pr-13"
+                    className="w-full h-15 !text-lg pl-13 pr-13 border-gray-400/50 focus:border-gray-400/60 focus:ring-1 focus:ring-blue-200/20"
                 />
-                <Dialog open={isOpen} onOpenChange={setIsOpen}>
+                <Dialog
+                    open={isOpen}
+                    onOpenChange={setIsOpen}>
                     <DialogTrigger asChild>
                         <Button
                             variant="ghost"
                             size="sm"
-                            className="absolute right-2 top-1/2 transform -translate-y-1/2 h-10 w-10 p-0 hover:bg-gray-100"
+                            className="absolute right-2 top-1/2 transform -translate-y-1/2 h-10 w-10 p-0 hover:bg-gray-100 cursor-pointer"
                         >
                             <Filter className="!h-5 !w-5" />
                         </Button>
                     </DialogTrigger>
-                    <DialogContent className="sm:max-w-[500px]">
+                    <DialogContent
+                        className="flex flex-col resize overflow-hidden border-2 border-blue-200 rounded-lg shadow-lg bg-white"
+                        style={{
+                            width: 'clamp(320px, 60vw, 1500px)',
+                            height: 'clamp(400px, 80vh, 1200px)',
+                            minWidth: 500,
+                            minHeight: 600,
+                            maxWidth: '95vw',
+                            maxHeight: '95vh',
+                        }}>
+                        {/* 헤더 영역 */}
                         <div className="pb-2">
                             <DialogHeader>
                                 <DialogTitle>고급 검색 기능</DialogTitle>
@@ -101,7 +113,11 @@ const DataInput = memo(() => {
                                 <Label className="text-sky-700 font-bold text-lg"> 파일 필터 </Label>
                             </DialogHeader>
                             <Separator className="my-2" />
-                            <div className="grid gap-4 px-2 py-4 max-h-147 overflow-y-auto scrollbar">
+                        </div>
+
+                        {/* 스크롤 영역 */}
+                        <div className="flex-1 overflow-y-auto px-2 py-4 min-h-0 scrollbar">
+                            <div className="grid gap-4">
                                 <div className="grid grid-cols-4 items-center gap-2">
                                     <div className="col-span-4">
                                         <Label htmlFor="fileType" className="mb-2 block text-left ml-1 text-base">타입</Label>
@@ -230,7 +246,9 @@ const DataInput = memo(() => {
                                 </div>
                             </div>
                         </div>
-                        <div className="flex justify-between items-center gap-2 mt-4">
+
+                        {/* 버튼 영역 */}
+                        <div className="h-20 border-t border-gray-200 bg-white px-6 flex items-center justify-between">
                             <Button variant="outline" onClick={handleReset}>
                                 <RefreshCcw className="w-4 h-4 mr-1" />
                                 초기화
@@ -240,12 +258,11 @@ const DataInput = memo(() => {
                                 <Button variant="outline" onClick={() => setIsOpen(false)}>필터 검색</Button>
                             </div>
                         </div>
-
                     </DialogContent>
                 </Dialog>
             </div>
         </div>
     );
-});
+};
 
-export default DataInput;   
+export default DataInput;

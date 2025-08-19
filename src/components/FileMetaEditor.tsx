@@ -1,4 +1,4 @@
-import { useFileUploadStore } from "@/stores/useFileInputStore";
+import { useFileToggleStore, useFileUploadStore } from "@/stores/useFileInputStore";
 import {
     Select,
     SelectTrigger,
@@ -11,7 +11,6 @@ import { memo } from "react";
 import { ScrollArea } from "./ui/scroll-area";
 import { useFileSelectionStore } from "@/stores/useFileSelectionStore";
 import { Separator } from "./ui/separator";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./ui/tooltip";
 import {
     ContextMenu,
     ContextMenuContent,
@@ -42,7 +41,8 @@ const FileMetaEditor = memo(() => {
     const fileMetadata = useFileMetaDataStore((state) => state.fileMetadata);
     const setFileMetadata = useFileMetaDataStore((state) => state.setFileMetadata);
     const clearFileMetadata = useFileMetaDataStore((state) => state.clearFileMetadata);
-    
+    const isFolderMode = useFileToggleStore((state) => state.isFolderMode);
+
     const handleResetDeliverableType = () => {
         const currentMetadata = fileMetadata[selectedFileIndex];
         if (currentMetadata) {
@@ -62,29 +62,50 @@ const FileMetaEditor = memo(() => {
     };
 
     return (
-        <div className="flex flex-col h-120 w-full">
+        <div className="flex flex-col h-full w-full">
             <div className="mb-2 flex items-center gap-2">
-                <Label className="mt-1 font-bold text-blue-500 text-left text-lg whitespace-nowrap">메타데이터 편집: </Label>
-                <TooltipProvider>
-                    <Tooltip>
-                        <TooltipTrigger asChild>
-                            <Label
-                                className="font-bold text-left text-2xl truncate block"
-                            >
-                                {file[selectedFileIndex]?.name}
-                            </Label>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                            <p>{file[selectedFileIndex]?.name}</p>
-                        </TooltipContent>
-                    </Tooltip>
-                </TooltipProvider>
+                <Label className="mt-1 font-bold text-blue-500 text-left text-lg whitespace-nowrap">선택 파일: </Label>
+                <Label
+                    className="font-bold text-left text-xl truncate block"
+                >
+                    {file[selectedFileIndex]?.name}
+                </Label>
             </div>
-            <Separator className="my-2 mb-2" />
-            <div className="grid gap-4">
-                <ScrollArea className="w-full h-125">
-                    <div className="space-y-4">
+            <Separator className="h-0.5 bg-gray-300 opacity-100 my-2 mb-4" />
+            <div className="flex-1 overflow-auto">
+                <ScrollArea
+                    className="h-full pr-4"
+                    type="auto"
+                    onDragOver={(e) => e.preventDefault()}
+                >
+                    <div className="space-y-4 pr-2">
+                        {isFolderMode && (
+                            <>
+                                <div className="rounded-lg border border-blue-200 bg-blue-50 p-4 mb-2">
+                                    <div>
+                                        <Label className="text-left font-bold text-xl mb-2 text-blue-600">Group Properties</Label>
+                                    </div>
+                                    <div>
+                                        <Label className="text-left font-bold text-lg mb-1">Group Name</Label>
+                                        <Input
+                                            className="mb-4"
+                                            placeholder="Enter group name"
+                                            value={""}
+                                        />
+                                    </div>
+                                    <div>
+                                        <Label className="text-left font-bold text-lg mb-1">Group Description</Label>
+                                        <Textarea
+                                            className="h-25 resize-none"
+                                            placeholder="Enter description..."
+                                        />
+                                    </div>
+                                </div>
+                                <Separator className="h-0.5 bg-gray-300 opacity-100 my-4 mb-2" />
+                            </>
+                        )}
                         <div>
+
                             <Label className="text-left font-bold text-lg mb-1">DeliverableType</Label>
                             <ContextMenu>
                                 <ContextMenuTrigger asChild>
@@ -151,7 +172,6 @@ const FileMetaEditor = memo(() => {
                                 </ContextMenuContent>
                             </ContextMenu>
                         </div>
-                            <Separator className="my-6 mb-4 !h-0.5"/>
                         <div>
                             <Label className="text-left font-bold text-lg mb-1">Vehicle</Label>
                             <Select
@@ -278,7 +298,6 @@ const FileMetaEditor = memo(() => {
                                 </SelectContent>
                             </Select>
                         </div>
-                        <Separator className="my-6 mb-4 !h-0.5"/>
                         <div>
                             <Label className="text-left font-bold text-lg mb-1">TcNumber</Label>
                             <Input
@@ -293,7 +312,7 @@ const FileMetaEditor = memo(() => {
                                 placeholder="Type SwVersion"
                                 value={fileMetadata[selectedFileIndex]?.swVersion || ""}
                                 onChange={(e) => setFileMetadata(selectedFileIndex, { swVersion: e.target.value })}
-                            />  
+                            />
                         </div>
                         <div    >
                             <Label className="text-left font-bold text-lg mb-1">DepArr</Label>

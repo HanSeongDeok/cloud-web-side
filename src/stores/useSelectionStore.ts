@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { ecuOptions, stepOptions, vehicleOptions, type MultiSelectOption } from "@/models/multiSelectModel";
+import { ecuOptions, stepOptions, vehicleOptions, typeOptions, type MultiSelectOption } from "@/models/multiSelectModel";
 
 interface SelectionState {
   selectedMap: Map<string, boolean>;
@@ -19,6 +19,7 @@ interface MultiSelectState {
 interface VehicleSelectionState extends MultiSelectState {}
 interface EcuSelectionState extends MultiSelectState {}
 interface StepSelectionState extends MultiSelectState {}
+interface TypeSelectionState extends MultiSelectState {}
 
 /**
  * 테이블 노드 선택 상태 관리
@@ -30,6 +31,17 @@ export const useSelectionStore = create<SelectionState>((set, get) => ({
     return get().selectedMap.get(nodeId) ?? false;
   },
   clearSelection: () => set({ selectedMap: new Map<string, boolean>() }),
+}));
+
+/**
+ * 배지 버튼 타입 선택 상태 관리
+ */
+export const useTypeSelectionStore = create<TypeSelectionState>((set, get) => ({
+  selected: [],
+  setSelected: (selected) => set({ selected }),
+  isAllSelected: () => get().selected.length === typeOptions.length,
+  clearAll: () => set({ selected: [] }),
+  changeAll: (options: MultiSelectOption[]) => set({ selected: [] }),
 }));
 
 /**

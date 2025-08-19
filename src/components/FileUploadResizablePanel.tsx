@@ -18,7 +18,7 @@ const FileUploadResizablePanel = memo(() => {
             direction="horizontal" 
             onLayout={handleResize} 
         >
-            <ResizablePanel defaultSize={leftPanelWidth} minSize={28} maxSize={50} className="p-2 border-r">
+            <ResizablePanel defaultSize={leftPanelWidth} minSize={28} maxSize={50} className="p-2 border-r border-gray-300">
                 <FileUploadList />
             </ResizablePanel>
             <ResizableHandle />
