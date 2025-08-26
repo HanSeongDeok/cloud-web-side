@@ -51,14 +51,14 @@ const AlertModal: React.FC<AlertModalProps> = ({
   const getIcon = () => {
     switch (type) {
       case "success":
-        return <CheckCircle className="w-8 h-8 text-green-500" />;
+        return <CheckCircle className="w-6 h-6 text-green-500" />;
       case "error":
-        return <XCircle className="w-8 h-8 text-red-500" />;
+        return <XCircle className="w-6 h-6 text-red-500" />;
       case "warning":
-        return <AlertCircle className="w-8 h-8 text-yellow-500" />;
+        return <AlertCircle className="w-6 h-6 text-yellow-500" />;
       case "info":
       default:
-        return <Info className="w-8 h-8 text-blue-500" />;
+        return <Info className="w-6 h-6 text-blue-500" />;
     }
   };
 
@@ -103,49 +103,61 @@ const AlertModal: React.FC<AlertModalProps> = ({
   const colors = getColors();
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg w-full max-w-md mx-4 shadow-xl">
-        <div className="flex items-center justify-between p-4 border-b">
-          <div className="flex items-center gap-3">
-            {getIcon()}
-            <h2 className={`text-lg font-semibold ${colors.title}`}>{title}</h2>
-          </div>
-          <button
-            onClick={onClose}
-            className="text-gray-400 hover:text-gray-600 transition-colors"
+    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+      <div className="relative bg-white/95 backdrop-blur-xl rounded-2xl w-full max-w-sm mx-auto shadow-[0_32px_64px_-12px_rgba(0,0,0,0.25)] border border-white/20 transform animate-in zoom-in-95 duration-200">
+        {/* 아이콘 영역 - 상단 중앙 */}
+        <div className="flex flex-col items-center pt-6 pb-4">
+          <div
+            className={`p-2 rounded-full ${colors.bg} ${colors.border} border-2 mb-3 shadow-lg`}
           >
-            <X size={20} />
-          </button>
-        </div>
-
-        <div className={`p-4 ${colors.bg} ${colors.border} border-t border-b`}>
-          <p className={`text-sm ${colors.message} whitespace-pre-wrap`}>
+            {getIcon()}
+          </div>
+          <h2 className={`text-xl font-bold ${colors.title} text-center mb-2`}>
+            {title}
+          </h2>
+          <p
+            className={`text-sm ${colors.message} text-center px-6 leading-relaxed whitespace-pre-wrap`}
+          >
             {message}
           </p>
         </div>
 
-        <div className="flex gap-3 p-4">
+        {/* 버튼 영역 */}
+        <div className="flex flex-col gap-3 p-6 pt-2">
           <Button
             type="button"
             onClick={handleConfirm}
             disabled={isProcessing}
-            className={`${showCancel ? "flex-1" : "w-full"} ${
-              colors.button
-            } text-white focus:ring-2 focus:ring-offset-2 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed`}
+            className={`w-full h-12 ${colors.button} text-white rounded-xl font-semibold text-base shadow-lg hover:shadow-xl transform hover:scale-[1.02] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none`}
           >
-            {isProcessing ? "처리 중..." : confirmText}
+            {isProcessing ? (
+              <div className="flex items-center justify-center gap-2">
+                <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                처리 중...
+              </div>
+            ) : (
+              confirmText
+            )}
           </Button>
           {showCancel && (
             <Button
               type="button"
               onClick={onClose}
               disabled={isProcessing}
-              className="flex-1 bg-gray-300 text-gray-700 hover:bg-gray-400 focus:ring-gray-500 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full h-12 bg-gray-100 text-gray-700 rounded-xl font-semibold text-base hover:bg-gray-200 transform hover:scale-[1.02] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
             >
               {cancelText}
             </Button>
           )}
         </div>
+
+        {/* 닫기 버튼 - 우상단 */}
+        <button
+          onClick={onClose}
+          className="absolute top-4 right-4 w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors duration-200"
+        >
+          <X size={16} className="text-gray-500" />
+        </button>
       </div>
     </div>
   );

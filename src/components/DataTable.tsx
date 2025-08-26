@@ -87,7 +87,7 @@ const DataTable = React.memo(() => {
           ref={gridRef}
           enableBrowserTooltips={true}
           theme={themeMaterial}
-          rowData={data}
+          rowData={data}  
           columnDefs={columns}
           rowHeight={60}
           pagination={false}

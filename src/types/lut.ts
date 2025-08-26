@@ -1,12 +1,12 @@
 // property_lut 기본 인터페이스
 export interface LutItem {
   id: number;
-  property_metadata_id: number; // 속성 메타데이터 ID
-  lut_value: string;
+  propertyMetadataId: number; // 속성 메타데이터 ID
+  lutValue: string;
   description: string | null; // 설명 (null 가능)
-  sort_order: number; // 정렬 순서
-  created_by: number; // 사용자 ID
-  created_at: Date;
+  sortOrder: number; // 정렬 순서
+  createdBy: number; // 사용자 ID
+  createdAt: Date;
   isActive: boolean; // 활성화 여부 (선택적, 기본값: false)
 }
 
@@ -14,10 +14,10 @@ export interface LutItem {
 export type NewLutItem = Omit<
   LutItem,
   | "id"
-  | "sort_order"
-  | "created_at"
-  | "created_by"
-  | "property_metadata_id"
+  | "sortOrder"
+  | "createdAt"
+  | "createdBy"
+  | "propertyMetadataId"
   | "isActive"
 >;
 

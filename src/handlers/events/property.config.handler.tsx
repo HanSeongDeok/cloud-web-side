@@ -2,10 +2,10 @@ import type { ColDef } from "ag-grid-community";
 
 export type Column = {
   name: string;
-  data_type: string;
-  use_lut: string;
+  dataType: string;
+  useLut: string;
   description: string;
-  property_type: string;
+  propertyType: string;
 };
 
 /**
@@ -25,10 +25,10 @@ const createNameColumn = (name: string): ColDef<Column> => {
  * 속성 타입 컬럼 생성
  * @returns 속성 타입 컬럼
  */
-const createDataTypeColumn = (data_type: string): ColDef<Column> => {
+const createDataTypeColumn = (dataType: string): ColDef<Column> => {
   return {
-    headerName: data_type,
-    field: "data_type",
+    headerName: dataType,
+    field: "dataType",
     flex: 1,
     cellStyle: { textAlign: "center" },
   };
@@ -38,10 +38,10 @@ const createDataTypeColumn = (data_type: string): ColDef<Column> => {
  * 참조표 컬럼 생성
  * @returns 참조표 컬럼
  */
-const createUseLutColumn = (use_lut: string): ColDef<Column> => {
+const createUseLutColumn = (useLut: string): ColDef<Column> => {
   return {
-    headerName: use_lut,
-    field: "use_lut",
+    headerName: useLut,
+    field: "useLut",
     flex: 1,
     cellStyle: { textAlign: "center" },
   };
@@ -64,10 +64,10 @@ const createDescriptionColumn = (description: string): ColDef<Column> => {
  * 속성 타입 컬럼 생성
  * @returns 속성 타입 컬럼
  */
-const createPropertyTypeColumn = (property_type: string): ColDef<Column> => {
+const createPropertyTypeColumn = (propertyType: string): ColDef<Column> => {
   return {
-    headerName: property_type,
-    field: "property_type",
+    headerName: propertyType,
+    field: "propertyType",
     flex: 1,
     cellStyle: { textAlign: "center" },
   };
@@ -81,10 +81,10 @@ const createPropertyTypeColumn = (property_type: string): ColDef<Column> => {
 export const columnDefs = (columns: Column): ColDef<Column>[] => {
   return [
     createNameColumn(columns.name),
-    createDataTypeColumn(columns.data_type),
-    createUseLutColumn(columns.use_lut),
+    createDataTypeColumn(columns.dataType),
+    createUseLutColumn(columns.useLut),
     createDescriptionColumn(columns.description),
-    createPropertyTypeColumn(columns.property_type),
+    createPropertyTypeColumn(columns.propertyType),
   ];
 };
 

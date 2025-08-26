@@ -164,8 +164,8 @@ const FileMetaEditor = memo(() => {
                                     <ContextMenuLabel>TestClassification</ContextMenuLabel>
                                     <ContextMenuSeparator />
                                     <ContextMenuItem
-                                        className="h-8 cursor-pointer font-bold text-sm flex items-center gap-2 px-3"
-                                        onClick={handleResetTestClassification}>
+                                            className="h-8 cursor-pointer font-bold text-sm flex items-center gap-2 px-3"
+                                            onClick={handleResetTestClassification}>
                                         <RotateCcw className="mr-2 h-4 w-4" />
                                         초기화
                                     </ContextMenuItem>

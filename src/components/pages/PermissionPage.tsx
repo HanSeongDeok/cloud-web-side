@@ -64,7 +64,12 @@ const PermissionPage = memo(() => {
           console.log(checkData);
 
           if (checkData.isWhitelisted) {
-            setPermissionData({ hasPermission: true, isRequesting: false });
+            setPermissionData({ hasPermission: true, isRequesting: false, 
+              name: checkData.name,
+              email: checkData.email,
+              role: checkData.role,
+              id: checkData.id
+            });
             navigate("/storage", { replace: true });
             return;
           }
@@ -162,12 +167,12 @@ const PermissionPage = memo(() => {
               // const response = await requestPermissionDev()
               if (response.ok) {
                 console.log(response);
-                setPermissionData({ isRequesting: true });
+                setPermissionData({ isRequesting: true, hasPermission: false });
               } else {
                 const errorData: ErrorResponse = await response.json();
                 console.log(errorData);
                 if (errorData.code === "AUTH_008") {
-                  setPermissionData({ isRequesting: true });
+                  setPermissionData({ isRequesting: true, hasPermission: false });
                 }
 
                 if (

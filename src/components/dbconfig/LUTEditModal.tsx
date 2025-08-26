@@ -52,7 +52,7 @@ function SortableItem({
       ref={setNodeRef}
       style={style}
       onClick={() => onEditItemClick(item)}
-      className={`flex items-center p-4 hover:bg-gray-50 cursor-pointer transition-colors ${
+      className={`flex items-center py-2 px-4 hover:bg-gray-50 cursor-pointer transition-colors ${
         editingItem?.id === item.id
           ? "bg-blue-50 border-l-4 border-blue-500"
           : ""
@@ -81,7 +81,7 @@ function SortableItem({
 
       {/* 아이템 내용 */}
       <div className="flex-1">
-        <div className="font-medium text-gray-900">{item.lut_value}</div>
+        <div className="font-medium text-gray-900">{item.lutValue}</div>
         {item.description && (
           <div className="text-sm text-gray-500 mt-1">{item.description}</div>
         )}
@@ -96,7 +96,7 @@ function SortableItem({
           onClick={(e) => {
             e.stopPropagation(); // 행 클릭 이벤트 방지
             const confirmDelete = window.confirm(
-              `"${item.lut_value}" 아이템을 삭제하시겠습니까?`
+              `"${item.lutValue}" 아이템을 삭제하시겠습니까?`
             );
             if (confirmDelete) {
               onDeleteItem(item.id);
@@ -121,7 +121,7 @@ interface LutEditModalProps {
   title?: string;
   initialItems?: LutItem[];
   editingItem?: LutItem | null;
-  onUpdateItem: () => void;
+  onUpdateItem: (item: LutItem) => Promise<void>;
   onUpdateOrder: (items: LutItem[]) => Promise<void>;
 }
 
@@ -150,11 +150,11 @@ const LutEditModal = ({
     })
   );
 
-  // initialItems가 변경될 때 localItems 동기화 (sort_order 기준으로 정렬)
+  // initialItems가 변경될 때 localItems 동기화 (sortOrder 기준으로 정렬)
   // 최초로 부모에게 받아올때 initialItems 를 토대로 정렬시켜서 localItems에 저장
   useEffect(() => {
     const sortedItems = [...initialItems].sort(
-      (a, b) => a.sort_order - b.sort_order
+      (a, b) => a.sortOrder - b.sortOrder
     );
     setLocalItems(sortedItems);
   }, [initialItems]);
@@ -164,7 +164,7 @@ const LutEditModal = ({
       // editingItem이 있으면 폼에 표시, 없으면 빈 폼
       if (editingItem) {
         setFormData({
-          value: editingItem.lut_value,
+          value: editingItem.lutValue,
           description: editingItem.description ?? "",
         });
       } else {
@@ -176,17 +176,19 @@ const LutEditModal = ({
   const handleAddOrUpdateItem = async () => {
     try {
       if (editingItem) {
-        onEditItem({
+        const updatedItem = {
           ...editingItem,
-          lut_value: formData.value.trim(),
+          lutValue: formData.value.trim(),
           description: formData.description.trim(),
-        });
-        onUpdateItem();
+        };
+        await onUpdateItem(updatedItem);
+
+        onEditItem(updatedItem);
         alert("아이템이 수정되었습니다."); // 임시
       } else {
         // 새 아이템 추가 모드
         await onCreateItem({
-          lut_value: formData.value.trim(),
+          lutValue: formData.value.trim(),
           description: formData.description.trim(),
         });
       }
@@ -204,7 +206,7 @@ const LutEditModal = ({
     onEditItem(item);
     // 폼에 해당 아이템 정보 표시
     setFormData({
-      value: item.lut_value,
+      value: item.lutValue,
       description: item.description ?? "",
     });
   };
@@ -230,20 +232,20 @@ const LutEditModal = ({
 
         const newItems = arrayMove(items, oldIndex, newIndex);
 
-        // sort_order 재설정 (1부터 시작)
+        // sortOrder 재설정 (1부터 시작)
         return newItems.map((item, index) => ({
           ...item,
-          sort_order: index + 1,
+          sortOrder: index + 1,
         }));
       });
     }
   }
 
   const handleSave = async () => {
-    // 순서가 변경되었는지 확인 (sort_order 기준)
+    // 순서가 변경되었는지 확인 (sortOrder 기준)
     const orderChanged = localItems.some((item) => {
       const originalItem = initialItems.find((orig) => orig.id === item.id);
-      return originalItem && originalItem.sort_order !== item.sort_order;
+      return originalItem && originalItem.sortOrder !== item.sortOrder;
     });
 
     if (orderChanged) {
@@ -268,7 +270,7 @@ const LutEditModal = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+    <div className="fixed inset-0 bg-black/40 bg-opacity-50 flex items-center justify-center z-50 p-4">
       <div className="bg-white rounded-lg w-full max-w-2xl max-h-[90vh] overflow-hidden flex flex-col">
         {/* 헤더 */}
         <div className="flex items-center justify-between p-6 border-b">
@@ -355,7 +357,7 @@ const LutEditModal = ({
                   onClick={() => {
                     if (editingItem) {
                       const confirmDelete = window.confirm(
-                        `"${editingItem.lut_value}" 아이템을 삭제하시겠습니까?`
+                        `"${editingItem.lutValue}" 아이템을 삭제하시겠습니까?`
                       );
                       if (confirmDelete) {
                         onDeleteItem(editingItem.id);

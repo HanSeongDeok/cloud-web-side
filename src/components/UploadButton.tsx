@@ -17,13 +17,47 @@ import { useFileMetaDataStore } from "@/stores/useFileMetaDataStore";
 import { useFileMultiSelectionStore, useFileSelectionStore } from "@/stores/useFileSelectionStore";
 import { useState } from "react";
 import Toggle from "./ui/toggle";
-import { useDataTableStore } from "@/stores/useTableDataStore";
+import { fetchInitUpload, fetchUpload, fetchUploadComplete } from "@/handlers/services/upLoad.service.handler";
+
+export interface UploadData {
+    sessionId: string;
+    id: number;
+    presignedUrl: string;
+    file: File;
+    type: string;
+}
+
+export interface UploadFileData {
+    id: number;
+    type: string;
+    etag: string;
+    status: string;
+}
+
+export interface UploadCompleteData {
+    sessionId: string;
+    files: UploadFileData[];
+}
+
+export interface FileInfo {
+    name: string;
+    fileSize: number;
+    fileExtension: string;
+    file: File;
+    mimeType: string;
+    description?: string;
+    vehicle?: string;
+    testResult?: string;
+  }
 
 const UploadButton = memo(() => {
     // 업로드 다이얼로그 열기 닫기
     const [isOpen, setIsOpen] = useState(false);
 
-    // 선택된 파일 상태
+    // 선택된 파일 목록
+    const files = useFileUploadStore((state) => state.selectedFiles);
+
+    // 선택 상태
     const selectedFiles = useFileUploadStore((state) => state.selectedFiles);
     const clearFiles = useFileUploadStore((state) => state.clearFiles);
 
@@ -35,11 +69,6 @@ const UploadButton = memo(() => {
     const clearSelectedFileIndex = useFileSelectionStore((state) => state.clearSelectedFileIndex);
     const clearSelectedFileIndices = useFileMultiSelectionStore((state) => state.clearSelectedFileIndices);
 
-    /**
-     * 
-     */
-    const fetchData = useDataTableStore((state) => state.fetchData);
-
     const handleReset = () => {
         clearFiles();
         clearAllMetadata();
@@ -47,13 +76,51 @@ const UploadButton = memo(() => {
         clearSelectedFileIndices();
     }
     // TODO 업로드 로직 추가
-    const handleUpload = () => {
+    const handleUpload = async () => {
         // setIsOpen(false);
         if (isFolderMode) {
             console.log("folder mode");
             
         } else {
             console.log("file mode");
+            try {
+                // 1. 업로드 초기화
+                if (files.length > 0) {
+                    const fileInfo: FileInfo[] = files.map((file) => ({
+                        name: file.name,
+                        fileSize: file.size,
+                        fileExtension: file.name.split('.').pop() || '',
+                        mimeType: file.type,
+                        file: file
+                    }));
+                    const uploadDatas: UploadData[] = await fetchInitUpload(fileInfo, "INDIVIDUAL");
+                    console.log(uploadDatas);
+
+                    const uploadResp = await fetchUpload(uploadDatas);
+                    console.log(uploadResp);
+                    
+                    const uploadComplete = await fetchUploadComplete(uploadResp);
+                    console.log(uploadComplete);
+                }
+
+                // 3. 업로드 완료 알리기
+                // await fetch("/api/upload/complete", {
+                //   method: "POST",
+                //   headers: { "Content-Type": "application/json" },
+                //   body: JSON.stringify({
+                //     sessionId,
+                //     objectKey,
+                //     eTag,
+                //     contentLength: file.size,
+                //     originalFileName: file.name,
+                //     contentType: file.type
+                //   })
+                // });
+            
+                console.log("업로드 성공!");
+              } catch (err) {
+                console.error("업로드 실패", err);
+              }
         }
     }
 

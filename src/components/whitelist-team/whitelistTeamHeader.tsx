@@ -39,7 +39,7 @@ const WhitelistTeamHeader: React.FC<WhitelistTeamHeaderProps> = ({
           <RotateCcw className={`w-4 h-4 ${loading ? "animate-spin" : ""}`} />
         </button>
         <button
-          onClick={onAddTeam}
+          onClick={() => onAddTeam()}
           className="bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center space-x-2 hover:bg-blue-700 transition-colors shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)]"
         >
           <Plus className="w-4 h-4" />

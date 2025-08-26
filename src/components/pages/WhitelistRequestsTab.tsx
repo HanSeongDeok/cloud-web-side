@@ -117,6 +117,7 @@ const WhitelistRequestsTab: React.FC = () => {
         requests: prev.requests.filter((r) => !selectedRows.includes(r.id)),
       }));
       setSelectedRows([]); // 성공 시 선택 초기화
+      alertModal.hideAlert(); // 성공 시 모달 닫기
       toast.success(`${selectedRows.length}개 권한 요청이 승인되었습니다.`, {
         duration: 3000,
       });
@@ -145,6 +146,7 @@ const WhitelistRequestsTab: React.FC = () => {
         requests: prev.requests.filter((r) => !selectedRows.includes(r.id)),
       }));
       setSelectedRows([]); // 성공 시 선택 초기화
+      alertModal.hideAlert(); // 성공 시 모달 닫기
       toast.success(`${selectedRows.length}개 권한 요청이 거절되었습니다.`, {
         duration: 3000,
       });
@@ -171,6 +173,7 @@ const WhitelistRequestsTab: React.FC = () => {
           ...prev,
           requests: prev.requests.filter((r) => r.id !== id),
         }));
+        alertModal.hideAlert(); // 성공 시 모달 닫기
         toast.success("권한 요청이 승인되었습니다.", {
           duration: 3000,
         });
@@ -199,6 +202,7 @@ const WhitelistRequestsTab: React.FC = () => {
           ...prev,
           requests: prev.requests.filter((r) => r.id !== id),
         }));
+        alertModal.hideAlert(); // 성공 시 모달 닫기
         toast.success("권한 요청이 거절되었습니다.", {
           duration: 3000,
         });
@@ -222,7 +226,7 @@ const WhitelistRequestsTab: React.FC = () => {
   const handleConfirmSelectedApprove = useCallback(() => {
     showConfirm(
       "승인 확인",
-      `선택된 ${selectedRows.length}개의 권한 요청을 승인하시겠습니까?\n승인된 사용자는 즉시 화이트리스트에 추가됩니다.`,
+      `선택된 ${selectedRows.length}개의 권한 요청을 승인하시겠습니까?\n(사용자에게 email이 전송됩니다.)`,
       handleAcceptSelected,
       "info"
     );
@@ -231,7 +235,7 @@ const WhitelistRequestsTab: React.FC = () => {
   const handleConfirmSelectedReject = useCallback(() => {
     showConfirm(
       "거절 확인",
-      `선택된 ${selectedRows.length}개의 권한 요청을 거절하시겠습니까?\n거절된 요청은 영구적으로 삭제됩니다.`,
+      `선택된 ${selectedRows.length}개의 권한 요청을 거절하시겠습니까?\n(사용자에게 email이 전송됩니다.)`,
       handleRejectSelected,
       "error"
     );
@@ -241,7 +245,7 @@ const WhitelistRequestsTab: React.FC = () => {
     (id: number) => {
       showConfirm(
         "권한 승인",
-        "이 사용자의 권한 요청을 승인하시겠습니까?\n승인된 사용자는 즉시 화이트리스트에 추가됩니다.",
+        "사용자의 권한 요청을 승인하시겠습니까?\n(사용자에게 email이 전송됩니다.)",
         () => handleAcceptSingle(id),
         "info"
       );
@@ -253,7 +257,7 @@ const WhitelistRequestsTab: React.FC = () => {
     (id: number) => {
       showConfirm(
         "권한 거절",
-        "이 사용자의 권한 요청을 거절하시겠습니까?\n거절된 요청은 영구적으로 삭제됩니다.",
+        "사용자의 권한 요청을 거절하시겠습니까?\n(사용자에게 email이 전송됩니다.)",
         () => handleRejectSingle(id),
         "error"
       );

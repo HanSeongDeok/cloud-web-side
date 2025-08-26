@@ -20,31 +20,31 @@ const PropertyEditModal = ({
 }: PropertyEditModalProps) => {
   const [formData, setFormData] = useState({
     name: "",
-    data_type: "TEXT" as "TEXT" | "NUMBER" | "DATE" | "BOOLEAN",
-    use_lut: 0 as 0 | 1,
+    dataType: "TEXT" as "TEXT" | "NUMBER" | "DATE" | "BOOLEAN",
+    useLut: false as false | true,
     description: "",
   });
 
   // BUILT_IN 타입 여부 확인
-  const isBuiltIn = property?.property_type === "BUILT_IN";
+  const isBuiltIn = property?.propertyType === "BUILT_IN";
   // USER_DEFINED 타입 여부 확인
-  const isUserDefined = property?.property_type === "USER_DEFINED";
+  const isUserDefined = property?.propertyType === "USER_DEFINED";
 
   useEffect(() => {
     if (property) {
       // 편집 모드일 때 기존 데이터 로드
       setFormData({
         name: property.name,
-        data_type: property.data_type,
-        use_lut: property.use_lut,
+        dataType: property.dataType,
+        useLut: property.useLut,
         description: property.description,
       });
     } else {
       // 새로 만들기 모드일 때 초기화
       setFormData({
         name: "",
-        data_type: "TEXT",
-        use_lut: 0,
+        dataType: "TEXT",
+        useLut: false,
         description: "",
       });
     }
@@ -68,12 +68,12 @@ const PropertyEditModal = ({
   };
   if (!isOpen) return null;
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div className="fixed inset-0 bg-black/40 bg-opacity-50 flex items-center justify-center z-50">
       <div className="bg-white rounded-lg w-full max-w-md mx-4 max-h-[90vh] overflow-y-auto">
         {/* 헤더 */}
         <div className="flex items-center justify-between p-6 border-b">
           <h2 className="text-xl font-semibold text-gray-900">{title}</h2>
-          <button 
+          <button
             onClick={onClose}
             className="text-gray-400 hover:text-gray-600 transition-colors"
             title="close"
@@ -113,10 +113,10 @@ const PropertyEditModal = ({
             </label>
             <select
               title="type"
-              value={formData.data_type}
+              value={formData.dataType}
               onChange={(e) =>
                 handleInputChange(
-                  "data_type",
+                  "dataType",
                   e.target.value as "TEXT" | "NUMBER" | "DATE" | "BOOLEAN"
                 )
               }
@@ -150,14 +150,11 @@ const PropertyEditModal = ({
               <label className="flex items-center">
                 <input
                   type="radio"
-                  name="use_lut"
+                  name="useLut"
                   value={1}
-                  checked={formData.use_lut === 1}
+                  checked={formData.useLut === true}
                   onChange={(e) =>
-                    handleInputChange(
-                      "use_lut",
-                      parseInt(e.target.value) as 0 | 1
-                    )
+                    handleInputChange("useLut", e.target.value === "1")
                   }
                   disabled={isBuiltIn || isUserDefined}
                   className="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
@@ -175,14 +172,11 @@ const PropertyEditModal = ({
               <label className="flex items-center">
                 <input
                   type="radio"
-                  name="use_lut"
+                  name="useLut"
                   value={0}
-                  checked={formData.use_lut === 0}
+                  checked={formData.useLut === false}
                   onChange={(e) =>
-                    handleInputChange(
-                      "use_lut",
-                      parseInt(e.target.value) as 0 | 1
-                    )
+                    handleInputChange("useLut", e.target.value === "1")
                   }
                   disabled={isBuiltIn || isUserDefined}
                   className="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"

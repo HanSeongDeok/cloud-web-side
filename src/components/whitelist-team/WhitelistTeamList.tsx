@@ -129,19 +129,16 @@ const WhitelistTeamList: React.FC<WhitelistTeamListProps> = ({
                       </span>
                     </div>
                   </div>
-                  {user.role !== "ROLE_SUPER_ADMIN" ? (
+                  {user.role !== "SUPER_ADMIN" ? (
                     <div className="flex items-center space-x-14">
                       <Select
-                        value={user.role || "ROLE_USER"}
+                        value={user.role || "USER"}
                         onValueChange={(newRole) => {
-                          if (
-                            newRole === "ROLE_ADMIN" &&
-                            user.role !== "ROLE_ADMIN"
-                          ) {
+                          if (newRole === "ADMIN" && user.role !== "ADMIN") {
                             onPromoteUser(user.id, user.name);
                           } else if (
-                            newRole === "ROLE_USER" &&
-                            user.role === "ROLE_ADMIN"
+                            newRole === "USER" &&
+                            user.role === "ADMIN"
                           ) {
                             onDemoteUser(user.id, user.name);
                           }
@@ -152,13 +149,13 @@ const WhitelistTeamList: React.FC<WhitelistTeamListProps> = ({
                           size="sm"
                           className={cn(
                             "w-35 rounded-full transition-all duration-200 text-xs", // 세로폭(h) 줄이고 글씨 크기(text-xs)도 줄임
-                            user.role === "ROLE_ADMIN"
+                            user.role === "ADMIN"
                               ? "border-orange-300 bg-orange-50 text-orange-700 hover:border-orange-400 hover:bg-orange-100"
                               : "border-blue-300 bg-blue-50 text-blue-700 hover:border-blue-400 hover:bg-blue-100"
                           )}
                         >
                           <div className="flex items-center space-x-1">
-                            {user.role === "ROLE_ADMIN" ? (
+                            {user.role === "ADMIN" ? (
                               <>
                                 <UserCheck className="w-3 h-3" />{" "}
                                 {/* 아이콘도 작게 */}
@@ -173,13 +170,13 @@ const WhitelistTeamList: React.FC<WhitelistTeamListProps> = ({
                           </div>
                         </SelectTrigger>
                         <SelectContent className="bg-white border border-gray-200 shadow-lg">
-                          <SelectItem value="ROLE_ADMIN">
+                          <SelectItem value="ADMIN">
                             <div className="flex items-center space-x-2">
                               <UserCheck className="w-4 h-4" />
                               <span>서브 관리자</span>
                             </div>
                           </SelectItem>
-                          <SelectItem value="ROLE_USER">
+                          <SelectItem value="USER">
                             <div className="flex items-center space-x-2">
                               <User className="w-4 h-4" />
                               <span>사용자</span>

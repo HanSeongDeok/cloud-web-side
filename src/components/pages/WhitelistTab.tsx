@@ -9,11 +9,11 @@ import type {
 import {
   getWhitelistCollection,
   deleteGroup,
-  deleteUser,
   addGroup,
   updateGroup,
   promoteAdmin,
   demoteAdmin,
+  RevokeUserPermission,
 } from "@/handlers/services/whitelist.service.handler";
 import { useAlert } from "@/hooks/useAlert";
 import AlertModal from "@/components/ui/AlertModal";
@@ -192,22 +192,22 @@ const WhitelistTab: React.FC = () => {
       );
     }
   };
-
+  //TODO : 유저 삭제 시에도 알림 모달 뜨도록 UI feedback 추가 필요
   const handleDeleteUser = async (userId: number) => {
     try {
-      const updatedData = await deleteUser(userId);
+      const updatedData = await RevokeUserPermission(userId);
       setWhitelistData(updatedData);
       // 업데이트된 데이터의 모든 그룹을 펼쳐진 상태로 유지
       const allGroupIds = new Set(updatedData.groups.map((group) => group.id));
       setExpandedGroups(allGroupIds);
-      toast.success("사용자가 성공적으로 삭제되었습니다.", {
+      toast.success("사용자가 성공적으로 권한이 회수되었습니다.", {
         duration: 3000,
       });
     } catch (error) {
-      console.error("사용자 삭제 실패:", error);
+      console.error("사용자 권한 회수 실패:", error);
       showError(
-        "사용자 삭제 실패",
-        `사용자 삭제에 실패했습니다: ${
+        "사용자 권한 회수 실패",
+        `사용자 권한 회수에 실패했습니다: ${
           error instanceof Error ? error.message : "알 수 없는 오류"
         }`
       );
@@ -226,7 +226,7 @@ const WhitelistTab: React.FC = () => {
       //     ...group,
       //     users: group.users.map((user) =>
       //       user.id === userId
-      //         ? { ...user, role: "ROLE_ADMIN" as UserRole }
+      //         ? { ...user, role: "ADMIN" as UserRole }
       //         : user
       //     ),
       //   })),
@@ -260,7 +260,7 @@ const WhitelistTab: React.FC = () => {
       //     ...group,
       //     users: group.users.map((user) =>
       //       user.id === userId
-      //         ? { ...user, role: "ROLE_USER" as UserRole }
+      //         ? { ...user, role: "USER" as UserRole }
       //         : user
       //     ),
       //   })),

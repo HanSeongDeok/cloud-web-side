@@ -19,7 +19,7 @@ export const API_CONFIG_DEV = {
 /**
  * 개별 API EndPoint 저장소 테이블
  */
-export const DATA_TABLE = {
+export const DATA_TABLE_DEV = {
   columns: "/api/data-table/columns",
   data: "/api/data-table/all-data-v3",
   dataTotalCount: "/api/data-table/total-count",
@@ -27,10 +27,23 @@ export const DATA_TABLE = {
 } as const;
 
 /**
+ * 파일 프로퍼티 API EndPoint
+ */
+export const DATA_TABLE = {
+  data: "/api/v1/files",
+  columns: "/api/v1/files/properties",
+} as const;
+
+/**
  * 개별 API EndPoint SSO 로그인
  */
 export const SSO_LOGIN_DEV = {
   ssoLogin: "/api/auth/google",
+} as const;
+
+export const UPLOAD = {
+  init: "/api/v1/files/upload/init",
+  complete: "/api/v1/files/upload/complete",
 } as const;
 
 export const PERMISSION_DEV = {
@@ -45,14 +58,6 @@ export const SSO_LOGIN = {
 export const PERMISSION = {
   permission: "/api/auth/me",
   requestPermission: "/api/users/permission-request",
-} as const;
-
-/**
- * 파일 프로퍼티 API EndPoint
- */
-export const FILE_PROPERTY = {
-  files: "/api/v1/files",
-  properties: "/api/v1/files/properties",
 } as const;
 
 

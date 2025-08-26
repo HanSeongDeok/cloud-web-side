@@ -1,4 +1,4 @@
-import { fetchDataTotalCount } from "@/handlers/services/dataTable.service.handler";      
+import { fetchData } from "@/handlers/services/dataTable.service.handler";      
 import { create } from "zustand";
 
 
@@ -28,9 +28,13 @@ export const usePaginationStore = create<PagnationState>((set, get) => ({
     setTotalRow: (totalRow) => set({ totalRow }),
     fetchTotalRows: async () => {
         try {
-            const response = await fetchDataTotalCount();
-            const totalRow = JSON.parse(response).totalCount;
+            const response = await fetchData(null);
+            
+            const totalRow = response.data.totalItems;
+            const totalPages = response.data.totalPages;
+
             get().setTotalRow(totalRow);
+            get().setTotalPages(totalPages);
         } catch (error) {
             console.error('Failed to fetch columns:', error);
         }

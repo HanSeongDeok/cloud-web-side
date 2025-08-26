@@ -6,48 +6,49 @@ import type { LutItem, NewLutItem } from "@/types/lut";
  */
 export const getAllLutItem = async (propertyId: number): Promise<LutItem[]> => {
   // 🔨 개발 중 Mock 데이터 반환 (나중에 제거)
-  return getMockLutItems();
+  // return getMockLutItems();
 
-  //   try {
-  //     // 실제 API 호출
-  //     const response = await fetch(
-  //       `${API_CONFIG.baseURL}${LUT_ITEM.list(propertyId)}`
-  //     );
+  try {
+    // 실제 API 호출
+    const response = await fetch(
+      `${API_CONFIG.baseURL}${LUT_ITEM.list(propertyId)}`
+    );
 
-  //     if (!response.ok) {
-  //       throw new Error(
-  //         `API 호출 실패: ${response.status} ${response.statusText}`
-  //       );
-  //     }
+    if (!response.ok) {
+      throw new Error(
+        `API 호출 실패: ${response.status} ${response.statusText}`
+      );
+    }
 
-  //     const result = await response.json();
+    const result = await response.json();
 
-  //     if (!result.success) {
-  //       // 실패 응답 구조: { success: false, status: number, code: string, message: string }
-  //       const errorMessage = result.message || "룩업 아이템 조회 중 오류가 발생했습니다";
-  //       const errorCode = result.code ? `[${result.code}] ` : "";
-  //       const statusInfo = result.status ? ` (Status: ${result.status})` : "";
+    if (!result.success) {
+      // 실패 응답 구조: { success: false, status: number, code: string, message: string }
+      const errorMessage =
+        result.message || "룩업 아이템 조회 중 오류가 발생했습니다";
+      const errorCode = result.code ? `[${result.code}] ` : "";
+      const statusInfo = result.status ? ` (Status: ${result.status})` : "";
 
-  //       throw new Error(`${errorCode}${errorMessage}${statusInfo}`);
-  //     }
+      throw new Error(`${errorCode}${errorMessage}${statusInfo}`);
+    }
 
-  //     // 성공 응답 구조: { success: true, data: T, message: string }
-  //     console.log("룩업 아이템 데이터 로딩 성공:", result.message);
-  //     return result.data || [];
-  //   } catch (error) {
-  //     console.error("getAllLutItem 에러:", error);
-  //     throw error;
-  //   }
+    // 성공 응답 구조: { success: true, data: T, message: string }
+    console.log("룩업 아이템 데이터 로딩 성공:", result.message);
+    return result.data || [];
+  } catch (error) {
+    console.error("getAllLutItem 에러:", error);
+    throw error;
+  }
 };
 
 /**
  * 새로운 룩업 아이템을 생성하는 함수
- * @param lut_item - 생성할 룩업 아이템 데이터 (id, sort_order, created_at, created_by 제외)
+ * @param lutItem - 생성할 룩업 아이템 데이터 (id, sortOrder, createdAt, createdBy 제외)
  * @returns Promise<LutItem> - 생성된 룩업 아이템
  */
 export const createLutItem = async (
   propertyId: number,
-  lut_item: NewLutItem
+  lutItem: NewLutItem
 ): Promise<LutItem> => {
   try {
     const response = await fetch(
@@ -57,7 +58,7 @@ export const createLutItem = async (
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(lut_item),
+        body: JSON.stringify(lutItem),
       }
     );
 
@@ -89,7 +90,7 @@ export const createLutItem = async (
 };
 
 /**
- * LUT 목록  (sort_order) 순서 수정 함수
+ * LUT 목록  (sortOrder) 순서 수정 함수
  * @param propertyId - 수정할 lut- ID
  * @param updates - 수정할 데이터
  * @returns Promise<DbProperty> - 수정된 속성
@@ -138,24 +139,24 @@ export const updateSortOrder = async (
 };
 
 /**
- * LUT 목록  (sort_order) 순서 수정 함수
+ * LUT 목록  (sortOrder) 순서 수정 함수
  * @param propertyId - 수정할 lut- ID
  * @param updates - 수정할 데이터
  * @returns Promise<DbProperty> - 수정된 속성
  */
 export const updateLutItem = async (
   propertyId: number,
-  updateItem: LutItem
+  updatedItem: LutItem
 ): Promise<void> => {
   try {
     const response = await fetch(
-      `${API_CONFIG.baseURL}${LUT_ITEM.update(propertyId, updateItem.id)}`,
+      `${API_CONFIG.baseURL}${LUT_ITEM.update(propertyId, updatedItem.id)}`,
       {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(updateItem),
+        body: JSON.stringify(updatedItem),
       }
     );
 
@@ -192,18 +193,16 @@ export const updateLutItem = async (
  * @returns Promise<{ success: boolean; message: string }> - 삭제 결과
  */
 export const deleteLutItem = async (
-  propertyId: number,
-  selectedId: number
+  lutItemId: number
 ): Promise<{ success: boolean; message: string }> => {
   try {
     const response = await fetch(
-      `${API_CONFIG.baseURL}${LUT_ITEM.delete(propertyId)}`,
+      `${API_CONFIG.baseURL}${LUT_ITEM.delete(lutItemId)}`,
       {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ id: selectedId }),
       }
     );
 
@@ -250,151 +249,151 @@ function getMockLutItems(): LutItem[] {
   return [
     {
       id: 1,
-      property_metadata_id: 1,
-      lut_value: "KONA",
-      sort_order: 1,
-      created_by: 1,
-      created_at: new Date(),
+      propertyMetadataId: 1,
+      lutValue: "KONA",
+      sortOrder: 1,
+      createdBy: 1,
+      createdAt: new Date(),
       description: "현대자동차 KONA",
       isActive: true,
     },
     {
       id: 2,
-      property_metadata_id: 1,
-      lut_value: "SANTA FE",
-      sort_order: 2,
-      created_by: 1,
-      created_at: new Date(),
+      propertyMetadataId: 1,
+      lutValue: "SANTA FE",
+      sortOrder: 2,
+      createdBy: 1,
+      createdAt: new Date(),
       description: "현대자동차 SANTA FE",
       isActive: true,
     },
     {
       id: 3,
-      property_metadata_id: 2,
-      lut_value: "NEXO",
-      sort_order: 3,
-      created_by: 1,
-      created_at: new Date(),
+      propertyMetadataId: 2,
+      lutValue: "NEXO",
+      sortOrder: 3,
+      createdBy: 1,
+      createdAt: new Date(),
       description: "NEXO 수소차",
       isActive: false,
     },
     {
       id: 4,
-      property_metadata_id: 4,
-      lut_value: "TUCSON",
-      sort_order: 4,
-      created_by: 1,
-      created_at: new Date(),
+      propertyMetadataId: 4,
+      lutValue: "TUCSON",
+      sortOrder: 4,
+      createdBy: 1,
+      createdAt: new Date(),
       description: "현대자동차 TUCSON",
       isActive: true,
     },
     {
       id: 5,
-      property_metadata_id: 5,
-      lut_value: "PALISADE",
-      sort_order: 5,
-      created_by: 1,
-      created_at: new Date(),
+      propertyMetadataId: 5,
+      lutValue: "PALISADE",
+      sortOrder: 5,
+      createdBy: 1,
+      createdAt: new Date(),
       description: "현대자동차 PALISADE",
       isActive: true,
     },
     {
       id: 6,
-      property_metadata_id: 1,
-      lut_value: "GENESIS G90",
-      sort_order: 6,
-      created_by: 1,
-      created_at: new Date(),
+      propertyMetadataId: 1,
+      lutValue: "GENESIS G90",
+      sortOrder: 6,
+      createdBy: 1,
+      createdAt: new Date(),
       description: "제네시스 G90",
       isActive: true,
     },
     {
       id: 7,
-      property_metadata_id: 1,
-      lut_value: "GENESIS GV70",
-      sort_order: 7,
-      created_by: 1,
-      created_at: new Date(),
+      propertyMetadataId: 1,
+      lutValue: "GENESIS GV70",
+      sortOrder: 7,
+      createdBy: 1,
+      createdAt: new Date(),
       description: "제네시스 GV70",
       isActive: true,
     },
     {
       id: 8,
-      property_metadata_id: 2,
-      lut_value: "IONIQ 5",
-      sort_order: 8,
-      created_by: 1,
-      created_at: new Date(),
+      propertyMetadataId: 2,
+      lutValue: "IONIQ 5",
+      sortOrder: 8,
+      createdBy: 1,
+      createdAt: new Date(),
       description: "현대자동차 IONIQ 5",
       isActive: true,
     },
     {
       id: 9,
-      property_metadata_id: 2,
-      lut_value: "IONIQ 6",
-      sort_order: 9,
-      created_by: 1,
-      created_at: new Date(),
+      propertyMetadataId: 2,
+      lutValue: "IONIQ 6",
+      sortOrder: 9,
+      createdBy: 1,
+      createdAt: new Date(),
       description: "현대자동차 IONIQ 6",
       isActive: true,
     },
     {
       id: 10,
-      property_metadata_id: 3,
-      lut_value: "AVANTE",
-      sort_order: 10,
-      created_by: 1,
-      created_at: new Date(),
+      propertyMetadataId: 3,
+      lutValue: "AVANTE",
+      sortOrder: 10,
+      createdBy: 1,
+      createdAt: new Date(),
       description: "현대자동차 AVANTE",
       isActive: true,
     },
     {
       id: 11,
-      property_metadata_id: 3,
-      lut_value: "SONATA",
-      sort_order: 11,
-      created_by: 1,
-      created_at: new Date(),
+      propertyMetadataId: 3,
+      lutValue: "SONATA",
+      sortOrder: 11,
+      createdBy: 1,
+      createdAt: new Date(),
       description: "현대자동차 SONATA",
       isActive: true,
     },
     {
       id: 12,
-      property_metadata_id: 4,
-      lut_value: "GRANDEUR",
-      sort_order: 12,
-      created_by: 1,
-      created_at: new Date(),
+      propertyMetadataId: 4,
+      lutValue: "GRANDEUR",
+      sortOrder: 12,
+      createdBy: 1,
+      createdAt: new Date(),
       description: "현대자동차 GRANDEUR",
       isActive: true,
     },
     {
       id: 13,
-      property_metadata_id: 4,
-      lut_value: "VENUE",
-      sort_order: 13,
-      created_by: 1,
-      created_at: new Date(),
+      propertyMetadataId: 4,
+      lutValue: "VENUE",
+      sortOrder: 13,
+      createdBy: 1,
+      createdAt: new Date(),
       description: "현대자동차 VENUE",
       isActive: false,
     },
     {
       id: 14,
-      property_metadata_id: 5,
-      lut_value: "CASPER",
-      sort_order: 14,
-      created_by: 1,
-      created_at: new Date(),
+      propertyMetadataId: 5,
+      lutValue: "CASPER",
+      sortOrder: 14,
+      createdBy: 1,
+      createdAt: new Date(),
       description: "현대자동차 CASPER",
       isActive: true,
     },
     {
       id: 15,
-      property_metadata_id: 5,
-      lut_value: "STARIA",
-      sort_order: 15,
-      created_by: 1,
-      created_at: new Date(),
+      propertyMetadataId: 5,
+      lutValue: "STARIA",
+      sortOrder: 15,
+      createdBy: 1,
+      createdAt: new Date(),
       description: "현대자동차 STARIA",
       isActive: true,
     },

@@ -1,65 +1,33 @@
-import type { Column } from '@/handlers/events/dataTable.config.handler';
-import { API_CONFIG, DATA_TABLE, FILE_PROPERTY } from '@/api/api.config.ts';
+import { API_CONFIG, DATA_TABLE } from '@/api/api.config.ts';
 import type { PaginationInfo } from '@/stores/usePaginationState ';
 
-/**
- * 
- * @returns 
- */
-export const fetchDataTotalCount = async () => {
-  // const response = await fetch(`${API_CONFIG.baseURL}${DATA_TABLE.dataTotalCount}`);
-  const response = JSON.stringify({ totalCount: 10 });
-  return response;
+
+interface ColumnArray {
+  originalName: string
+  displayName: string
 }
 
 /**
  * 
  * @returns 
  */
-export const fetchColumns = async (): Promise<Column> => {
-  // try {
-  //   const response = await fetch(`${API_CONFIG.baseURL}${DATA_TABLE.columns}`);
-  //   // const response = await fetch(`${API_CONFIG.baseURL}${FILE_PROPERTY.columns}`);
+export const fetchColumns = async (): Promise<ColumnArray[]> => {
+  const response = await fetch(`${API_CONFIG.baseURL}${DATA_TABLE.columns}`, {
+    method: 'GET',
+    credentials: 'include',
+  });
+  const data = await response.json();
+  console.log(data.data);
 
-  //   if (!response.ok) {
-  //     throw new Error(`HTTP error! status: ${response.status}`);
-  //   }
-
-  //   return await response.json();
-  // } catch (error) {
-  //   throw error;
-  // }
-
-  const response2 = await fetch(`${API_CONFIG.baseURL}${FILE_PROPERTY.properties}`);
-  const data2 = await response2.json();
-  console.log(data2.data);
-
-  return   data2.data;
-;
+  return data.data;
 };
 
 /**
  * 
  * @returns 
  */
-export const fetchData = async (paginationInfo: PaginationInfo): Promise<any[]> => {
-  // try {
-  //   const url = new URL(`${API_CONFIG.baseURL}${DATA_TABLE.data}`);
-  //   url.searchParams.set("limit", paginationInfo.pageSize.toString());
-  //   url.searchParams.set("offset", ((paginationInfo.currentPage-1) * paginationInfo.pageSize).toString());
-
-  //   const response = await fetch(url.toString());
-
-  //   if (!response.ok) {
-  //     throw new Error(`HTTP error! status: ${response.status}`);
-  //   }
-
-  //   return await response.json();
-  // } catch (error) {
-  //   throw error;
-  // }
-
-  const filesResponse = await fetch(`${API_CONFIG.baseURL}${FILE_PROPERTY.files}`, {
+export const fetchData = async (paginationInfo: PaginationInfo | null): Promise<any> => {
+  const filesResponse = await fetch(`${API_CONFIG.baseURL}${DATA_TABLE.data}`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -69,16 +37,17 @@ export const fetchData = async (paginationInfo: PaginationInfo): Promise<any[]> 
     body: JSON.stringify({
       mode: 'NONE',
       paging: {
-        page: paginationInfo.currentPage,
-        size: paginationInfo.pageSize
+        page: paginationInfo?.currentPage ? paginationInfo.currentPage - 1 : 0,
+        size: paginationInfo?.pageSize
       }
     })
   });
 
-  const filesData = await filesResponse.json();
-  console.log(filesData.data.items); 
+  const data = await filesResponse.json(); 
+  console.log(data.data.totalPages);
+  console.log(data.data.items); 
 
-  return filesData.data.items;
+  return data;
 };    
 
 /**
@@ -88,7 +57,7 @@ export const fetchData = async (paginationInfo: PaginationInfo): Promise<any[]> 
  */
 export const searchData = async (keyword: string): Promise<any[]> => {
   try {
-    const response = await fetch(`${API_CONFIG.baseURL}${DATA_TABLE.search}?keyword=${encodeURIComponent(keyword)}`);
+    const response = await fetch(`${API_CONFIG.baseURL}${DATA_TABLE.data}?keyword=${encodeURIComponent(keyword)}`);
 
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);

@@ -1,9 +1,9 @@
 export type UserRole =
-  | "ROLE_PERMISSION_REQUIRED" // 권한 필요
-  | "ROLE_PERMISSION_REQUESTED" // 권한 요청됨
-  | "ROLE_USER" // 일반 사용자
-  | "ROLE_ADMIN" // 관리자
-  | "ROLE_SUPER_ADMIN"; // 최고 관리자
+  | "PERMISSION_REQUIRED" // 권한 필요
+  | "PERMISSION_REQUESTED" // 권한 요청됨
+  | "USER" // 일반 사용자
+  | "ADMIN" // 관리자
+  | "SUPER_ADMIN"; // 최고 관리자
 
 export interface WhitelistUser {
   id: number;
@@ -36,7 +36,7 @@ export type PartialWhitelistGroup = Partial<WhitelistGroup>;
 export type PartialWhitelistUser = Partial<WhitelistUser>;
 
 //---
-// 권한 요청 사용자 - ROLE_PERMISSION_REQUESTED 상태의 유저들
+// 권한 요청 사용자 - PERMISSION_REQUESTED 상태의 유저들
 export interface PermissionRequestUser {
   id: number;
   email: string;

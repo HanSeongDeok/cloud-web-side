@@ -1,19 +1,19 @@
 export type DataType = "TEXT" | "NUMBER" | "DATE" | "BOOLEAN";
-export type PropertyType = "BUILT_IN" | "USER_DEFINED";
+export type PropertyType = "BUILT_IN" | "USER_DEFINED" | "SERVER_MANAGED";
 export type DeleteRequestStatus = "IN_USE" | "DELETE_REQUESTED" | "DELETED";
 
 // DbProperty 기본 인터페이스
 export interface DbProperty {
   id: number;
   name: string;
-  data_type: DataType;
-  property_type: PropertyType;
-  use_lut: 0 | 1; // 0: 사용안함(자율 양식), 1: 사용(lut 사용)
-  is_active: boolean;
-  delete_request_status: DeleteRequestStatus;
-  created_by: number; // 사용자 ID
-  created_at: Date;
-  updated_at: Date;
+  dataType: DataType;
+  propertyType: PropertyType;
+  useLut: boolean; // false: 사용안함(자율 양식), true: 사용(lut 사용)
+  isActive: boolean;
+  deleteRequestStatus: DeleteRequestStatus;
+  createdBy: number; // 사용자 ID
+  createdAt: Date;
+  updatedAt: Date;
   description: string;
 }
 
@@ -21,12 +21,12 @@ export interface DbProperty {
 export type NewDbProperty = Omit<
   DbProperty,
   | "id"
-  | "created_at"
-  | "updated_at"
-  | "is_active"
-  | "delete_request_status"
-  | "created_by"
-  | "property_type"
+  | "createdAt"
+  | "updatedAt"
+  | "isActive"
+  | "deleteRequestStatus"
+  | "createdBy"
+  | "propertyType"
 >;
 
 // 속성의 부분 집합을 나타내는 타입 (업데이트, 컬럼 정의 등에서 사용)

@@ -54,7 +54,7 @@ const DbConfigPage: React.FC = () => {
 
   // 선택된 행들 중 BUILT_IN 타입이 있는지 확인하는 함수 - useMemo로 최적화
   const isRemoveDisabled = useMemo(() => {
-    return selectedRows.some((row) => row.property_type === "BUILT_IN");
+    return selectedRows.some((row) => row.propertyType === "BUILT_IN");
   }, [selectedRows]);
 
   // 선택 변경 핸들러 - 선택된 행들만 상태로 업데이트
@@ -276,7 +276,7 @@ const DbConfigPage: React.FC = () => {
         return;
       }
 
-      await deleteLutItem(lutPropertyId, lutItemId);
+      await deleteLutItem(lutItemId);
       console.log("LUT 아이템 삭제:", { propertyId: lutPropertyId, lutItemId });
 
       await refreshLUT();
@@ -296,15 +296,15 @@ const DbConfigPage: React.FC = () => {
     }
   };
 
-  const handleUpdateLUTItem = async () => {
+  const handleUpdateLUTItem = async (updatedItem: LutItem) => {
     try {
-      if (editingLUT) {
+      if (updatedItem) {
         if (lutPropertyId === null) {
           showError("오류", "속성 ID가 설정되지 않았습니다.");
           return;
         }
         // 기존 LUT 아이템 수정
-        await updateLutItem(lutPropertyId, editingLUT);
+        await updateLutItem(lutPropertyId, updatedItem);
       } else {
         console.error("편집 중인 LUT 아이템이 없습니다.");
       }
@@ -338,7 +338,6 @@ const DbConfigPage: React.FC = () => {
       <h3 className="text-xl font-semibold mb-6">DB 속성 관리</h3>
       <div className="min-h-screen bg-gray-100">
         <div className="max-w-7xl mx-auto flex">
-          {/* Main Content */}
           <div className="flex-1 p-6">
             <DbConfigHeader
               onAddProperty={handleAddProperty}

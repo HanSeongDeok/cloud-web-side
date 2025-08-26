@@ -8,7 +8,7 @@ import { useSelectionStore } from "@/stores/useSelectionStore"
 import { useSearchKeywordStore } from "@/stores/useSearchKeywordStore";
 import { debounce, throttle } from "lodash";  
 
-export type Column = {
+export type Column_DEV = {
   fileName: string
   testItem: string
   driveType: string
@@ -31,6 +31,10 @@ export type Column = {
   fileFormat: string
   createdAt: string
   updatedAt: string
+  [key: string]: string
+}
+
+export type Column = {
   [key: string]: string
 }
 
@@ -273,14 +277,20 @@ const createUpdatedAtColumn = (updatedAt: string): ColDef<Column> => {
   }
 }
 
-export const createCustomColumn = (headerName: string, field: string): ColDef<Column> => {
+export const createCustomColumn = (id: string, displayName: string): ColDef<Column> => {
   return {
-    headerName: headerName, 
-    field: field, 
+    headerName: displayName, 
+    field: id, 
     tooltipValueGetter: (params) => params.value,
-    width: 150, 
+    width: 200, 
     cellStyle: { textAlign: 'center' } 
   }
+}
+
+export const columnDefs_DEV = (id: string, displayName: string): ColDef<Column>[] => {
+  return [
+    createCustomColumn(id, displayName),
+  ]
 }
 
 export const columnDefs = (columns: Column): ColDef<Column>[] => {

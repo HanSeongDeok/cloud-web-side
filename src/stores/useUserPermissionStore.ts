@@ -2,11 +2,11 @@ import { create } from 'zustand';
 
 export interface PermissionData {
     isRequesting: boolean;
-    hasPermission?: boolean;
-    role?: string;
+    hasPermission: boolean;
     name?: string;
-    picture?: string;
     email?: string;
+    role?: string;
+    id?: number;
 }
 
 interface UserPermissionState {
@@ -15,6 +15,6 @@ interface UserPermissionState {
 }
 
 export const useUserPermissionStore = create<UserPermissionState>((set) => ({
-    permissionData: {isRequesting: false},
+    permissionData: {isRequesting: false, hasPermission: false},
     setPermissionData: (permissionData: PermissionData) => set({ permissionData }),
 }));

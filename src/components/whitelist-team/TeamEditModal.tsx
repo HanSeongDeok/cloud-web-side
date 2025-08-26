@@ -131,7 +131,7 @@ const TeamEditModal = ({
                   }
                 }}
                 className="w-full px-4 py-3 bg-gray-50 border-0 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:bg-white transition-all"
-                placeholder="TEAM01, DEV@COMPANY, API.V2 등"
+                placeholder="팀 코드를 입력하세요"
                 required
                 disabled={loading}
               />

@@ -16,37 +16,43 @@ import type {
 export const getWhitelistCollection =
   async (): Promise<WhitelistCollection> => {
     // 🔨 개발 중 Mock 데이터 반환 (나중에 제거)
-    return getMockWhitelistCollection();
+    // return getMockWhitelistCollection();
 
-    //   try {
-    //     // 실제 API 호출
-    //     const response = await fetch(`${API_CONFIG.baseURL}${WHITELIST.list}`);
+    try {
+      // 실제 API 호출
+      const response = await fetch(`${API_CONFIG.baseURL}${WHITELIST.list}`);
 
-    //     if (!response.ok) {
-    //       throw new Error(
-    //         `API 호출 실패: ${response.status} ${response.statusText}`
-    //       );
-    //     }
+      if (!response.ok) {
+        throw new Error(
+          `API 호출 실패: ${response.status} ${response.statusText}`
+        );
+      }
 
-    //     const result = await response.json();
+      const result = await response.json();
 
-    //     if (!result.success) {
-    //       // 실패 응답 구조: { success: false, status: number, code: string, message: string }
-    //       const errorMessage =
-    //         result.message || "데이터 조회 중 오류가 발생했습니다";
-    //       const errorCode = result.code ? `[${result.code}] ` : "";
-    //       const statusInfo = result.status ? ` (Status: ${result.status})` : "";
+      if (!result.success) {
+        // 실패 응답 구조: { success: false, status: number, code: string, message: string }
+        const errorMessage =
+          result.message || "데이터 조회 중 오류가 발생했습니다";
+        const errorCode = result.code ? `[${result.code}] ` : "";
+        const statusInfo = result.status ? ` (Status: ${result.status})` : "";
 
-    //       throw new Error(`${errorCode}${errorMessage}${statusInfo}`);
-    //     }
+        throw new Error(`${errorCode}${errorMessage}${statusInfo}`);
+      }
 
-    //     // 성공 응답 구조: { success: true, data: T, message: string }
-    //     console.log("화이트리스트 데이터 로딩 성공:", result.message);
-    //     return result.data;
-    //   } catch (error) {
-    //     console.error("getWhitelistCollection 에러:", error);
-    //     throw error;
-    //   }
+      // 성공 응답 구조: { success: true, data: T, message: string }
+      console.log("화이트리스트 데이터 로딩 성공:", result.message);
+
+      // WhitelistCollection 형태로 래핑
+      if (Array.isArray(result.data)) {
+        return { groups: result.data };
+      }
+
+      return result.data;
+    } catch (error) {
+      console.error("getWhitelistCollection 에러:", error);
+      throw error;
+    }
   };
 
 /**
@@ -83,6 +89,10 @@ export const addGroup = async (
     }
     // 성공 응답 구조: { success: true, data: T, message: string }
     console.log("그룹 생성 성공:", result.message);
+    // WhitelistCollection 형태로 래핑
+    if (Array.isArray(result.data)) {
+      return { groups: result.data };
+    }
     return result.data;
   } catch (error) {
     console.error("addGroup 에러:", error);
@@ -126,6 +136,10 @@ export const updateGroup = async (
     }
     // 성공 응답 구조: { success: true, data: T, message: string }
     console.log("그룹 수정 성공:", result.message);
+    // WhitelistCollection 형태로 래핑
+    if (Array.isArray(result.data)) {
+      return { groups: result.data };
+    }
     return result.data;
   } catch (error) {
     console.error("updateGroup 에러:", error);
@@ -164,6 +178,10 @@ export const deleteGroup = async (
     }
     // 성공 응답 구조: { success: true, data: T, message: string }
     console.log("그룹 삭제 성공:", result.message);
+    // WhitelistCollection 형태로 래핑
+    if (Array.isArray(result.data)) {
+      return { groups: result.data };
+    }
     return result.data;
   } catch (error) {
     console.error("deleteGroup 에러:", error);
@@ -203,9 +221,56 @@ export const deleteUser = async (
     }
     // 성공 응답 구조: { success: true, data: T, message: string }
     console.log("화이트리스트 유저 삭제 성공:", result.message);
+    // WhitelistCollection 형태로 래핑
+    if (Array.isArray(result.data)) {
+      return { groups: result.data };
+    }
     return result.data;
   } catch (error) {
     console.error("deleteUser 에러:", error);
+    throw error;
+  }
+};
+
+/**
+ * 화이트리스트에서 사용자 권한 회수
+ * @param userId - 권한을 회수할 유저 ID
+ * @returns Promise<WhitelistCollection[]> - 화이트리스트 팀 구조 트리 목록
+ */
+
+export const RevokeUserPermission = async (
+  userId: number
+): Promise<WhitelistCollection> => {
+  try {
+    const response = await fetch(
+      `${API_CONFIG.baseURL}${WHITELIST.deleteUser(userId)}`,
+      {
+        method: "PUT",
+      }
+    );
+    if (!response.ok) {
+      throw new Error(
+        `API 호출 실패: ${response.status} ${response.statusText}`
+      );
+    }
+    const result = await response.json();
+    if (!result.success) {
+      // 실패 응답 구조: { success: false, status: number, code: string, message: string }
+      const errorMessage =
+        result.message || "화이트리스트 유저 권한 회수 중 오류가 발생했습니다";
+      const errorCode = result.code ? `[${result.code}] ` : "";
+      const statusInfo = result.status ? ` (Status: ${result.status})` : "";
+      throw new Error(`${errorCode}${errorMessage}${statusInfo}`);
+    }
+    // 성공 응답 구조: { success: true, data: T, message: string }
+    console.log("화이트리스트 유저 권한 회수 성공:", result.message);
+    // WhitelistCollection 형태로 래핑
+    if (Array.isArray(result.data)) {
+      return { groups: result.data };
+    }
+    return result.data;
+  } catch (error) {
+    console.error("RevokeUserPermission 에러:", error);
     throw error;
   }
 };
@@ -297,33 +362,36 @@ export const demoteAdmin = async (userIds: number[]) => {
  */
 export const getPermissionRequests = async (): Promise<PermissionRequests> => {
   // 🔨 개발 중 Mock 데이터 반환 (나중에 제거)
-  return getMockPermissionRequests();
+  // return getMockPermissionRequests();
 
-  // try {
-  //   const response = await fetch(
-  //     `${API_CONFIG.baseURL}${WHITELIST.permissionRequests}`
-  //   );
-  //   if (!response.ok) {
-  //     throw new Error(
-  //       `API 호출 실패: ${response.status} ${response.statusText}`
-  //     );
-  //   }
-  //   const result = await response.json();
-  //   if (!result.success) {
-  //     // 실패 응답 구조: { success: false, status: number, code: string, message: string }
-  //     const errorMessage =
-  //       result.message || "권한 요청 목록을 조회 중 오류가 발생했습니다";
-  //     const errorCode = result.code ? `[${result.code}] ` : "";
-  //     const statusInfo = result.status ? ` (Status: ${result.status})` : "";
-  //     throw new Error(`${errorCode}${errorMessage}${statusInfo}`);
-  //   }
-  //   // 성공 응답 구조: { success: true, data: T, message: string }
-  //   console.log("권한 요청 목록을 조회 성공:", result.message);
-  //   return result.data;
-  // } catch (error) {
-  //   console.error("getPermissionRequests 에러:", error);
-  //   throw error;
-  // }
+  try {
+    const response = await fetch(
+      `${API_CONFIG.baseURL}${WHITELIST.permissionRequests}`
+    );
+    if (!response.ok) {
+      throw new Error(
+        `API 호출 실패: ${response.status} ${response.statusText}`
+      );
+    }
+    const result = await response.json();
+    if (!result.success) {
+      // 실패 응답 구조: { success: false, status: number, code: string, message: string }
+      const errorMessage =
+        result.message || "권한 요청 목록을 조회 중 오류가 발생했습니다";
+      const errorCode = result.code ? `[${result.code}] ` : "";
+      const statusInfo = result.status ? ` (Status: ${result.status})` : "";
+      throw new Error(`${errorCode}${errorMessage}${statusInfo}`);
+    }
+    // 성공 응답 구조: { success: true, data: T, message: string }
+    console.log("권한 요청 목록을 조회 성공:", result.message);
+    if (Array.isArray(result.data)) {
+      return { requests: result.data };
+    }
+    return result.data;
+  } catch (error) {
+    console.error("getPermissionRequests 에러:", error);
+    throw error;
+  }
 };
 
 /**
@@ -359,6 +427,9 @@ export const approvePermissionRequests = async (requestIds: number[]) => {
     }
     // 성공 응답 구조: { success: true, data: T, message: string }
     console.log("권한 요청 승인 성공:", result.message);
+    if (Array.isArray(result.data)) {
+      return { requests: result.data };
+    }
     return result.data;
   } catch (error) {
     console.error("approvePermissionRequests 에러:", error);
@@ -399,6 +470,9 @@ export const rejectPermissionRequests = async (requestIds: number[]) => {
     }
     // 성공 응답 구조: { success: true, data: T, message: string }
     console.log("권한 요청을 거절 성공:", result.message);
+    if (Array.isArray(result.data)) {
+      return { requests: result.data };
+    }
     return result.data;
   } catch (error) {
     console.error("rejectPermissionRequests 에러:", error);
@@ -423,7 +497,7 @@ export const getMockWhitelistCollection = (): WhitelistCollection => {
             name: "홍길동",
             employeeId: "001",
             team: "차량 성능시험 팀",
-            role: "ROLE_SUPER_ADMIN",
+            role: "SUPER_ADMIN",
           },
         ],
         code: "TEAM001",
@@ -439,7 +513,7 @@ export const getMockWhitelistCollection = (): WhitelistCollection => {
             name: "장태민",
             employeeId: "002",
             team: "차량제어기 시험 팀",
-            role: "ROLE_USER",
+            role: "USER",
           },
         ],
         code: "TEAM002",
@@ -455,7 +529,7 @@ export const getMockWhitelistCollection = (): WhitelistCollection => {
             name: "김상민",
             employeeId: "003",
             team: "UX 팀",
-            role: "ROLE_USER",
+            role: "USER",
           },
           {
             id: 4,
@@ -463,7 +537,7 @@ export const getMockWhitelistCollection = (): WhitelistCollection => {
             name: "김민주",
             employeeId: "004",
             team: "UX 팀",
-            role: "ROLE_ADMIN",
+            role: "ADMIN",
           },
         ],
         code: "TEAM003",

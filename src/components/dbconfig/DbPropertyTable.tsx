@@ -1,5 +1,5 @@
 // src/components/dbconfig/DbPropertyTable.tsx
-import { useState, forwardRef } from "react";
+import { useState, forwardRef, useMemo } from "react";
 import type { DbProperty } from "@/types/property";
 import { AgGridReact } from "ag-grid-react";
 import { getMockDbColumns } from "../../handlers/services/DbProperty.service.handler";
@@ -30,6 +30,11 @@ const DbPropertyTable = forwardRef<AgGridReact, DbPropertyTableProps>(
     { data, loading, onEditProperty, onOpenLutModal, onSelectionChanged },
     ref
   ) => {
+    // 필터링된 데이터를 메모이제이션
+    const filteredData = useMemo(() => {
+      return data.filter((item) => item.propertyType !== "SERVER_MANAGED");
+    }, [data]);
+
     //  AG-Grid 컬럼 정의 (편집 버튼, 룩업 버튼 컬럼 추가)
     const [columnDefs] = useState<ColDef[]>([
       ...(getMockDbColumns() as ColDef[]),
@@ -77,13 +82,13 @@ const DbPropertyTable = forwardRef<AgGridReact, DbPropertyTableProps>(
         >
           <AgGridReact
             ref={ref}
-            rowData={data}
+            rowData={filteredData}
             columnDefs={columnDefs}
             loading={loading}
             rowSelection="multiple"
             getRowStyle={(params) => {
               // 시스템 속성(BUILT_IN)인 경우 배경색 변경
-              if (params.data?.property_type === "BUILT_IN") {
+              if (params.data?.propertyType === "BUILT_IN") {
                 return {
                   backgroundColor: "#fcf8e8", // 연한 노랑 배경
                   fontWeight: "500", // 약간 굵은 글씨

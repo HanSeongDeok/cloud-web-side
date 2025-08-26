@@ -30,9 +30,9 @@ export function SSOLoginVerifyPage() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const [status, setStatus] = useState<'loading' | 'success' | 'error'>('loading');
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isLoading ] = useState<boolean>(true);
   const setPermissionData = useUserPermissionStore((state) => state.setPermissionData)
-  
+
   useEffect(() => {
     const checkPermission = async () => {
       const success = searchParams.get('success');
@@ -65,7 +65,12 @@ export function SSOLoginVerifyPage() {
         console.log(checkData)
 
         if (checkData.isWhitelisted) {
-          setPermissionData({ hasPermission: true, isRequesting: false })
+          setPermissionData({ hasPermission: true, isRequesting: false, 
+            name: checkData.name,
+            email: checkData.email,
+            role: checkData.role,
+            id: checkData.id
+          })
           navigate('/storage', { replace: true })
           return;
         }
