@@ -4,8 +4,8 @@ import { create } from "zustand";
 import { fetchColumns } from "@/handlers/services/dataTable.service.handler";
 
 interface mapColumns {
-    headerName: string;
-    field: string;
+    id: string;
+    displayName: string;
 }
 
 interface ColumnsStore {
@@ -24,18 +24,19 @@ export const useColumnsStore = create<ColumnsStore>((set, get) => ({
     fetchColumns: async () => {
         try {
             const columnsData = await fetchColumns();
-            console.log(columnsData);
 
             // columnsData는 ColumnArray[] 배열이므로 직접 순회
+            const mapColumns: mapColumns[] = [];
             const columnsArray: ColDef<Column>[] = [];
             columnsData.forEach(item => {
                 const headerName = item.displayName.toLowerCase().replace(/\s+/g, '');
+                mapColumns.push({ id: headerName, displayName: item.displayName });
                 columnsArray.push(createCustomColumn(headerName, item.displayName));
             });
 
             console.log(columnsArray);
             get().setColumns(columnsArray);
-
+            get().setMapColumns(mapColumns);
             // const fetchCustomColumns = columns.map((item) => item.headerName);
             // const newColumns: ColDef<Column>[] = [];
             // Object.entries(columnsArray)

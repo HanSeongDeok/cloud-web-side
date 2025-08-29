@@ -24,8 +24,8 @@ interface WhitelistTeamListProps {
   expandedGroups: Set<number>;
   onToggleTeamExpansion: (groupId: number) => void;
   onOpenTeamModal: (group: WhitelistGroup) => void;
-  onDeleteTeam: (groupId: number) => void;
-  onDeleteUser: (userId: number) => void;
+  onDeleteTeam: (groupId: number, groupName: string) => void;
+  onDeleteUser: (userId: number, userName: string) => void;
   onPromoteUser: (userId: number, userName: string) => void;
   onDemoteUser: (userId: number, userName: string) => void;
 }
@@ -95,7 +95,7 @@ const WhitelistTeamList: React.FC<WhitelistTeamListProps> = ({
                 <Edit className="w-4 h-4" />
               </button>
               <button
-                onClick={() => onDeleteTeam(group.id)}
+                onClick={() => onDeleteTeam(group.id, group.name)}
                 className="p-1 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded transition-colors"
               >
                 <Trash2 className="w-4 h-4" />
@@ -185,7 +185,7 @@ const WhitelistTeamList: React.FC<WhitelistTeamListProps> = ({
                         </SelectContent>
                       </Select>
                       <button
-                        onClick={() => onDeleteUser(user.id)}
+                        onClick={() => onDeleteUser(user.id, user.name)}
                         className="p-1 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded transition-colors"
                       >
                         <Trash2 className="w-4 h-4" />

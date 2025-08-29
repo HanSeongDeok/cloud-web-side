@@ -27,11 +27,19 @@ export interface UploadData {
     type: string;
 }
 
+// 멀티파트 파트 정보 타입
+interface MultipartPartInfo {
+    partNumber: number;
+    etag: string;
+}
+
 export interface UploadFileData {
     id: number;
     type: string;
-    etag: string;
+    etag?: string; // 단일 업로드 시
+    multipartParts?: MultipartPartInfo[]; // 멀티파트 업로드 시
     status: string;
+    errorMessage?: string;
 }
 
 export interface UploadCompleteData {
@@ -102,20 +110,6 @@ const UploadButton = memo(() => {
                     const uploadComplete = await fetchUploadComplete(uploadResp);
                     console.log(uploadComplete);
                 }
-
-                // 3. 업로드 완료 알리기
-                // await fetch("/api/upload/complete", {
-                //   method: "POST",
-                //   headers: { "Content-Type": "application/json" },
-                //   body: JSON.stringify({
-                //     sessionId,
-                //     objectKey,
-                //     eTag,
-                //     contentLength: file.size,
-                //     originalFileName: file.name,
-                //     contentType: file.type
-                //   })
-                // });
             
                 console.log("업로드 성공!");
               } catch (err) {

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { toast } from "sonner";
 import type {
   WhitelistCollection,
@@ -33,8 +33,7 @@ const WhitelistTab: React.FC = () => {
   const [teamModalOpen, setTeamModalOpen] = useState(false);
   const [editingTeam, setEditingTeam] = useState<WhitelistGroup | null>(null);
 
-  const { showError, isOpen, config, hideAlert } = useAlert();
-
+  const { showConfirm, showError, isOpen, config, hideAlert } = useAlert();
   // 컴포넌트 마운트 시 데이터 로딩
   useEffect(() => {
     const loadData = async () => {
@@ -172,47 +171,82 @@ const WhitelistTab: React.FC = () => {
     }
   };
 
-  const handleDeleteTeam = async (groupId: number) => {
-    try {
-      const updatedData = await deleteGroup(groupId);
-      setWhitelistData(updatedData);
-      // 업데이트된 데이터의 모든 그룹을 펼쳐진 상태로 유지
-      const allGroupIds = new Set(updatedData.groups.map((group) => group.id));
-      setExpandedGroups(allGroupIds);
-      toast.success("그룹이 성공적으로 삭제되었습니다.", {
-        duration: 3000,
-      });
-    } catch (error) {
-      console.error("그룹 삭제 실패:", error);
-      showError(
-        "그룹 삭제 실패",
-        `그룹 삭제에 실패했습니다: ${
-          error instanceof Error ? error.message : "알 수 없는 오류"
-        }`
-      );
-    }
-  };
+  const handleDeleteTeam = useCallback(
+    async (groupId: number) => {
+      try {
+        const updatedData = await deleteGroup(groupId);
+        setWhitelistData(updatedData);
+        // 업데이트된 데이터의 모든 그룹을 펼쳐진 상태로 유지
+        const allGroupIds = new Set(
+          updatedData.groups.map((group) => group.id)
+        );
+        setExpandedGroups(allGroupIds);
+        toast.success("그룹이 성공적으로 삭제되었습니다.", {
+          duration: 3000,
+        });
+      } catch (error) {
+        console.error("그룹 삭제 실패:", error);
+        showError(
+          "그룹 삭제 실패",
+          `그룹 삭제에 실패했습니다: ${
+            error instanceof Error ? error.message : "알 수 없는 오류"
+          }`
+        );
+      }
+    },
+    [showError]
+  );
+
   //TODO : 유저 삭제 시에도 알림 모달 뜨도록 UI feedback 추가 필요
-  const handleDeleteUser = async (userId: number) => {
-    try {
-      const updatedData = await RevokeUserPermission(userId);
-      setWhitelistData(updatedData);
-      // 업데이트된 데이터의 모든 그룹을 펼쳐진 상태로 유지
-      const allGroupIds = new Set(updatedData.groups.map((group) => group.id));
-      setExpandedGroups(allGroupIds);
-      toast.success("사용자가 성공적으로 권한이 회수되었습니다.", {
-        duration: 3000,
-      });
-    } catch (error) {
-      console.error("사용자 권한 회수 실패:", error);
-      showError(
-        "사용자 권한 회수 실패",
-        `사용자 권한 회수에 실패했습니다: ${
-          error instanceof Error ? error.message : "알 수 없는 오류"
-        }`
+  const handleDeleteUser = useCallback(
+    async (userId: number) => {
+      try {
+        const updatedData = await RevokeUserPermission(userId);
+        setWhitelistData(updatedData);
+        // 업데이트된 데이터의 모든 그룹을 펼쳐진 상태로 유지
+        const allGroupIds = new Set(
+          updatedData.groups.map((group) => group.id)
+        );
+        setExpandedGroups(allGroupIds);
+        toast.success("사용자가 성공적으로 권한이 회수되었습니다.", {
+          duration: 3000,
+        });
+      } catch (error) {
+        console.error("사용자 권한 회수 실패:", error);
+        showError(
+          "사용자 권한 회수 실패",
+          `사용자 권한 회수에 실패했습니다: ${
+            error instanceof Error ? error.message : "알 수 없는 오류"
+          }`
+        );
+      }
+    },
+    [showError]
+  );
+
+  const handleConfirmDeleteTeam = useCallback(
+    (groupId: number, groupName: string) => {
+      showConfirm(
+        "그룹 삭제 안내 ",
+        `${groupName}\n 해당 그룹을 화이트리스트에서 제거하시겠습니까? \n 일반 팀의 경우 하위에 포함된 유저의 권한도 함께 해제됩니다. `,
+        () => handleDeleteTeam(groupId),
+        "warning"
       );
-    }
-  };
+    },
+    [showConfirm, handleDeleteTeam]
+  );
+
+  const handleConfirmDeleteUser = useCallback(
+    (userId: number, userName: string) => {
+      showConfirm(
+        "유저 권한 해제 안내",
+        `${userName}\n 유저를 화이트리스트 권한을 해제하시겠습니까? \n(마지막 유저를 삭제하는 경우, 해당 그룹도 함께 삭제됩니다.)`,
+        () => handleDeleteUser(userId),
+        "warning"
+      );
+    },
+    [showConfirm, handleDeleteUser]
+  );
 
   const handlePromoteUser = async (userId: number, userName: string) => {
     try {
@@ -310,8 +344,8 @@ const WhitelistTab: React.FC = () => {
         expandedGroups={expandedGroups}
         onToggleTeamExpansion={toggleTeamExpansion}
         onOpenTeamModal={handleOpenTeamModal}
-        onDeleteTeam={handleDeleteTeam}
-        onDeleteUser={handleDeleteUser}
+        onDeleteTeam={handleConfirmDeleteTeam}
+        onDeleteUser={handleConfirmDeleteUser}
         onPromoteUser={handlePromoteUser}
         onDemoteUser={handleDemoteUser}
       />

@@ -19,7 +19,7 @@ const StepMultiSelect = memo(() => {
     return (
         <Popover>
             <PopoverTrigger asChild>
-                <Button variant="outline" className="w-45 sm:w-45 lg:w-45 h-12 sm:h-12 lg:h-12 justify-between text-sm sm:text-base cursor-pointer bg-gray-100/30 hover:bg-gray-100 transition-colors border border-gray-300 hover:border-gray-400">
+                <Button variant="outline" className="w-50 sm:w-50 lg:w-50 h-12 sm:h-12 lg:h-12 justify-between text-sm sm:text-base cursor-pointer bg-gray-100/30 hover:bg-gray-100 transition-colors border border-gray-300 hover:border-gray-400">
                     <span className="font-bold truncate">
                         단계 선택
                     </span>
@@ -39,9 +39,11 @@ const StepMultiSelect = memo(() => {
                         <Checkbox
                             checked={selected.length === stepOptions.length}
                             onCheckedChange={selectAll}
-                            className="pointer-events-none size-5 sm:size-5 lg:size-5"
+                            className="pointer-events-none size-5 sm:size-5 lg:size-5 border-2 border-black bg-white shadow-sm data-[state=checked]:bg-blue-300 data-[state=checked]:border-black transition-all"
                         />
-                        <span className="text-base sm:text-base font-bold pl-1">All</span>
+                        <span className="text-base sm:text-base font-bold pl-1 text-black tracking-wide">
+                            전체 선택
+                        </span>
                     </div>
                     <Separator className="h-0.5 bg-gray-300 opacity-100"/>
                     <ScrollArea className="h-[120px] sm:h-[150px]">

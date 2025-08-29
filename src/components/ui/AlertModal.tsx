@@ -104,7 +104,7 @@ const AlertModal: React.FC<AlertModalProps> = ({
 
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-      <div className="relative bg-white/95 backdrop-blur-xl rounded-2xl w-full max-w-sm mx-auto shadow-[0_32px_64px_-12px_rgba(0,0,0,0.25)] border border-white/20 transform animate-in zoom-in-95 duration-200">
+      <div className="relative bg-white/95 backdrop-blur-xl rounded-2xl w-full max-w-md mx-auto shadow-[0_32px_64px_-12px_rgba(0,0,0,0.25)] border border-white/20 transform animate-in zoom-in-95 duration-200">
         {/* 아이콘 영역 - 상단 중앙 */}
         <div className="flex flex-col items-center pt-6 pb-4">
           <div
@@ -122,13 +122,15 @@ const AlertModal: React.FC<AlertModalProps> = ({
           </p>
         </div>
 
-        {/* 버튼 영역 */}
-        <div className="flex flex-col gap-3 p-6 pt-2">
+        {/* 버튼 영역 - 한 행에 나란히 */}
+        <div className="flex flex-row gap-3 p-6 pt-2">
           <Button
             type="button"
             onClick={handleConfirm}
             disabled={isProcessing}
-            className={`w-full h-12 ${colors.button} text-white rounded-xl font-semibold text-base shadow-lg hover:shadow-xl transform hover:scale-[1.02] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none`}
+            className={`${showCancel ? "w-1/2" : "w-full"} h-12 ${
+              colors.button
+            } text-white rounded-xl font-semibold text-base shadow-lg hover:shadow-xl transform hover:scale-[1.02] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none`}
           >
             {isProcessing ? (
               <div className="flex items-center justify-center gap-2">
@@ -144,7 +146,7 @@ const AlertModal: React.FC<AlertModalProps> = ({
               type="button"
               onClick={onClose}
               disabled={isProcessing}
-              className="w-full h-12 bg-gray-100 text-gray-700 rounded-xl font-semibold text-base hover:bg-gray-200 transform hover:scale-[1.02] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+              className="w-1/2 h-12 bg-gray-100 text-gray-700 rounded-xl font-semibold text-base hover:bg-gray-200 transform hover:scale-[1.02] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
             >
               {cancelText}
             </Button>
