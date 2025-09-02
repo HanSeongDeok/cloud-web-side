@@ -1,11 +1,7 @@
 import { API_CONFIG, DATA_TABLE } from '@/api/api.config.ts';
+import type { ColumnArray, FilterSearchBody } from '@/stores/useColumnsStore';
 import type { PaginationInfo } from '@/stores/usePaginationState ';
 
-
-interface ColumnArray {
-  originalName: string
-  displayName: string
-}
 
 /**
  * 
@@ -49,6 +45,30 @@ export const fetchData = async (paginationInfo: PaginationInfo | null): Promise<
 
   return data;
 };    
+
+/**
+ * 
+ * @param filterInfo - 필터 정보
+ * @returns 
+ */
+export const filterSearch = async (filterInfo: FilterSearchBody): Promise<any> => {
+  try {
+  const response = await fetch(`${API_CONFIG.baseURL}${DATA_TABLE.data}`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    credentials: 'include',
+    body: JSON.stringify(filterInfo),
+  });
+
+    const data = await response.json(); 
+    return data;
+  } catch (error) {
+    console.error('Filter search failed:', error);
+    throw error;
+  }
+};
 
 /**
  * 

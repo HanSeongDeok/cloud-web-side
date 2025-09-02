@@ -1,25 +1,10 @@
+
 import { create } from 'zustand';
 
-export interface FileMetadata {
-    deliverableType: string;
-    testClassification: string;
-    vehicle: string;
-    driveType: string;
-    devStep: string;
-    ecu: string;
-    testItem: string;
-    result: string;
-    tcNumber: string;
-    swVersion: string;
-    description: string;
-    memType: string;
-    deparr: string;
-}
 
 interface FileMetaDataStore {
-    fileMetadata: Record<number, FileMetadata>;
-    setFileMetadata: (fileIndex: number, metadata: Partial<FileMetadata>) => void;
-    getFileMetadata: (fileIndex: number) => FileMetadata;
+    fileMetadata: Record<number, any>;
+    setFileMetadata: (fileIndex: number, metadata: Partial<any>) => void;
     clearFileMetadata: (fileIndex: number) => void;
     clearAllMetadata: () => void;
 }
@@ -27,7 +12,7 @@ interface FileMetaDataStore {
 export const useFileMetaDataStore = create<FileMetaDataStore>((set, get) => ({
     fileMetadata: {},
     
-    setFileMetadata: (fileIndex: number, metadata: Partial<FileMetadata>) => {
+    setFileMetadata: (fileIndex: number, metadata: Partial<any>) => {
         set((state) => ({
             fileMetadata: {
                 ...state.fileMetadata,
@@ -37,24 +22,6 @@ export const useFileMetaDataStore = create<FileMetaDataStore>((set, get) => ({
                 },
             },
         }));
-    },
-    
-    getFileMetadata: (fileIndex: number) => {
-        return get().fileMetadata[fileIndex] || {
-            deliverableType: "",
-            testClassification: "",
-            vehicle: "",
-            driveType: "",
-            devStep: "",    
-            ecu: "",
-            testItem: "",
-            result: "",
-            tcNumber: "",
-            swVersion: "",
-            description: "",
-            memType: "",
-            deparr: "",
-        };
     },
     
     clearFileMetadata: (fileIndex: number) => {

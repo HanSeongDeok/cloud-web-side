@@ -20,46 +20,33 @@ import {
     ContextMenuLabel,
 } from "./ui/context-menu";
 import {
-    vehicleOptions,
-    deliverableTypeOptions,
-    testClassificationOptions,
-    driveTypeOptions,
-    ecuOptions,
-    stepOptions,
-    testItemOptions,
-    resultOptions,
-    memTypeOptions
+    lutOptions,
 } from "@/models/multiSelectModel";
 import { useFileMetaDataStore } from "@/stores/useFileMetaDataStore";
 import { RotateCcw } from "lucide-react";
 import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
+import { useColumnsStore } from "@/stores/useColumnsStore";
 
 const FileMetaEditor = memo(() => {
     const file = useFileUploadStore((state) => state.selectedFiles);
     const selectedFileIndex = useFileSelectionStore((state) => state.selectedFileIndex);
     const fileMetadata = useFileMetaDataStore((state) => state.fileMetadata);
     const setFileMetadata = useFileMetaDataStore((state) => state.setFileMetadata);
-    const clearFileMetadata = useFileMetaDataStore((state) => state.clearFileMetadata);
     const isFolderMode = useFileToggleStore((state) => state.isFolderMode);
+    const mapColumns = useColumnsStore((state) => state.mapColumns);
 
-    const handleResetDeliverableType = () => {
-        const currentMetadata = fileMetadata[selectedFileIndex];
-        if (currentMetadata) {
-            const { deliverableType, ...restMetadata } = currentMetadata;
-            clearFileMetadata(selectedFileIndex);
-            setFileMetadata(selectedFileIndex, restMetadata);
-        }
-    };
-
-    const handleResetTestClassification = () => {
-        const currentMetadata = fileMetadata[selectedFileIndex];
-        if (currentMetadata) {
-            const { testClassification, ...restMetadata } = currentMetadata;
-            clearFileMetadata(selectedFileIndex);
-            setFileMetadata(selectedFileIndex, restMetadata);
-        }
-    };
+    const sortedMapColumns = [
+        ...mapColumns.filter(col => col.originalName === "deliverabletype"),
+        ...mapColumns.filter(col => col.originalName === "testclassification"),
+        ...mapColumns.filter(
+            col =>
+                col.originalName !== "deliverabletype" &&
+                col.originalName !== "testclassification" &&
+                col.originalName !== "description"
+        ),
+        ...mapColumns.filter(col => col.originalName === "description"),
+    ];
 
     return (
         <div className="flex flex-col h-full w-full">
@@ -78,8 +65,8 @@ const FileMetaEditor = memo(() => {
                     type="auto"
                     onDragOver={(e) => e.preventDefault()}
                 >
-                    <div className="space-y-4 pr-2">
-                        {isFolderMode && (
+                    <div className="space-y-4 pr-2 pb-6">
+                    {isFolderMode && (
                             <>
                                 <div className="rounded-lg border border-blue-200 bg-blue-50 p-4 mb-2">
                                     <div>
@@ -91,6 +78,7 @@ const FileMetaEditor = memo(() => {
                                             className="mb-4"
                                             placeholder="Enter group name"
                                             value={""}
+                                            style={{ fontSize: "18px" }}
                                         />
                                     </div>
                                     <div>
@@ -98,239 +86,93 @@ const FileMetaEditor = memo(() => {
                                         <Textarea
                                             className="h-25 resize-none"
                                             placeholder="Enter description..."
+                                            style={{ fontSize: "18px" }}
                                         />
                                     </div>
                                 </div>
                                 <Separator className="h-0.5 bg-gray-300 opacity-100 my-4 mb-2" />
                             </>
                         )}
-                        <div>
-
-                            <Label className="text-left font-bold text-lg mb-1">DeliverableType</Label>
-                            <ContextMenu>
-                                <ContextMenuTrigger asChild>
-                                    <div>
-                                        <Select
-                                            value={fileMetadata[selectedFileIndex]?.deliverableType || ""}
-                                            onValueChange={(value) => setFileMetadata(selectedFileIndex, { deliverableType: value })}>
-                                            <SelectTrigger className="w-full">
-                                                <SelectValue placeholder="Select DeliverableType" />
-                                            </SelectTrigger>
-                                            <SelectContent>
-                                                <ScrollArea className="h-[100px]">
-                                                    {deliverableTypeOptions.map((option) => (
-                                                        <SelectItem key={option.id} value={option.id}>{option.label}</SelectItem>
-                                                    ))}
-                                                </ScrollArea>
-                                            </SelectContent>
-                                        </Select>
-                                    </div>
-                                </ContextMenuTrigger>
-                                <ContextMenuContent className="w-38 truncate max-w-full text-left">
-                                    <ContextMenuLabel>DeliverableType</ContextMenuLabel>
-                                    <ContextMenuSeparator />
-                                    <ContextMenuItem
-                                        className="h-8 cursor-pointer font-bold text-sm flex items-center gap-2 px-3"
-                                        onClick={handleResetDeliverableType}>
-                                        <RotateCcw className="mr-2 h-4 w-4" />
-                                        초기화
-                                    </ContextMenuItem>
-                                </ContextMenuContent>
-                            </ContextMenu>
-                        </div>
-                        <div>
-                            <Label className="text-left font-bold text-lg mb-1">TestClassification</Label>
-                            <ContextMenu>
-                                <ContextMenuTrigger asChild>
-                                    <div>
-                                        <Select
-                                            value={fileMetadata[selectedFileIndex]?.testClassification || ""}
-                                            onValueChange={(value) => setFileMetadata(selectedFileIndex, { testClassification: value })}
-                                        >
-                                            <SelectTrigger className="w-full">
-                                                <SelectValue placeholder="Select TestClassification" />
-                                            </SelectTrigger>
-                                            <SelectContent>
-                                                <ScrollArea className="h-[130px]">
-                                                    {testClassificationOptions.map((option) => (
-                                                        <SelectItem key={option.id} value={option.id}>{option.label}</SelectItem>
-                                                    ))}
-                                                </ScrollArea>
-                                            </SelectContent>
-                                        </Select>
-                                    </div>
-                                </ContextMenuTrigger>
-                                <ContextMenuContent className="w-38 truncate max-w-full text-left">
-                                    <ContextMenuLabel>TestClassification</ContextMenuLabel>
-                                    <ContextMenuSeparator />
-                                    <ContextMenuItem
-                                            className="h-8 cursor-pointer font-bold text-sm flex items-center gap-2 px-3"
-                                            onClick={handleResetTestClassification}>
-                                        <RotateCcw className="mr-2 h-4 w-4" />
-                                        초기화
-                                    </ContextMenuItem>
-                                </ContextMenuContent>
-                            </ContextMenu>
-                        </div>
-                        <div>
-                            <Label className="text-left font-bold text-lg mb-1">Vehicle</Label>
-                            <Select
-                                value={fileMetadata[selectedFileIndex]?.vehicle || ""}
-                                onValueChange={(value) => setFileMetadata(selectedFileIndex, { vehicle: value })}
-                            >
-                                <SelectTrigger className="w-full">
-                                    <SelectValue placeholder="Select Vehicle" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <ScrollArea className="h-[130px]">
-                                        {vehicleOptions.map((option) => (
-                                            <SelectItem key={option.id} value={option.id}>{option.label}</SelectItem>
-                                        ))}
-                                    </ScrollArea>
-                                </SelectContent>
-                            </Select>
-                        </div>
-                        <div>
-                            <Label className="text-left font-bold text-lg mb-1">DriveType</Label>
-                            <Select
-                                value={fileMetadata[selectedFileIndex]?.driveType || ""}
-                                onValueChange={(value) => setFileMetadata(selectedFileIndex, { driveType: value })}
-                            >
-                                <SelectTrigger className="w-full">
-                                    <SelectValue placeholder="Select DriveType" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <ScrollArea className="h-[130px]">
-                                        {driveTypeOptions.map((option) => (
-                                            <SelectItem key={option.id} value={option.id}>{option.label}</SelectItem>
-                                        ))}
-                                    </ScrollArea>
-                                </SelectContent>
-                            </Select>
-                        </div>
-                        <div>
-                            <Label className="text-left font-bold text-lg mb-1">DevStep</Label>
-                            <Select
-                                value={fileMetadata[selectedFileIndex]?.devStep || ""}
-                                onValueChange={(value) => setFileMetadata(selectedFileIndex, { devStep: value })}
-                            >
-                                <SelectTrigger className="w-full">
-                                    <SelectValue placeholder="Select DevStep" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <ScrollArea className="h-[130px]">
-                                        {stepOptions.map((option) => (
-                                            <SelectItem key={option.id} value={option.id}>{option.label}</SelectItem>
-                                        ))}
-                                    </ScrollArea>
-                                </SelectContent>
-                            </Select>
-                        </div>
-                        <div>
-                            <Label className="text-left font-bold text-lg mb-1">ECU</Label>
-                            <Select
-                                value={fileMetadata[selectedFileIndex]?.ecu || ""}
-                                onValueChange={(value) => setFileMetadata(selectedFileIndex, { ecu: value })}
-                            >
-                                <SelectTrigger className="w-full">
-                                    <SelectValue placeholder="Select ECU" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <ScrollArea className="h-[130px]">
-                                        {ecuOptions.map((option) => (
-                                            <SelectItem key={option.id} value={option.id}>{option.label}</SelectItem>
-                                        ))}
-                                    </ScrollArea>
-                                </SelectContent>
-                            </Select>
-                        </div>
-                        <div>
-                            <Label className="text-left font-bold text-lg mb-1">TestItem</Label>
-                            <Select
-                                value={fileMetadata[selectedFileIndex]?.testItem || ""}
-                                onValueChange={(value) => setFileMetadata(selectedFileIndex, { testItem: value })}
-                            >
-                                <SelectTrigger className="w-full">
-                                    <SelectValue placeholder="Select TestItem" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <ScrollArea className="h-[130px]">
-                                        {testItemOptions.map((option) => (
-                                            <SelectItem key={option.id} value={option.id}>{option.label}</SelectItem>
-                                        ))}
-                                    </ScrollArea>
-                                </SelectContent>
-                            </Select>
-                        </div>
-                        <div>
-                            <Label className="text-left font-bold text-lg mb-1">Result</Label>
-                            <Select
-                                value={fileMetadata[selectedFileIndex]?.result || ""}
-                                onValueChange={(value) => setFileMetadata(selectedFileIndex, { result: value })}
-                            >
-                                <SelectTrigger className="w-full">
-                                    <SelectValue placeholder="Select Result" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <ScrollArea className="h-[130px]">
-                                        {resultOptions.map((option) => (
-                                            <SelectItem key={option.id} value={option.id}>{option.label}</SelectItem>
-                                        ))}
-                                    </ScrollArea>
-                                </SelectContent>
-                            </Select>
-                        </div>
-                        <div>
-                            <Label className="text-left font-bold text-lg mb-1">MemType</Label>
-                            <Select
-                                value={fileMetadata[selectedFileIndex]?.memType || ""}
-                                onValueChange={(value) => setFileMetadata(selectedFileIndex, { memType: value })}
-                            >
-                                <SelectTrigger className="w-full">
-                                    <SelectValue placeholder="Select MemType" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <ScrollArea className="h-[65px]">
-                                        {memTypeOptions.map((option) => (
-                                            <SelectItem key={option.id} value={option.id}>{option.label}</SelectItem>
-                                        ))}
-                                    </ScrollArea>
-                                </SelectContent>
-                            </Select>
-                        </div>
-                        <div>
-                            <Label className="text-left font-bold text-lg mb-1">TcNumber</Label>
-                            <Input
-                                placeholder="Type TcNumber"
-                                value={fileMetadata[selectedFileIndex]?.tcNumber || ""}
-                                onChange={(e) => setFileMetadata(selectedFileIndex, { tcNumber: e.target.value })}
-                            />
-                        </div>
-                        <div>
-                            <Label className="text-left font-bold text-lg mb-1">SwVersion</Label>
-                            <Input
-                                placeholder="Type SwVersion"
-                                value={fileMetadata[selectedFileIndex]?.swVersion || ""}
-                                onChange={(e) => setFileMetadata(selectedFileIndex, { swVersion: e.target.value })}
-                            />
-                        </div>
-                        <div    >
-                            <Label className="text-left font-bold text-lg mb-1">DepArr</Label>
-                            <Input
-                                placeholder="Type DepArr"
-                                value={fileMetadata[selectedFileIndex]?.deparr || ""}
-                                onChange={(e) => setFileMetadata(selectedFileIndex, { deparr: e.target.value })}
-                            />
-                        </div>
-                        <div>
-                            <Label className="text-left font-bold text-lg mb-1">Description</Label>
-                            <Textarea
-                                className="h-25 resize-none"
-                                value={fileMetadata[selectedFileIndex]?.description || ""}
-                                onChange={(e) => setFileMetadata(selectedFileIndex, { description: e.target.value })}
-                                placeholder="Enter description..."
-                            />
-                        </div>
+                        {sortedMapColumns.map((col) => (
+                            <div key={col.originalName}>
+                                <Label className="text-left text-gray-500 font-medium text-lg mb-1">{col.displayName}</Label>
+                                {(() => {
+                                    if (col.originalName === "description") {
+                                        return (
+                                            <Textarea
+                                                className="h-25 resize-none border border-gray-300 rounded-md px-3 py-2 transition-colors duration-150"
+                                                value={fileMetadata[selectedFileIndex]?.[col.originalName] || ""}
+                                                onChange={(e) =>
+                                                    setFileMetadata(selectedFileIndex, { [col.originalName]: e.target.value })
+                                                }
+                                                style={{ fontSize: "18px" }}
+                                            />
+                                        );
+                                    } else if (col.useLut) {
+                                        return (
+                                            <ContextMenu>
+                                                <ContextMenuTrigger asChild>
+                                                    <div>
+                                                        <Select
+                                                            value={fileMetadata[selectedFileIndex]?.[col.originalName] || ""}
+                                                            onValueChange={(value) =>
+                                                                setFileMetadata(selectedFileIndex, { [col.originalName]: value })
+                                                            }
+                                                        >
+                                                            <SelectTrigger className="w-full border border-gray-300 !h-12 cursor-pointer rounded-md px-3 py-2 transition-colors duration-150">
+                                                                <span className="text-lg font-medium">
+                                                                    <SelectValue />
+                                                                </span>
+                                                            </SelectTrigger>
+                                                            <SelectContent className="bg-white border border-gray-300 rounded-md shadow-lg">
+                                                                <ScrollArea className="h-[210px]" type="auto">
+                                                                    {lutOptions[col.originalName]?.map((option) => (
+                                                                        <SelectItem
+                                                                            key={option.id}
+                                                                            value={option.id}
+                                                                            className="text-lg font-medium px-3 py-3 bg-white hover:bg-blue-50 border-b border-gray-100 last:border-b-0 transition-colors duration-150 cursor-pointer"
+                                                                        >
+                                                                            {option.label}
+                                                                        </SelectItem>
+                                                                    ))}
+                                                                </ScrollArea>
+                                                            </SelectContent>
+                                                        </Select>
+                                                    </div>
+                                                </ContextMenuTrigger>
+                                                <ContextMenuContent className="w-50 truncate max-w-full text-center bg-white border border-gray-300 rounded-md shadow-lg">
+                                                    <ContextMenuLabel className="font-bold text-base text-gray-800 px-3 py-2">
+                                                        {col.displayName}
+                                                    </ContextMenuLabel>
+                                                    <ContextMenuSeparator className="bg-gray-200 h-0.5" />
+                                                    <ContextMenuItem
+                                                        className="h-10 cursor-pointer font-bold text-sm flex items-center gap-2 py-2 hover:bg-blue-50 transition-colors duration-150 pl-12"
+                                                        onClick={() => {
+                                                            setFileMetadata(selectedFileIndex, { [col.originalName]: "" });
+                                                        }}
+                                                    >
+                                                        <RotateCcw className="mr-2 h-4 w-4 text-gray-600" />
+                                                        <span className="text-gray-700">초기화</span>
+                                                    </ContextMenuItem>
+                                                </ContextMenuContent>
+                                            </ContextMenu>
+                                        );
+                                    } else {
+                                        return (
+                                            <Input
+                                                placeholder={`...`}
+                                                value={fileMetadata[selectedFileIndex]?.[col.originalName] || ""}
+                                                onChange={(e) => {
+                                                    setFileMetadata(selectedFileIndex, { [col.originalName]: e.target.value })
+                                                }}
+                                                className="h-12 border border-gray-300 rounded-md px-3 py-2 transition-colors duration-150 font-medium text-base"
+                                                style={{ fontSize: "18px" }}
+                                            />
+                                        );
+                                    }
+                                })()}
+                            </div>
+                        ))}
                     </div>
                 </ScrollArea>
             </div>

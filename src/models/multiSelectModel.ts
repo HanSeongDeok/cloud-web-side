@@ -64,24 +64,23 @@ export const deliverableTypeOptions: MultiSelectOption[] = [
     { id: "test-report", label: "시험보고서(1)" },
     { id: "vehicle-data", label: "차량데이터(2)" },
     { id: "evidence-data", label: "증적자료(3)" },
-    { id: "campaign", label: "캠페인(4)" },
-    { id: "real-road-driving", label: "실도로주행(5)" },
 ];
 
 export const testClassificationOptions: MultiSelectOption[] = [
     { id: "vehicle-compliance", label: "실차적합성(1)" },
     { id: "cyber-security", label: "사이버보안(2)" },
     { id: "ota", label: "OTA(3)" },
+    { id: "campaign", label: "캠페인(4)" },
     { id: "real-road-driving", label: "실도로주행(5)" },
 ];
 
-export const driveTypeOptions: MultiSelectOption[] = [
+export const ptTypeOptions: MultiSelectOption[] = [
     { id: "ice", label: "ICE" },
     { id: "hev", label: "HEV" },
     { id: "phev", label: "PHEV" },
     { id: "ev", label: "EV" },
     { id: "erev", label: "EREV" },
-];
+];      
 
 // TestItem을 3개 컬럼으로 세분화
 export const testItem1Options: MultiSelectOption[] = [
@@ -132,3 +131,48 @@ export const memTypeOptions: MultiSelectOption[] = [
     { id: "single", label: "단일" },
     { id: "dual", label: "이중화" },
 ];
+
+export const depArrOptions: MultiSelectOption[] = [
+    { id: "dep1", label: "dep1" },
+    { id: "dep2", label: "dep2" },
+    { id: "dep3", label: "dep3" },
+];
+
+/**
+ * TODO 추후 LUT API를 통해 받아온 뒤 동적 매핑 되어야함.
+ * 현재는 테스트 용으로 하드코딩 된 실제 예시 데이터를 사용함.
+ * 
+ * 해당 id 값이 columns header에 존재하지 않으면 disabled 처리. 
+ */
+export const lutOptions: Record<string, MultiSelectOption[]> = {
+    deliverabletype: [
+        ...deliverableTypeOptions
+    ],
+    testclassification: [
+        ...testClassificationOptions
+    ],
+    vehicle: [
+        ...vehicleOptions
+    ],
+    pttype: [
+        ...ptTypeOptions
+    ],
+    step: [
+        ...stepOptions
+    ],
+    ecu: [
+        ...ecuOptions
+    ],
+    testitem: [
+        ...testItemOptions
+    ],
+    testresult: [
+        ...resultOptions
+    ],
+    memtype: [
+        ...memTypeOptions
+    ],
+    deparr: [
+        ...depArrOptions
+    ],
+};

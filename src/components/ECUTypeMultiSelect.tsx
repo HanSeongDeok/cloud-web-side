@@ -1,4 +1,4 @@
-import { memo } from "react";
+import { memo, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
 import { Label } from "@/components/ui/label";
@@ -10,33 +10,21 @@ import { ChevronDown } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useEcuSelectionStore } from "@/stores/useSelectionStore";
 import { useColumnsStore } from "@/stores/useColumnsStore";
-import { Separator } from "@/components/ui/separator";
-import { Checkbox } from "@/components/ui/checkbox";
 
 const ECUTypeMultiSelect = memo(() => {
     const selected = useEcuSelectionStore((state) => state.selected);
     const setSelected = useEcuSelectionStore((state) => state.setSelected);
     const mapColumns = useColumnsStore((state) => state.mapColumns);
 
-    const selectAll = () => {
-        setSelected(selected.length === mapColumns.length ?
-            [] :
-            mapColumns.map(option => option.id));
-    };
+    const lutColumns = mapColumns.filter(col => col.useLut);
 
     // 마지막 선택된 항목 (UI 체크용)
-    const lastSelected = selected[selected.length - 1];
-
     const handleSelect = (id: string) => {
-        if (selected.includes(id)) {
-            setSelected([...selected.filter(item => item !== id), id]);
-        } else {
-            setSelected([...selected, id]);
-        }
+        setSelected(id);
     };
 
-    const selectedDisplayName = selected.length > 0
-        ? mapColumns.find(option => option.id === lastSelected)?.displayName
+    const selectedDisplayName = selected
+        ? lutColumns.find(option => option.originalName === selected)?.displayName
         : "컬럼 선택";
 
     return (
@@ -61,55 +49,37 @@ const ECUTypeMultiSelect = memo(() => {
                 }}
             >
                 <div className="flex flex-col h-full">
-                <div
-                        className={`flex items-center gap-2 sm:gap-3 px-2 py-1 rounded cursor-pointer transition-colors 
-                            ${selected.length === mapColumns.length
-                                ? "bg-primary/10"
-                                : "hover:bg-accent/50"
-                            }`}
-                        onClick={selectAll}
-                    >
-                        <Checkbox
-                            checked={selected.length === mapColumns.length}
-                            onCheckedChange={selectAll}
-                            className="pointer-events-none size-5 sm:size-5 lg:size-5 border-2 border-black bg-white shadow-sm data-[state=checked]:bg-blue-300 data-[state=checked]:border-black transition-all"
-                        />
-                        <span className="text-base sm:text-base font-bold pl-1 text-black tracking-wide">
-                            전체 선택
-                        </span>
-                    </div>
-                    <Separator className="h-0.5 bg-gray-300 opacity-100" />
                     <ScrollArea className="h-full pr-2" type="always">
                         <RadioGroup
-                            value={lastSelected || ""}
+                            value={selected || ""}
                             onValueChange={handleSelect}
                             className="flex flex-col space-y-1 font-bold pb-2"
                         >
-                            {mapColumns.map((option) => (
+                            {lutColumns.map((option) => (
                                 <div
-                                    key={option.id}
+                                    key={option.originalName}
                                     className={`flex items-center gap-3 px-2 py-1 rounded cursor-pointer transition-colors font-bold 
-                                        ${selected.includes(option.id)
+                                        ${selected.includes(option.originalName)
                                             ? "bg-primary/10"
                                             : "hover:bg-accent/50"
                                         }`}
-                                    onClick={() => handleSelect(option.id)}
+                                    onClick={() => handleSelect(option.originalName)}
                                 >
                                     <RadioGroupItem
-                                        value={option.id}
-                                        id={option.id}
+                                        value={option.originalName}
+                                        id={option.originalName}
                                         className={`appearance-none w-5 h-5 rounded-full border-2 data-[state=checked]:[&>span]:hidden
-                                            ${option.id === lastSelected
+                                            ${option.originalName === selected
                                                 ? "bg-blue-300 border-blue-400"
                                                 : "bg-white border-gray-400"
                                             }`}
                                     />
                                     <Label
-                                        htmlFor={option.id}
+                                        htmlFor={option.originalName}
                                         className="text-sm sm:text-base cursor-pointer flex-1 select-none"
                                         style={{
-                                            color: option.id === lastSelected ? "#2563eb" : "#222",
-                                            fontWeight: option.id === lastSelected ? 700 : 500,
+                                            color: option.originalName === selected ? "#2563eb" : "#222",
+                                            fontWeight: option.originalName === selected ? 700 : 500,
                                             transition: "color 0.2s"
                                         }}
                                     >

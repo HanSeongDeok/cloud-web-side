@@ -18,6 +18,7 @@ import { useFileMultiSelectionStore, useFileSelectionStore } from "@/stores/useF
 import { useState } from "react";
 import Toggle from "./ui/toggle";
 import { fetchInitUpload, fetchUpload, fetchUploadComplete } from "@/handlers/services/upLoad.service.handler";
+import { useColumnsStore } from "@/stores/useColumnsStore";
 
 export interface UploadData {
     sessionId: string;
@@ -53,9 +54,7 @@ export interface FileInfo {
     fileExtension: string;
     file: File;
     mimeType: string;
-    description?: string;
-    vehicle?: string;
-    testResult?: string;
+    [key: string]: any;
   }
 
 const UploadButton = memo(() => {
@@ -77,6 +76,9 @@ const UploadButton = memo(() => {
     const clearSelectedFileIndex = useFileSelectionStore((state) => state.clearSelectedFileIndex);
     const clearSelectedFileIndices = useFileMultiSelectionStore((state) => state.clearSelectedFileIndices);
 
+    const mapColumns = useColumnsStore((state) => state.mapColumns);
+    const fileMetadata = useFileMetaDataStore((state) => state.fileMetadata);
+
     const handleReset = () => {
         clearFiles();
         clearAllMetadata();
@@ -94,12 +96,13 @@ const UploadButton = memo(() => {
             try {
                 // 1. 업로드 초기화
                 if (files.length > 0) {
-                    const fileInfo: FileInfo[] = files.map((file) => ({
+                    const fileInfo: FileInfo[] = files.map((file, index) => ({
                         name: file.name,
                         fileSize: file.size,
                         fileExtension: file.name.split('.').pop() || '',
                         mimeType: file.type,
-                        file: file
+                        file: file,
+                        ...fileMetadata[index]
                     }));
                     const uploadDatas: UploadData[] = await fetchInitUpload(fileInfo, "INDIVIDUAL");
                     console.log(uploadDatas);

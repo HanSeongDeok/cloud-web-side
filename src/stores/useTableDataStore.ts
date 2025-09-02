@@ -4,13 +4,18 @@ import type { PaginationInfo } from "@/stores/usePaginationState ";
 
 interface DataTableStore {
     data: any[];    
-
+    isFiltered: boolean;
     setData: (data: any[]) => void;
+    setFiltered: (filtered: boolean) => void;
+    clearFiltered: () => void;
     fetchData: (paginationInfo: PaginationInfo) => Promise<void>;
 }
 
 export const useDataTableStoreDev = create<DataTableStore>((set, get) => ({
     data: [],
+    isFiltered: false,
+    setFiltered: (filtered) => set({ isFiltered: filtered }),
+    clearFiltered: () => set({ isFiltered: false }),
     setData: (data) => set({ data }),
     fetchData: async (paginationInfo: PaginationInfo) => {
         try {
@@ -30,11 +35,16 @@ export const useDataTableStoreDev = create<DataTableStore>((set, get) => ({
 
 export const useDataTableStore = create<DataTableStore>((set, get) => ({
     data: [],
+    isFiltered: false,
+    setFiltered: (filtered) => set({ isFiltered: filtered }),
+    clearFiltered: () => set({ isFiltered: false }),
     setData: (data) => set({ data }),
     fetchData: async (paginationInfo: PaginationInfo) => {
         try {
+            if (get().isFiltered) {
+                return;
+            }
             const data = await fetchData(paginationInfo);
-
             get().setData(data.data.items);
             console.log(get().data);
         } catch (error) {

@@ -11,6 +11,10 @@ import { usePaginationStore } from "@/stores/usePaginationState ";
 import { memo } from "react";
 import { ChevronsLeft, ChevronsRight } from "lucide-react";
 import { Button } from "./ui/button";
+import { useStepSelectionStore } from "@/stores/useSelectionStore";
+import { useDataTableStore } from "@/stores/useTableDataStore";
+import { filterSearch } from "@/handlers/services/dataTable.service.handler";
+import type { FilterSearchBody } from "@/stores/useColumnsStore";
 
 const PaginationComponent = memo(() => {
   const pageSize = usePaginationStore((state) => state.pageSize);
@@ -42,6 +46,11 @@ const PaginationComponent = memo(() => {
     if (endPage >= 100) return "min-w-[2rem] sm:min-w-[2.5rem] lg:min-w-[3rem]";
     return "min-w-[2rem] sm:min-w-[2.5rem] lg:min-w-[3rem]";
   };
+
+  const stepSelected = useStepSelectionStore((state) => state.selected);
+  const setDataTableData = useDataTableStore((state) => state.setData);
+
+  const setFiltered = useDataTableStore((state) => state.setFiltered);
 
   return (
     <Pagination className="flex justify-center">
@@ -76,9 +85,36 @@ const PaginationComponent = memo(() => {
             <PaginationLink
               href="#"
               isActive={page === currentPage}
-              onClick={(e) => {
+              onClick={async (e) => {
                 e.preventDefault();
                 goToPage(page);
+                
+                if ((stepSelected && Array.from(stepSelected.values()).some(arr => arr.length > 0))) {
+                  try {                                        
+                    const quickFilter: Record<string, string> = {};
+                    stepSelected.forEach((values, key) => {
+                        if (values.length > 0) {
+                            quickFilter[key] = values.join(',');
+                        }
+                    });
+                    const filterInfo: FilterSearchBody = {
+                        mode: "ONLY_QUICK_FILTER",
+                        paging: { 
+                            page: page - 1, 
+                            size: pageSize 
+                        }, 
+                        quickFilter: quickFilter    
+                    };
+                    const result = await filterSearch(filterInfo);
+                    setFiltered(true); 
+                    setDataTableData(result.data.items);
+                    console.log('Filter search result:', result.data.items);
+                    // 결과 처리 로직 추가
+                } catch (error) {
+                    console.error('Filter search failed:', error);
+                }
+                }
+
               }}
               className={`${getPageWidthClass()} text-center w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 p-0 text-sm sm:text-base lg:text-lg font-medium transition-colors`}
             >

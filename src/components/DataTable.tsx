@@ -27,6 +27,8 @@ const DataTable = React.memo(() => {
   const setCurrentPage = usePaginationStore((state) => state.setCurrentPage);
   const fetchTotalRows = usePaginationStore((state) => state.fetchTotalRows);
 
+  const isFiltered = useDataTableStore((state) => state.isFiltered);
+
   // 페이지 사이즈 옵션
   const pageSizeOptions = [10, 20, 50, 100];
 
@@ -39,6 +41,18 @@ const DataTable = React.memo(() => {
       fetchTotalRows();
     }
   };
+
+  React.useEffect(() => {
+    if (isFiltered !== undefined) {
+      const paginationInfo = {
+        pageSize: pageSize,
+        currentPage: currentPage,
+        totalPages: totalPages,
+        totalRow: totalRow,
+      };
+      fetchData(paginationInfo);
+    }
+  }, [isFiltered]);
 
   const handlePaginationChanged = () => {
     setPaginationInfo();
