@@ -1,6 +1,6 @@
 import type { Column } from '@/handlers/events/dataTable.config.handler';
 import { API_CONFIG, DATA_TABLE } from '@/api/api.config.ts';
-import type { PaginationInfo } from '@/stores/usePaginationState ';
+import type { PaginationInfo } from '@/stores/useTableDataStore';
 
 /**
  * 

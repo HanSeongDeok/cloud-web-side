@@ -9,15 +9,6 @@ export interface ColumnArray {
     useLut: boolean
     propertyType: string
   }
-  
-export interface FilterSearchBody {
-    mode: string;
-    paging: {
-      page: number;
-      size: number;
-    };
-    quickFilter: Record<string, string>; 
-  }
 
 interface ColumnsStore {
     columns: ColDef<Column>[];
@@ -35,14 +26,18 @@ export const useColumnsStore = create<ColumnsStore>((set, get) => ({
     fetchColumns: async () => {
         try {
             const columnsData = await fetchColumns();
-
             // columnsData는 ColumnArray[] 배열이므로 직접 순회
             const mapColumns: ColumnArray[] = [];
             const columnsArray: ColDef<Column>[] = [];
             columnsData.forEach(item => {
                 const headerName = item.originalName.toLowerCase().replace(/\s+/g, '');
+                if (headerName === "name") {
+                    return;
+                }
                 mapColumns.push({ originalName: headerName, displayName: item.displayName, useLut: item.useLut, propertyType: item.propertyType });
                 columnsArray.push(createCustomColumn(headerName, item.displayName));
+                console.log(item.originalName);
+                
             });
 
             get().setColumns(columnsArray);

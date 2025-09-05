@@ -19,7 +19,9 @@ export const getAllDbProperties = async (): Promise<DbProperty[]> => {
   // return getMockDbProperties();
   try {
     // 실제 API 호출
-    const response = await fetch(`${API_CONFIG.baseURL}${DB_PROPERTY.list}`);
+    const response = await fetch(`${API_CONFIG.baseURL}${DB_PROPERTY.list}`, {
+      credentials: "include",
+    });
 
     if (!response.ok) {
       throw new Error(
@@ -53,6 +55,7 @@ export const createDbProperty = async (
       headers: {
         "Content-Type": "application/json",
       },
+      credentials: "include",
       body: JSON.stringify(property),
     });
 
@@ -94,6 +97,7 @@ export const updateDbProperty = async (
         headers: {
           "Content-Type": "application/json",
         },
+        credentials: "include",
         body: JSON.stringify(updates),
       }
     );
@@ -132,6 +136,7 @@ export const deleteDbProperty = async (
       headers: {
         "Content-Type": "application/json",
       },
+      credentials: "include",
       body: JSON.stringify({ ids: selectedIds }),
     });
 
@@ -178,6 +183,7 @@ export const deleteMultipleDbProperties = async (
       headers: {
         "Content-Type": "application/json",
       },
+      credentials: "include",
       body: JSON.stringify({ ids }),
     });
 

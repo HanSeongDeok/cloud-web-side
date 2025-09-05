@@ -20,7 +20,9 @@ export const getWhitelistCollection =
 
     try {
       // 실제 API 호출
-      const response = await fetch(`${API_CONFIG.baseURL}${WHITELIST.list}`);
+      const response = await fetch(`${API_CONFIG.baseURL}${WHITELIST.list}`, {
+        credentials: "include",
+      });
 
       if (!response.ok) {
         throw new Error(
@@ -71,6 +73,7 @@ export const addGroup = async (
         headers: {
           "Content-Type": "application/json",
         },
+        credentials: "include",
         body: JSON.stringify(groupData),
       }
     );
@@ -118,6 +121,7 @@ export const updateGroup = async (
         headers: {
           "Content-Type": "application/json",
         },
+        credentials: "include",
         body: JSON.stringify(groupData),
       }
     );
@@ -161,6 +165,7 @@ export const deleteGroup = async (
       `${API_CONFIG.baseURL}${WHITELIST.deleteGroup(groupId)}`,
       {
         method: "DELETE",
+        credentials: "include",
       }
     );
     if (!response.ok) {
@@ -203,6 +208,7 @@ export const deleteUser = async (
       `${API_CONFIG.baseURL}${WHITELIST.deleteUser(userId)}`,
       {
         method: "DELETE",
+        credentials: "include",
       }
     );
     if (!response.ok) {
@@ -246,6 +252,7 @@ export const RevokeUserPermission = async (
       `${API_CONFIG.baseURL}${WHITELIST.deleteUser(userId)}`,
       {
         method: "PUT",
+        credentials: "include",
       }
     );
     if (!response.ok) {
@@ -289,6 +296,7 @@ export const promoteAdmin = async (userIds: number[]) => {
         headers: {
           "Content-Type": "application/json",
         },
+        credentials: "include",
         body: JSON.stringify({ userIds }),
       }
     );
@@ -329,6 +337,7 @@ export const demoteAdmin = async (userIds: number[]) => {
         headers: {
           "Content-Type": "application/json",
         },
+        credentials: "include",
         body: JSON.stringify({ userIds }),
       }
     );
@@ -366,7 +375,10 @@ export const getPermissionRequests = async (): Promise<PermissionRequests> => {
 
   try {
     const response = await fetch(
-      `${API_CONFIG.baseURL}${WHITELIST.permissionRequests}`
+      `${API_CONFIG.baseURL}${WHITELIST.permissionRequests}`,
+      {
+        credentials: "include",
+      }
     );
     if (!response.ok) {
       throw new Error(
@@ -408,6 +420,7 @@ export const approvePermissionRequests = async (requestIds: number[]) => {
         headers: {
           "Content-Type": "application/json",
         },
+        credentials: "include",
         body: JSON.stringify({ requestIds }),
       }
     );
@@ -451,6 +464,7 @@ export const rejectPermissionRequests = async (requestIds: number[]) => {
         headers: {
           "Content-Type": "application/json",
         },
+        credentials: "include",
         body: JSON.stringify({ requestIds }),
       }
     );

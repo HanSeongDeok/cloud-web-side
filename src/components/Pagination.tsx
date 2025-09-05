@@ -7,27 +7,18 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination"
-import { usePaginationStore } from "@/stores/usePaginationState ";
+import { useDataTableStore } from "@/stores/useTableDataStore";
 import { memo } from "react";
 import { ChevronsLeft, ChevronsRight } from "lucide-react";
 import { Button } from "./ui/button";
-import { useStepSelectionStore } from "@/stores/useSelectionStore";
-import { useDataTableStore } from "@/stores/useTableDataStore";
-import { filterSearch } from "@/handlers/services/dataTable.service.handler";
-import type { FilterSearchBody } from "@/stores/useColumnsStore";
 
 const PaginationComponent = memo(() => {
-  const pageSize = usePaginationStore((state) => state.pageSize);
-  const totalRow = usePaginationStore((state) => state.totalRow);
-
-  const currentPage = usePaginationStore((state) => state.currentPage);
-  const setCurrentPage = usePaginationStore((state) => state.setCurrentPage);
-
-  const totalPages = Math.ceil(totalRow / pageSize);
+  const paginationInfo = useDataTableStore((state) => state.pagination);
+  const setPaginationInfo = useDataTableStore((state) => state.setPagination);
   const visiblePageCount = 5;
 
-  const startPage = Math.floor((currentPage-1) / visiblePageCount) * visiblePageCount + 1;
-  const endPage = Math.min(startPage + visiblePageCount - 1, totalPages);
+  const startPage = Math.floor((paginationInfo.currentPage - 1) / visiblePageCount) * visiblePageCount + 1;
+  const endPage = Math.min(startPage + visiblePageCount - 1, paginationInfo.totalPages);
 
   const pages = [];
   for (let i = startPage; i <= endPage; i++) {
@@ -35,8 +26,8 @@ const PaginationComponent = memo(() => {
   }
 
   const goToPage = (page: number) => {
-    if (page < 1 || page > totalPages) return;
-    setCurrentPage(page);
+    if (page < 1 || page > paginationInfo.totalPages) return;
+    setPaginationInfo({ ...paginationInfo, currentPage: page });
   };
 
   const getPageWidthClass = () => {
@@ -46,11 +37,6 @@ const PaginationComponent = memo(() => {
     if (endPage >= 100) return "min-w-[2rem] sm:min-w-[2.5rem] lg:min-w-[3rem]";
     return "min-w-[2rem] sm:min-w-[2.5rem] lg:min-w-[3rem]";
   };
-
-  const stepSelected = useStepSelectionStore((state) => state.selected);
-  const setDataTableData = useDataTableStore((state) => state.setData);
-
-  const setFiltered = useDataTableStore((state) => state.setFiltered);
 
   return (
     <Pagination className="flex justify-center">
@@ -65,55 +51,29 @@ const PaginationComponent = memo(() => {
             <ChevronsLeft className="h-4 w-4 sm:h-5 sm:w-5 lg:h-6 lg:w-6 text-gray-600" />
           </Button>
         </PaginationItem>
-        
+
         {/* < 이전 */}
         <PaginationItem>
           <PaginationPrevious
             href="#"
             onClick={(e) => {
               e.preventDefault();
-              goToPage(currentPage - 1);
+              goToPage(paginationInfo.currentPage - 1);
             }}
             className="w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 p-0 cursor-pointer mr-2 sm:mr-3 lg:mr-4 border border-gray-300 rounded-md hover:bg-gray-100 transition-colors"
           >
           </PaginationPrevious>
         </PaginationItem>
-        
+
         {/* 페이지 번호 */}
         {pages.map((page) => (
           <PaginationItem key={page}>
             <PaginationLink
               href="#"
-              isActive={page === currentPage}
+              isActive={page === paginationInfo.currentPage}
               onClick={async (e) => {
                 e.preventDefault();
                 goToPage(page);
-                
-                if ((stepSelected && Array.from(stepSelected.values()).some(arr => arr.length > 0))) {
-                  try {                                        
-                    const quickFilter: Record<string, string> = {};
-                    stepSelected.forEach((values, key) => {
-                        if (values.length > 0) {
-                            quickFilter[key] = values.join(',');
-                        }
-                    });
-                    const filterInfo: FilterSearchBody = {
-                        mode: "ONLY_QUICK_FILTER",
-                        paging: { 
-                            page: page - 1, 
-                            size: pageSize 
-                        }, 
-                        quickFilter: quickFilter    
-                    };
-                    const result = await filterSearch(filterInfo);
-                    setFiltered(true); 
-                    setDataTableData(result.data.items);
-                    console.log('Filter search result:', result.data.items);
-                    // 결과 처리 로직 추가
-                } catch (error) {
-                    console.error('Filter search failed:', error);
-                }
-                }
 
               }}
               className={`${getPageWidthClass()} text-center w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 p-0 text-sm sm:text-base lg:text-lg font-medium transition-colors`}
@@ -122,9 +82,9 @@ const PaginationComponent = memo(() => {
             </PaginationLink>
           </PaginationItem>
         ))}
-        
+
         {/* 페이지 번호 끝 */}
-        {endPage < totalPages && (
+        {endPage < paginationInfo.totalPages && (
           <>
             <PaginationItem className="mr-2 sm:mr-3 lg:mr-4">
               <PaginationEllipsis />
@@ -134,33 +94,33 @@ const PaginationComponent = memo(() => {
                 href="#"
                 onClick={(e) => {
                   e.preventDefault();
-                  goToPage(totalPages);
+                  goToPage(paginationInfo.totalPages);
                 }}
                 className={`${getPageWidthClass()} text-center w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 p-0 text-sm sm:text-base lg:text-lg font-medium transition-colors`}
               >
-                {totalPages}
+                {paginationInfo.totalPages}
               </PaginationLink>
             </PaginationItem>
           </>
         )}
-        
+
         {/* > 다음  */}
         <PaginationItem>
           <PaginationNext
             href="#"
             onClick={(e) => {
               e.preventDefault();
-              goToPage(currentPage + 1);
+              goToPage(paginationInfo.currentPage + 1);
             }}
             className="w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 p-0 cursor-pointer ml-2 sm:ml-3 lg:ml-4 border border-gray-300 rounded-md hover:bg-gray-100 transition-colors"
-          > 
+          >
           </PaginationNext>
         </PaginationItem>
-        
+
         {/* > 마지막으로 */}
         <PaginationItem>
           <Button
-            onClick={() => goToPage(totalPages)}
+            onClick={() => goToPage(paginationInfo.totalPages)}
             variant="ghost"
             className="w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 p-0 cursor-pointer border border-gray-300 rounded-md hover:bg-gray-100 transition-colors"
           >

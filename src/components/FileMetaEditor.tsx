@@ -41,6 +41,7 @@ const FileMetaEditor = memo(() => {
         ...mapColumns.filter(col => col.originalName === "testclassification"),
         ...mapColumns.filter(
             col =>
+                col.propertyType !== "SERVER_MANAGED" &&
                 col.originalName !== "deliverabletype" &&
                 col.originalName !== "testclassification" &&
                 col.originalName !== "description"
@@ -102,9 +103,12 @@ const FileMetaEditor = memo(() => {
                                             <Textarea
                                                 className="h-25 resize-none border border-gray-300 rounded-md px-3 py-2 transition-colors duration-150"
                                                 value={fileMetadata[selectedFileIndex]?.[col.originalName] || ""}
-                                                onChange={(e) =>
+                                                onChange={(e) =>{
+                                                    if (col.propertyType === "USER_DEFINED") {
+                                                        setFileMetadata(selectedFileIndex, {["customMetadata"]: {[col.originalName]: e.target.value}});
+                                                    }
                                                     setFileMetadata(selectedFileIndex, { [col.originalName]: e.target.value })
-                                                }
+                                                }}
                                                 style={{ fontSize: "18px" }}
                                             />
                                         );
@@ -115,9 +119,12 @@ const FileMetaEditor = memo(() => {
                                                     <div>
                                                         <Select
                                                             value={fileMetadata[selectedFileIndex]?.[col.originalName] || ""}
-                                                            onValueChange={(value) =>
+                                                            onValueChange={(value) =>{
+                                                                if (col.propertyType === "USER_DEFINED") {
+                                                                    setFileMetadata(selectedFileIndex, {["customMetadata"]: {[col.originalName]: value}});
+                                                                }
                                                                 setFileMetadata(selectedFileIndex, { [col.originalName]: value })
-                                                            }
+                                                            }}
                                                         >
                                                             <SelectTrigger className="w-full border border-gray-300 !h-12 cursor-pointer rounded-md px-3 py-2 transition-colors duration-150">
                                                                 <span className="text-lg font-medium">
@@ -148,6 +155,9 @@ const FileMetaEditor = memo(() => {
                                                     <ContextMenuItem
                                                         className="h-10 cursor-pointer font-bold text-sm flex items-center gap-2 py-2 hover:bg-blue-50 transition-colors duration-150 pl-12"
                                                         onClick={() => {
+                                                            if (col.propertyType === "USER_DEFINED") {
+                                                                setFileMetadata(selectedFileIndex, {["customMetadata"]: ""});
+                                                            }
                                                             setFileMetadata(selectedFileIndex, { [col.originalName]: "" });
                                                         }}
                                                     >
@@ -163,6 +173,9 @@ const FileMetaEditor = memo(() => {
                                                 placeholder={`...`}
                                                 value={fileMetadata[selectedFileIndex]?.[col.originalName] || ""}
                                                 onChange={(e) => {
+                                                    if (col.propertyType === "USER_DEFINED") {
+                                                        setFileMetadata(selectedFileIndex, {["customMetadata"]: {[col.originalName]: e.target.value}});
+                                                    }
                                                     setFileMetadata(selectedFileIndex, { [col.originalName]: e.target.value })
                                                 }}
                                                 className="h-12 border border-gray-300 rounded-md px-3 py-2 transition-colors duration-150 font-medium text-base"

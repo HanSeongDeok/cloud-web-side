@@ -11,7 +11,10 @@ export const getAllLutItem = async (propertyId: number): Promise<LutItem[]> => {
   try {
     // 실제 API 호출
     const response = await fetch(
-      `${API_CONFIG.baseURL}${LUT_ITEM.list(propertyId)}`
+      `${API_CONFIG.baseURL}${LUT_ITEM.list(propertyId)}`,
+      {
+        credentials: "include",
+      }
     );
 
     if (!response.ok) {
@@ -58,6 +61,7 @@ export const createLutItem = async (
         headers: {
           "Content-Type": "application/json",
         },
+        credentials: "include",
         body: JSON.stringify(lutItem),
       }
     );
@@ -107,6 +111,7 @@ export const updateSortOrder = async (
         headers: {
           "Content-Type": "application/json",
         },
+        credentials: "include",
         body: JSON.stringify(updates),
       }
     );
@@ -156,6 +161,7 @@ export const updateLutItem = async (
         headers: {
           "Content-Type": "application/json",
         },
+        credentials: "include",
         body: JSON.stringify(updatedItem),
       }
     );
@@ -203,6 +209,7 @@ export const deleteLutItem = async (
         headers: {
           "Content-Type": "application/json",
         },
+        credentials: "include",
       }
     );
 

@@ -156,6 +156,7 @@ const AlertModal: React.FC<AlertModalProps> = ({
         {/* 닫기 버튼 - 우상단 */}
         <button
           onClick={onClose}
+          aria-label="닫기"
           className="absolute top-4 right-4 w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors duration-200"
         >
           <X size={16} className="text-gray-500" />

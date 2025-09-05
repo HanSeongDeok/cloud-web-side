@@ -2,12 +2,12 @@ import { memo } from "react";
 import DataTable from "@/components/DataTable";
 import DataInput from "../DataInput";
 import { TableDropDownMenu } from "../DropDownMenu";
-import TypeMultiSelect from "../TypeMultiSelect";
 import ECUTypeMultiSelect from "../ECUTypeMultiSelect";
 import StepMultiSelect from "../StepMultiSelect";
 import BadgeButtons from "../BadgeButton";
 import UploadButton from "../UploadButton";
 import PaginationComponent from "../Pagination";
+import { Label } from "../ui/label";
 
 const StoragePage = memo(() => {
   return (
@@ -24,8 +24,9 @@ const StoragePage = memo(() => {
         <div className="flex flex-col items-start w-full">
           <BadgeButtons />
           <DataInput />
-          <div className="flex flex-row gap-x-2 w-full justify-center mt-2">
-            <TypeMultiSelect />
+          <div className="flex flex-row gap-x-2 w-full justify-center mt-2 pr-15">
+            {/* <TypeMultiSelect /> */}
+            <Label className="text-xl font-medium text-gray-600">필터</Label>
             <div className="h-10 w-0.5 bg-gray-300 mx-3 font-bold"></div>
             <ECUTypeMultiSelect />
             <StepMultiSelect />

@@ -8,10 +8,9 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { useEcuSelectionStore, useStepSelectionStore } from "@/stores/useSelectionStore";
 import { lutOptions } from "@/models/multiSelectModel";
 import { Label } from "@radix-ui/react-label";
-import { filterSearch } from "@/handlers/services/dataTable.service.handler";
-import type { FilterSearchBody } from "@/stores/useColumnsStore";
-import { usePaginationStore } from "@/stores/usePaginationState ";
 import { useDataTableStore } from "@/stores/useTableDataStore";
+import { createfiterInfo } from "@/handlers/events/filterSearch.service.handler";
+import type { FilterSearchBody } from "@/stores/useTableDataStore";
 
 
 const StepMultiSelect = memo(() => {
@@ -19,11 +18,10 @@ const StepMultiSelect = memo(() => {
     const selected = useStepSelectionStore((state) => state.selected);
     const setSelected = useStepSelectionStore((state) => state.setSelected);
 
-    const pageSize = usePaginationStore((state) => state.pageSize);
-    const currentPage = usePaginationStore((state) => state.currentPage);
+    const paginationInfo = useDataTableStore((state) => state.pagination);
 
-    const setDataTableData = useDataTableStore((state) => state.setData);
-    const setFiltered = useDataTableStore((state) => state.setFiltered);
+    const fetchFilteredData = useDataTableStore((state) => state.fetchFilteredData);
+    const fetchPageData = useDataTableStore((state) => state.fetchPageData);
 
     const selectAll = () => {
         if (!columnHeaderSelected) return;
@@ -98,30 +96,18 @@ const StepMultiSelect = memo(() => {
 
                                         setSelected(updatedSelected);
                                         try {
-                                            const quickFilter: Record<string, string> = {};
+                                            const quickFilter: Record<string, string[]> = {};
                                             updatedSelected.forEach((values, key) => {
                                                 if (values.length > 0) {
-                                                    quickFilter[key] = values.join(',');
+                                                    quickFilter[key] = values; // 배열로 바로 할당
                                                 }
                                             });
-                                            const filterInfo: FilterSearchBody = {
-                                                mode: "ONLY_QUICK_FILTER",
-                                                paging: {
-                                                    page: currentPage - 1,
-                                                    size: pageSize
-                                                },
-                                                quickFilter: quickFilter
-                                            };
-                                            const result = await filterSearch(filterInfo);
-                                            setDataTableData(result.data.items);
-
-                                            const isTest = Array.from(updatedSelected.values()).some(arr => arr.length > 0);
-                                            console.log('isTest:', isTest);
-
+                                            const filterInfo = await createfiterInfo(updatedSelected, paginationInfo);
                                             Array.from(updatedSelected.values()).some(arr => arr.length > 0) ?
-                                                setFiltered(true) :
-                                                setFiltered(false);
+                                                fetchFilteredData(filterInfo as FilterSearchBody) :
+                                                fetchPageData(paginationInfo);
                                             
+
                                         } catch (error) {
                                             console.error('Filter search failed:', error);
                                         }

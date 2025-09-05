@@ -1,6 +1,7 @@
 import { API_CONFIG, DATA_TABLE } from '@/api/api.config.ts';
-import type { ColumnArray, FilterSearchBody } from '@/stores/useColumnsStore';
-import type { PaginationInfo } from '@/stores/usePaginationState ';
+import type { ColumnArray } from '@/stores/useColumnsStore';
+import type { FilterSearchBody } from '@/stores/useTableDataStore';
+  import type { PaginationInfo } from '@/stores/useTableDataStore';
 
 
 /**
@@ -23,7 +24,7 @@ export const fetchColumns = async (): Promise<ColumnArray[]> => {
  * @returns 
  */
 export const fetchData = async (paginationInfo: PaginationInfo | null): Promise<any> => {
-  const filesResponse = await fetch(`${API_CONFIG.baseURL}${DATA_TABLE.data}`, {
+  const response = await fetch(`${API_CONFIG.baseURL}${DATA_TABLE.data}`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -35,14 +36,11 @@ export const fetchData = async (paginationInfo: PaginationInfo | null): Promise<
       paging: {
         page: paginationInfo?.currentPage ? paginationInfo.currentPage - 1 : 0,
         size: paginationInfo?.pageSize
-      }
+      },
     })
-  });
+  }); 
 
-  const data = await filesResponse.json(); 
-  console.log(data.data.totalPages);
-  console.log(data.data.items); 
-
+  const data = await response.json(); 
   return data;
 };    
 
