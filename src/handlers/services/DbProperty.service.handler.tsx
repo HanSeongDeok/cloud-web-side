@@ -1,4 +1,4 @@
-import { API_CONFIG, DB_PROPERTY } from "@/api/api.config.ts";
+import { API_CONFIG, DB_PROPERTY } from "@/config/api.config";
 import type {
   DbProperty,
   NewDbProperty,

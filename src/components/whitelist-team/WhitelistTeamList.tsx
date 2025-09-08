@@ -89,12 +89,14 @@ const WhitelistTeamList: React.FC<WhitelistTeamListProps> = ({
             </div>
             <div className="flex items-center space-x-4">
               <button
+                title="그룹 수정"
                 onClick={() => onOpenTeamModal(group)}
                 className="p-1 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded transition-colors"
               >
                 <Edit className="w-4 h-4" />
               </button>
               <button
+                title="그룹 삭제"
                 onClick={() => onDeleteTeam(group.id, group.name)}
                 className="p-1 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded transition-colors"
               >
@@ -185,6 +187,7 @@ const WhitelistTeamList: React.FC<WhitelistTeamListProps> = ({
                         </SelectContent>
                       </Select>
                       <button
+                        title="삭제"
                         onClick={() => onDeleteUser(user.id, user.name)}
                         className="p-1 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded transition-colors"
                       >

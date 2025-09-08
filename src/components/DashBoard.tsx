@@ -1,6 +1,5 @@
 import { memo, useState } from "react";
 import type { ReactNode } from "react";
-import "@styles/DashBoard.css";
 import {
     DndContext,
     DragOverlay,

@@ -51,12 +51,6 @@ const Home = memo(() => {
             count is {count}
           </button>
           
-          <NavLink to="/login">
-            <button className="px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105 active:scale-95">
-              Login
-            </button>
-          </NavLink>
-          
           <NavLink to="/storage">
             <button className="px-6 py-3 bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105 active:scale-95">
               VTDM

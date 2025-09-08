@@ -49,7 +49,7 @@ export const ecuOptions: MultiSelectOption[] = [
     { id: "vcu", label: "VCU" },
 ];
 
-export const stepOptions: MultiSelectOption[] = [
+export const devstepOptions: MultiSelectOption[] = [
     { id: "t-car", label: "T-Car" },
     { id: "proto", label: "Proto" },
     { id: "m-car", label: "M/Car" },
@@ -80,7 +80,7 @@ export const ptTypeOptions: MultiSelectOption[] = [
     { id: "phev", label: "PHEV" },
     { id: "ev", label: "EV" },
     { id: "erev", label: "EREV" },
-];      
+];
 
 // TestItem을 3개 컬럼으로 세분화
 export const testItem1Options: MultiSelectOption[] = [
@@ -120,9 +120,12 @@ export const testItemOptions: MultiSelectOption[] = [
     ...testItem3Options,
 ];
 
-export const resultOptions: MultiSelectOption[] = [
+export const result1Options: MultiSelectOption[] = [
     { id: "pass", label: "PASS" },
     { id: "fail", label: "FAIL" },
+];
+
+export const result2Options: MultiSelectOption[] = [
     { id: "ok", label: "OK" },
     { id: "ng", label: "NG" },
 ];
@@ -157,17 +160,20 @@ export const lutOptions: Record<string, MultiSelectOption[]> = {
     pttype: [
         ...ptTypeOptions
     ],
-    step: [
-        ...stepOptions
+    devstep: [
+        ...devstepOptions
     ],
     ecu: [
         ...ecuOptions
     ],
     testitem: [
-        ...testItemOptions
+        ...testItem1Options,
+        ...testItem2Options,
+        ...testItem3Options,
     ],
     testresult: [
-        ...resultOptions
+        ...result1Options,
+        ...result2Options,
     ],
     memtype: [
         ...memTypeOptions

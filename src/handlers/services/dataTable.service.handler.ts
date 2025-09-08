@@ -1,4 +1,4 @@
-import { API_CONFIG, DATA_TABLE } from '@/api/api.config.ts';
+import { API_CONFIG, DATA_TABLE } from '@/config/api.config';
 import type { ColumnArray } from '@/stores/useColumnsStore';
 import type { FilterSearchBody } from '@/stores/useTableDataStore';
   import type { PaginationInfo } from '@/stores/useTableDataStore';

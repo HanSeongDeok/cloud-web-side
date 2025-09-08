@@ -27,9 +27,8 @@ interface SingleSelectState {
   clearAll: () => void;
 }
 
-interface VehicleSelectionState extends MultiSelectState {}
-interface EcuSelectionState extends SingleSelectState {}
-interface StepSelectionState extends MultiSelectStateV2 {}
+interface FilterColumnHeaderSelectionState extends SingleSelectState {}
+interface FilterLutSelectionState extends MultiSelectStateV2 {}
 interface TypeSelectionState extends MultiSelectState {}
 
 /**
@@ -45,7 +44,8 @@ export const useSelectionStore = create<SelectionState>((set, get) => ({
 }));
 
 /**
- * 배지 버튼 타입 선택 상태 관리
+ * @deprecated
+ * 파일 및 그룹 타입 선택 상태 관리
  */
 export const useTypeSelectionStore = create<TypeSelectionState>((set, get) => ({
   selected: [],
@@ -56,29 +56,18 @@ export const useTypeSelectionStore = create<TypeSelectionState>((set, get) => ({
 }));
 
 /**
- * 배지 버튼 차량 선택 상태 관리
+ * 필터 컬럼 헤더 선택 상태 관리
  */
-export const useVehicleSelectionStore = create<VehicleSelectionState>((set, get) => ({
-  selected: [],
-  setSelected: (selected) => set({ selected }),
-  isAllChecked: {},
-  setAllChecked: (key: string, boolean: boolean) => set({ isAllChecked: { ...get().isAllChecked, [key]: boolean } }),
-  clearAll: () => set({ selected: [] }),
-}));
-
-/**
- * 컬럼 헤더 선택 상태 관리
- */
-export const useEcuSelectionStore = create<EcuSelectionState>((set, get) => ({
+export const useFilterColumnHeaderSelectionStore = create<FilterColumnHeaderSelectionState>((set, get) => ({
   selected: "",
   setSelected: (selected) => set({ selected }),
   clearAll: () => set({ selected: "" }),
 }));
 
 /**
- * 배지 버튼 단계 선택 상태 관리
+ * 필터 속성(LUT) 선택 상태 관리
  */
-export const useStepSelectionStore = create<StepSelectionState>((set, get) => ({
+export const useFilterLutSelectionStore = create<FilterLutSelectionState>((set, get) => ({
   selected: new Map<string, string[]>() ,
   setSelected: (selected) => set({ selected }),
   clearAll: () => set({ selected: new Map<string, string[]>() }),

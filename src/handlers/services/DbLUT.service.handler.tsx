@@ -1,4 +1,4 @@
-import { API_CONFIG, LUT_ITEM } from "@/api/api.config.ts";
+import { API_CONFIG, LUT_ITEM } from "@/config/api.config";
 import type { LutItem, NewLutItem } from "@/types/lut";
 /**
  * 모든 룩업 아이템을 가져오는 함수

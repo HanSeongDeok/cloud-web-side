@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { ChevronDownIcon, ClipboardList } from "lucide-react";
 import { useNavigate, useLocation, NavLink } from "react-router-dom";
-import { ROUTE_PATH } from "@/api/path.config";
+import { ROUTE_PATH } from "@/config/path.config";
 import { useUserPermissionStore } from "@/stores/useUserPermissionStore";
 import { getRoleDisplayName, isAdmin } from "@/config/role.config";
 

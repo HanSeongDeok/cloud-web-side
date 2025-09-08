@@ -51,25 +51,21 @@
   background-color: transparent;
 }
 
-/* 리사이즈 가능한 다이얼로그 */
-/* [data-slot="dialog-content"] {
-  resize: both !important;
-  overflow: auto !important;
-  min-width: 400px !important;
-  min-height: 300px !important;
-  max-width: 90vw !important;
-  max-height: 90vh !important;
-} */
+/* ag-Grid 헤더 가운데 정렬 및 헤더 셀 사이 구분선 추가 */
+.ag-theme-custom .ag-header-cell-label {
+  justify-content: center !important;
+  display: flex !important;
+  align-items: center !important;
+}
 
-/* 리사이즈 핸들 스타일링 */
-/* [data-slot="dialog-content"]::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  width: 12px;
-  height: 12px;
-  background: linear-gradient(-45deg, transparent 30%, #9ca3af 30%, #9ca3af 40%, transparent 40%);
-  cursor: nw-resize;
-  border-radius: 0 0 6px 0;
-} */
+/* 헤더 텍스트 가운데 정렬 */
+.ag-theme-custom .ag-header-cell-text {
+  text-align: center !important;
+}
+
+/* 헤더 셀 배경에 회색 추가 및 전체 테두리 회색 적용 */
+.ag-theme-custom .ag-header-cell {
+  background-color: #e5e7eb !important; /* 더 연한 회색 배경 */
+  border: 1px solid #f3f4f6 !important; /* 전체 테두리 더 연한 회색 */
+  box-sizing: border-box;
+}

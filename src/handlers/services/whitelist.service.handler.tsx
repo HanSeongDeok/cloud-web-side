@@ -1,4 +1,4 @@
-import { API_CONFIG, WHITELIST } from "@/api/api.config.ts";
+import { API_CONFIG, WHITELIST } from "@/config/api.config";
 import type {
   WhitelistCollection,
   NewWhitelistGroup,

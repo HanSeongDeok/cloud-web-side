@@ -32,6 +32,7 @@ const WhitelistTeamHeader: React.FC<WhitelistTeamHeaderProps> = ({
       </div>
       <div className="flex items-center space-x-2">
         <button
+          title="새로고침"
           onClick={onRefresh}
           disabled={loading}
           className="bg-gray-600 text-white px-3 py-3 rounded-lg flex items-center justify-center hover:bg-gray-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)]"
@@ -39,6 +40,7 @@ const WhitelistTeamHeader: React.FC<WhitelistTeamHeaderProps> = ({
           <RotateCcw className={`w-4 h-4 ${loading ? "animate-spin" : ""}`} />
         </button>
         <button
+          title="팀 코드 등록"
           onClick={() => onAddTeam()}
           className="bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center space-x-2 hover:bg-blue-700 transition-colors shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)]"
         >

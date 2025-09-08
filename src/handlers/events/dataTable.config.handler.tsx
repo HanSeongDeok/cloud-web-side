@@ -45,11 +45,11 @@ export type Column = {
 
 export const createCustomColumn = (id: string, displayName: string): ColDef<Column> => {
   return {
-    headerName: displayName, 
-    field: id, 
+    headerName: displayName,
+    field: id,
     tooltipValueGetter: (params) => params.value,
-    width: 200, 
-    cellStyle: { textAlign: 'center' },
+    width: 200, // 칸을 더 키움
+    cellStyle: { textAlign: 'center' } 
   }
 }
 

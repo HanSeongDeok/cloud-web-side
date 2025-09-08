@@ -1,4 +1,4 @@
-import { API_CONFIG, API_CONFIG_DEV, PERMISSION, PERMISSION_DEV, SSO_LOGIN, SSO_LOGIN_DEV } from '@/api/api.config.ts';
+import { API_CONFIG, API_CONFIG_DEV, PERMISSION, PERMISSION_DEV, SSO_LOGIN, SSO_LOGIN_DEV } from '@/config/api.config';
 
 /**
  * 테스트용 SSO 로그인

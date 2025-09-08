@@ -72,7 +72,7 @@ export const useDataTableStore = create<DataTableStore>((set, get) => ({
                                     delete value.uploadedAt;
                                 }
                                 if (typeof value.testResult !== "undefined") {
-                                    value.testresult = value.testResult;
+                                    value.result = value.testResult;
                                     delete value.testResult;
                                 }
                                 if (typeof value.customMetadata !== "undefined") {
@@ -98,7 +98,7 @@ export const useDataTableStore = create<DataTableStore>((set, get) => ({
                         delete item.uploadedAt;
                     }
                     if (typeof item.testResult !== "undefined") {
-                        item.testresult = item.testResult;
+                        item.result = item.testResult;
                         delete item.testResult;
                     }
                     if (typeof item.customMetadata !== "undefined") {
@@ -155,7 +155,7 @@ export const useDataTableStore = create<DataTableStore>((set, get) => ({
                                     delete value.uploadedAt;
                                 }
                                 if (typeof value.testResult !== "undefined") {
-                                    value.testresult = value.testResult;
+                                    value.result = value.testResult;
                                     delete value.testResult;
                                 }
                                 if (typeof value.customMetadata !== "undefined") {
@@ -180,7 +180,7 @@ export const useDataTableStore = create<DataTableStore>((set, get) => ({
                         delete item.uploadedAt;
                     }
                     if (typeof item.testResult !== "undefined") {
-                        item.testresult = item.testResult;
+                        item.result = item.testResult;
                         delete item.testResult;
                     }
                     if (typeof item.customMetadata !== "undefined") {

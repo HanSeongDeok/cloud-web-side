@@ -17,8 +17,8 @@ import { SSOLoginPage } from "@/components/pages/SSOLoginPage";
 import PermissionPage from "@/components/pages/PermissionPage";
 import { SSOLoginVerifyPage } from "@/components/pages/SSOLoginVerifyPage";
 import Home from "@/components/Home";
-import { ROUTE_PATH } from "@/api/path.config";
-import ProtectedRoute from "@/components/ProtestedRoute";
+import { ROUTE_PATH } from "@/config/path.config";
+import ProtectedRoute from "@/routes/ProtestedRoute";
 import DashBoard from "@/components/DashBoard";
 
 const Router: React.FC = () => {

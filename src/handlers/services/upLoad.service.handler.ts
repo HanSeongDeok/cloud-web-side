@@ -1,5 +1,5 @@
-import { API_CONFIG, UPLOAD } from '@/api/api.config';
-import type { FileInfo, UploadCompleteData, UploadData, UploadFileData } from '@/components/UploadButton';
+import { API_CONFIG, UPLOAD } from '@/config/api.config';
+import type { FileInfo, UploadCompleteData, UploadData, UploadFileData } from '@/components/uploads/UploadButton';
 
 /**
  * 

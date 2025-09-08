@@ -54,7 +54,6 @@ const PermissionPage = memo(() => {
     const checkPermission = async () => {
       try {
         // 권한 확인 API 호출
-        // const response = await permissionPageDev()
         const response = await permissionPage();
         if (response.ok) {
           const checkResponse: CheckResponse = await response.json();
@@ -79,21 +78,6 @@ const PermissionPage = memo(() => {
             setIsLoading(false);
             return;
           }
-
-          // const permissionData: PermissionData = await response.json()
-          // console.log(permissionData)
-
-          // if(permissionData.hasPermission) {
-          //     setPermissionData({ hasPermission: true, isRequesting: false })
-          //     navigate('/storage', { replace: true })
-          //     return;
-          // }
-
-          // if(permissionData.isRequesting) {
-          //     setPermissionData({ hasPermission: false, isRequesting: true })
-          //     setIsLoading(false);
-          //     return;
-          // }
 
           // 권한이 없고 요청도 안한 경우
           setPermissionData({ hasPermission: false, isRequesting: false });
