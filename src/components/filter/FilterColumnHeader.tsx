@@ -24,7 +24,7 @@ const FilterColumnHeader = memo(() => {
     };
 
     const selectedDisplayName = filterColumnHeaderSelected
-        ? lutMapColumns.find(option => option.originalName === filterColumnHeaderSelected)?.displayName
+        ? lutMapColumns.find(option => option.columnName === filterColumnHeaderSelected)?.displayName
         : "컬럼 선택";
 
     return (
@@ -57,29 +57,29 @@ const FilterColumnHeader = memo(() => {
                         >
                             {lutMapColumns.map((option) => (
                                 <div
-                                    key={option.originalName}
+                                    key={option.columnName}
                                     className={`flex items-center gap-3 px-2 py-1 rounded cursor-pointer transition-colors font-bold 
-                                        ${filterColumnHeaderSelected.includes(option.originalName)
+                                        ${filterColumnHeaderSelected.includes(option.columnName)
                                             ? "bg-primary/10"
                                             : "hover:bg-accent/50"
                                         }`}
-                                    onClick={() => handleSelect(option.originalName)}
+                                    onClick={() => handleSelect(option.columnName)}
                                 >
                                     <RadioGroupItem
-                                        value={option.originalName}
-                                        id={option.originalName}
+                                        value={option.columnName}
+                                        id={option.columnName}
                                         className={`appearance-none w-5 h-5 rounded-full border-2 data-[state=checked]:[&>span]:hidden
-                                            ${option.originalName === filterColumnHeaderSelected
+                                            ${option.columnName === filterColumnHeaderSelected
                                                 ? "bg-blue-300 border-blue-400"
                                                 : "bg-white border-gray-400"
                                             }`}
                                     />
                                     <Label
-                                        htmlFor={option.originalName}
+                                        htmlFor={option.columnName}
                                         className="text-sm sm:text-base cursor-pointer flex-1 select-none"
                                         style={{
-                                            color: option.originalName === filterColumnHeaderSelected ? "#2563eb" : "#222",
-                                            fontWeight: option.originalName === filterColumnHeaderSelected ? 700 : 500,
+                                            color: option.columnName === filterColumnHeaderSelected ? "#2563eb" : "#222",
+                                            fontWeight: option.columnName === filterColumnHeaderSelected ? 700 : 500,
                                             transition: "color 0.2s"
                                         }}
                                     >

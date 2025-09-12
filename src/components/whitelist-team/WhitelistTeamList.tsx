@@ -146,7 +146,7 @@ const WhitelistTeamList: React.FC<WhitelistTeamListProps> = ({
                           }
                         }}
                       >
-                        {/* TODO 해당 Selecter가 '마스터 관리자'일 때만 활성화되도록 해야함*/}
+                        {/* TODO:  해당 Selecter가 '마스터 관리자'일 때만 활성화되도록 해야함*/}
                         <SelectTrigger
                           size="sm"
                           className={cn(

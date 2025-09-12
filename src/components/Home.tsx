@@ -4,8 +4,6 @@ import viteLogo from '/vite.svg'
 import { NavLink } from 'react-router-dom';
 
 const Home = memo(() => {
-  const [count, setCount] = useState(0)
-  
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 p-8">
       {/* 로고 컨테이너 */}
@@ -43,16 +41,9 @@ const Home = memo(() => {
 
       {/* 카드 컨테이너 */}
       <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 shadow-2xl border border-white/20 mb-8">
-        <div className="flex flex-col sm:flex-row gap-4 items-center">
-          <button 
-            className="px-6 py-3 bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105 active:scale-95"
-            onClick={() => setCount((count) => count + 1)}
-          >
-            count is {count}
-          </button>
-          
+        <div className="flex flex-col sm:flex-row gap-4 items-center"> 
           <NavLink to="/storage">
-            <button className="px-6 py-3 bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105 active:scale-95">
+            <button className="cursor-pointer px-6 py-3 bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105 active:scale-95">
               VTDM
             </button>
           </NavLink>

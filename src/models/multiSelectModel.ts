@@ -148,37 +148,37 @@ export const depArrOptions: MultiSelectOption[] = [
  * 해당 id 값이 columns header에 존재하지 않으면 disabled 처리. 
  */
 export const lutOptions: Record<string, MultiSelectOption[]> = {
-    deliverabletype: [
+    deliverableType: [
         ...deliverableTypeOptions
     ],
-    testclassification: [
+    testClassification: [
         ...testClassificationOptions
     ],
     vehicle: [
         ...vehicleOptions
     ],
-    pttype: [
+    ptType: [
         ...ptTypeOptions
     ],
-    devstep: [
+    devStep: [
         ...devstepOptions
     ],
     ecu: [
         ...ecuOptions
     ],
-    testitem: [
+    testItem: [
         ...testItem1Options,
         ...testItem2Options,
         ...testItem3Options,
     ],
-    testresult: [
+    testResult: [
         ...result1Options,
         ...result2Options,
     ],
-    memtype: [
+    memType: [
         ...memTypeOptions
     ],
-    deparr: [
+    depArr: [
         ...depArrOptions
     ],
 };

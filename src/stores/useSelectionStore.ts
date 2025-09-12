@@ -30,6 +30,7 @@ interface SingleSelectState {
 interface FilterColumnHeaderSelectionState extends SingleSelectState {}
 interface FilterLutSelectionState extends MultiSelectStateV2 {}
 interface TypeSelectionState extends MultiSelectState {}
+interface FilterAdvancedSelectionState extends MultiSelectStateV2 {}
 
 /**
  * 테이블 노드 선택 상태 관리
@@ -73,5 +74,13 @@ export const useFilterLutSelectionStore = create<FilterLutSelectionState>((set, 
   clearAll: () => set({ selected: new Map<string, string[]>() }),
 }));
 
+/**
+ * Advanced Search 선택 상태 관리
+ */
+export const useFilterAdvancedSelectionStore = create<FilterAdvancedSelectionState>((set, get) => ({
+  selected: new Map<string, string[]>() ,
+  setSelected: (selected) => set({ selected }),
+  clearAll: () => set({ selected: new Map<string, string[]>() }),
+}));
 
 

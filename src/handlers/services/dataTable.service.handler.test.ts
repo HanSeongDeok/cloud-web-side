@@ -59,7 +59,13 @@ export const fetchData = async (paginationInfo: PaginationInfo): Promise<any[]> 
  */
 export const searchData = async (keyword: string): Promise<any[]> => {
   try {
-    const response = await fetch(`${API_CONFIG.baseURL}${DATA_TABLE.data}?keyword=${encodeURIComponent(keyword)}`);
+    const response = await fetch(`${API_CONFIG.baseURL}${DATA_TABLE.data}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ keyword }),
+    });
 
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);

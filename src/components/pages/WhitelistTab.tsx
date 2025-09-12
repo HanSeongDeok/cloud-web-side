@@ -171,32 +171,26 @@ const WhitelistTab: React.FC = () => {
     }
   };
 
-  const handleDeleteTeam = useCallback(
-    async (groupId: number) => {
-      try {
-        const updatedData = await deleteGroup(groupId);
-        setWhitelistData(updatedData);
-        // 업데이트된 데이터의 모든 그룹을 펼쳐진 상태로 유지
-        const allGroupIds = new Set(
-          updatedData.groups.map((group) => group.id)
-        );
-        setExpandedGroups(allGroupIds);
-        toast.success("그룹이 성공적으로 삭제되었습니다.", {
-          duration: 3000,
-        });
-      } catch (error) {
-        console.error("그룹 삭제 실패:", error);
-        showError(
-          "그룹 삭제 실패",
-          `그룹 삭제에 실패했습니다: ${
-            error instanceof Error ? error.message : "알 수 없는 오류"
-          }`
-        );
-      }
-    },
-    [showError]
-  );
-
+  const handleDeleteTeam = async (groupId: number) => {
+    try {
+      const updatedData = await deleteGroup(groupId);
+      setWhitelistData(updatedData);
+      // 업데이트된 데이터의 모든 그룹을 펼쳐진 상태로 유지
+      const allGroupIds = new Set(updatedData.groups.map((group) => group.id));
+      setExpandedGroups(allGroupIds);
+      toast.success("팀이 성공적으로 삭제되었습니다.", {
+        duration: 3000,
+      });
+    } catch (error) {
+      console.error("팀 삭제 실패:", error);
+      showError(
+        "팀 삭제 실패",
+        `팀 삭제에 실패했습니다: ${
+          error instanceof Error ? error.message : "알 수 없는 오류"
+        }`
+      );
+    }
+  };
   //TODO : 유저 삭제 시에도 알림 모달 뜨도록 UI feedback 추가 필요
   const handleDeleteUser = useCallback(
     async (userId: number) => {

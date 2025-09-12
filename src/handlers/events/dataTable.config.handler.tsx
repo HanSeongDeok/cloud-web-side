@@ -3,41 +3,14 @@ import type {
   RowClickedEvent,
   SelectionChangedEvent,
 } from "ag-grid-community"
-import { RowDropDownMenu } from "@/components/DropDownMenu"
+import { RowDropDownMenu } from "@/components/tables/TableColumnSetting"
 import { useSelectionStore } from "@/stores/useSelectionStore"
 import { useSearchKeywordStore } from "@/stores/useSearchKeywordStore";
 import { debounce, throttle } from "lodash";  
 
-export type Column_DEV = {
-  fileName: string
-  testItem: string
-  driveType: string
-  tcNum: string
-  memType: string
-  filePath: string
-  testType: string
-  description: string
-  fileModifiedDate: string
-  fileCreator: string
-  devStep: string
-  vehicle: string
-  swVer: string
-  depArr: string
-  fileSize: string
-  ecu: string
-  tableNumber: string
-  deliverableType: string
-  testResult: string
-  fileFormat: string
-  createdAt: string
-  updatedAt: string
-  [key: string]: string
-}
-
 export type Column = {
   [key: string]: string
 }
-
 
 // 여기서 context menu(컨텍스트 메뉴) 추가 가능합니다.
 // ag-Grid의 ColDef에는 getContextMenuItems 프로퍼티를 사용할 수 있습니다.
@@ -48,8 +21,6 @@ export const createCustomColumn = (id: string, displayName: string): ColDef<Colu
     headerName: displayName,
     field: id,
     tooltipValueGetter: (params) => params.value,
-    width: 200, // 칸을 더 키움
-    cellStyle: { textAlign: 'center' } 
   }
 }
 
@@ -58,7 +29,6 @@ export const columnDefs_DEV = (id: string, displayName: string): ColDef<Column>[
     createCustomColumn(id, displayName),
   ]
 }
-
 
 // 선택 변경 이벤트 핸들러
 export const onSelectionChanged = (event: SelectionChangedEvent) => {

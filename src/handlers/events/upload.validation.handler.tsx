@@ -23,8 +23,8 @@ export const validateFileMetadata = (
 
   Object.entries(fileMetadata).forEach(([index, metadata]) => {
     const fileName = files[Number(index)]?.name || `파일(${index})`;
-    const deliverableType = metadata?.deliverabletype;
-    const testClassification = metadata?.testclassification;
+    const deliverableType = metadata?.deliverableType;
+    const testClassification = metadata?.testClassification;
 
     // 필수 필드 목록
     const requiredFields = getRequiredFields(deliverableType, testClassification);

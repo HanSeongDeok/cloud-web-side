@@ -4,32 +4,33 @@ import { Button } from "../ui/button";
 import { X } from "lucide-react";
 import { useFilterColumnHeaderSelectionStore, useFilterLutSelectionStore } from "@/stores/useSelectionStore";
 import { useColumnsStore } from "@/stores/useColumnsStore";
-import type { FilterSearchBody } from "@/stores/useTableDataStore";
+import type { SearchInfoBody } from "@/stores/useTableDataStore";
 import { useDataTableStore } from "@/stores/useTableDataStore";
-import { createfiterInfo } from "@/handlers/events/filterSearch.service.handler";
+import { convertSearchMode, createfiterInfo } from "@/handlers/events/filterSearch.service.handler";
+import { useSearchKeywordStore } from "@/stores/useSearchKeywordStore";
 
-const FilterLutBadge = memo(({allSelectedSteps, removeStep, tagId, columnHeaderId }: {
+const FilterLutBadge = memo(({allFilters, removeStep, tagId, columnHeaderId }: {
     columnHeaderId: string,
     tagId: string,
-    allSelectedSteps: string[],
+    allFilters: string[],
     removeStep: (columnHeaderId: string, stepId: string) => void
 }) => {
     return (
         <>
-            {allSelectedSteps.map((step) => (
+            {allFilters.map((filter) => (
                 <Badge
-                    key={step}
+                    key={filter}
                     variant="secondary"
-                    className="text-sm px-3 py-1.5 flex items-center gap-1 bg-purple-50 border-purple-200 text-purple-800 hover:bg-purple-100 transition-colors"
+                    className="text-sm px-3 py-1.5 flex items-center gap-1 bg-black border-neutral-900 text-white hover:bg-gray-800 transition-colors"
                 >
-                    <span className="text-purple-600 font-bold">{tagId}:</span> {step}
+                    <span className="text-gray-400 font-bold mr-1">{tagId}:</span>{filter}
                     <Button
-                        onClick={() => removeStep(columnHeaderId, step)}
-                        className="ml-1 p-0 h-4 w-4 min-w-0 min-h-0 hover:bg-purple-200 rounded-full transition-colors cursor-pointer"
+                        onClick={() => removeStep(columnHeaderId, filter)}
+                        className="ml-1 p-0 h-4 w-4 min-w-0 min-h-0 hover:bg-gray-700 rounded-full transition-colors cursor-pointer"
                         variant="ghost"
                         size="sm"
                     >
-                        <X className="w-3 h-3 text-purple-600 cursor-pointer" />
+                        <X className="w-3 h-3 text-rose-600 cursor-pointer" />
                     </Button>
                 </Badge>
             ))}
@@ -61,45 +62,50 @@ const AllFilterLutBadge = memo(({ stepClearAll, tagId }: {
 
 const FilterBadgeButton = memo(() => {
     const filterLutSelected = useFilterLutSelectionStore((state) => state.selected);
-    const filterLutClearAll = useFilterLutSelectionStore((state) => state.clearAll);
+    // const filterLutClearAll = useFilterLutSelectionStore((state) => state.clearAll);
     const filterColumnHeaderClearAll = useFilterColumnHeaderSelectionStore((state) => state.clearAll);
 
     const mapColumns = useColumnsStore((state) => state.mapColumns);
     const paginationInfo = useDataTableStore((state) => state.pagination);
+    const searchKeyword = useSearchKeywordStore((state) => state.searchKeyword);
 
-    const fetchFilteredData = useDataTableStore((state) => state.fetchFilteredData);
-    const fetchPageData = useDataTableStore((state) => state.fetchPageData);
+    const fetchSearchData = useDataTableStore((state) => state.fetchSearchData);
     const filterLutSetSelected = useFilterLutSelectionStore((state) => state.setSelected);
 
     const removeStep = async (columnHeaderId: string, stepId: string) => {
         const updatedStepSelected = new Map(filterLutSelected).set(columnHeaderId, filterLutSelected.get(columnHeaderId)?.filter((id: string) => id !== stepId) || []);
         filterLutSetSelected(updatedStepSelected);
 
-        const filterInfo = await createfiterInfo(updatedStepSelected, paginationInfo);
-        Array.from(updatedStepSelected.values()).some(arr => arr.length > 0) ?
-            fetchFilteredData(filterInfo as FilterSearchBody) :
-            fetchPageData(paginationInfo);
+        const mode = convertSearchMode(searchKeyword);
+        const searchInfo = await createfiterInfo(updatedStepSelected, paginationInfo, searchKeyword, mode);
+        fetchSearchData(searchInfo as SearchInfoBody)
     };
 
     // 전체 선택 해제 함수들
     const clearAll = () => {
-        filterLutClearAll();
+        // filterLutClearAll();
         filterColumnHeaderClearAll();
-        fetchPageData(paginationInfo);
+
+        const updatedStepSelected = new Map<string, string[]>();  
+        filterLutSetSelected(updatedStepSelected);
+
+        const mode = convertSearchMode(searchKeyword);
+        const searchInfo = createfiterInfo(updatedStepSelected, paginationInfo, searchKeyword, mode);
+        fetchSearchData(searchInfo as SearchInfoBody); 
     };
 
     return (
         <div>
             {(filterLutSelected && Array.from(filterLutSelected.values()).some(arr => arr && arr.length > 0)) &&
-                <div className="flex flex-wrap gap-2 mt-2 mb-2 overflow-y-auto max-h-38 scrollbar">
+                <div className="flex flex-wrap gap-2 mt-2 mb-2 overflow-y-auto max-h-40 scrollbar">
                     {/* stepSelected의 모든 key에 대해 StepBadge를 렌더링 */}
                     {Array.from(filterLutSelected.entries()).map(([key, steps]) => (
                         <FilterLutBadge
                             key={key}
-                            allSelectedSteps={steps || []} // steps가 undefined일 경우 빈 배열로 처리
+                            allFilters={steps || []} // steps가 undefined일 경우 빈 배열로 처리
                             removeStep={removeStep}
                             columnHeaderId={key}
-                            tagId={mapColumns.find(opt => opt.originalName === key)?.displayName || ""}
+                            tagId={mapColumns.find(opt => opt.columnName === key)?.displayName || ""}
                         />
                     ))}
 

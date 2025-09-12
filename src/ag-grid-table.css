@@ -1,0 +1,63 @@
+/* ag-Grid 헤더 가운데 정렬 및 헤더 셀 사이 구분선 추가 */
+.ag-theme-custom .ag-header-cell-label {
+    justify-content: center !important;
+    display: flex !important;
+    align-items: center !important;
+}
+
+/* 헤더 텍스트 가운데 정렬 */
+.ag-theme-custom .ag-header-cell-text {
+    text-align: center !important;
+}
+
+/* 헤더 셀 배경에 회색 추가 및 전체 테두리 회색 적용 */
+.ag-theme-custom .ag-header-cell {
+    background-color: #e5e7eb !important;
+    border: 1px solid #f3f4f6 !important;
+    box-sizing: border-box;
+}
+
+.ag-theme-custom .ag-cell-wrapper {
+    display: flex;
+    align-items: center !important;
+    height: 100%;
+}
+
+/* 셀 클릭 시(포커스 시) 검정색 테두리 제거 */
+.ag-theme-custom .ag-cell:focus,
+.ag-theme-custom .ag-cell.ag-cell-focus {
+    border-color: transparent !important;
+}
+
+/* 행 hover 효과 - 하늘색 배경 */
+.ag-theme-custom .ag-row:hover {
+    background-color: #e6e6e66c !important;
+    transition: background-color 0.2s ease;
+}
+
+/* 헤더 셀 hover 효과 */
+.ag-theme-custom .ag-header-cell:hover {
+    background-color: #c1c2c4 !important;
+    transition: background-color 0.2s ease;
+}
+
+.ag-theme-custom .ag-row-selected:hover .ag-cell,
+.ag-theme-custom .ag-row-selected.ag-row-hover .ag-cell {
+    background-color: #e0f2fe !important;
+}
+
+/* ag-Grid 기본 선택 색상 오버라이드 */
+.ag-theme-custom .ag-row-selected .ag-cell {
+    background-color: #e0f2fe !important;
+}
+
+/* 셀 hover 시 cursor pointer */
+.ag-theme-custom .ag-cell:hover {
+    cursor: pointer !important;
+}
+
+/* 그룹 아이콘(ag-group-expanded, ag-group-contracted)의 커서 영역을 조절 */
+.ag-theme-custom .ag-group-expanded,
+.ag-theme-custom .ag-group-contracted {
+    scale: 2 !important;
+}

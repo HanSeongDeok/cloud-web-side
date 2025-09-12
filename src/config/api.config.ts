@@ -17,16 +17,6 @@ export const API_CONFIG_DEV = {
 } as const;
 
 /**
- * 개별 API EndPoint 저장소 테이블
- */
-export const DATA_TABLE_DEV = {
-  columns: "/api/data-table/columns",
-  data: "/api/data-table/all-data-v3",
-  dataTotalCount: "/api/data-table/total-count",
-  search: "/api/data-table/search",
-} as const;
-
-/**
  * 파일 프로퍼티 API EndPoint
  */
 export const DATA_TABLE = {
@@ -34,21 +24,9 @@ export const DATA_TABLE = {
   columns: "/api/v1/files/properties",
 } as const;
 
-/**
- * 개별 API EndPoint SSO 로그인
- */
-export const SSO_LOGIN_DEV = {
-  ssoLogin: "/api/auth/google",
-} as const;
-
 export const UPLOAD = {
   init: "/api/v1/files/upload/init",
   complete: "/api/v1/files/upload/complete",
-} as const;
-
-export const PERMISSION_DEV = {
-  permission: "/api/auth/permission/V2",
-  requestPermission: "/api/auth/permission/request/V2",
 } as const;
 
 export const SSO_LOGIN = {
@@ -59,7 +37,6 @@ export const PERMISSION = {
   permission: "/api/auth/me",
   requestPermission: "/api/users/permission-request",
 } as const;
-
 
 export const DB_PROPERTY = {
   columns: "/api/v1/admin/db/file-properties/columns",
@@ -96,6 +73,10 @@ export const WHITELIST = {
   rejectRequests: `/api/v1/admin/whitelist/permission-requests/reject`,
 } as const;
 
+export const DASHBOARD = {
+  data: `/api/v1/dashboard`,
+  config: `/api/v1/dashboard/config`,
+};
 /**
  * 전체 API EndPoint 모음 객체
  */

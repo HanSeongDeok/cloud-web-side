@@ -8,9 +8,10 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { lutOptions } from "@/models/multiSelectModel";
 import { Label } from "@radix-ui/react-label";
 import { useDataTableStore } from "@/stores/useTableDataStore";
-import { createfiterInfo } from "@/handlers/events/filterSearch.service.handler";
-import type { FilterSearchBody } from "@/stores/useTableDataStore";
+import { convertSearchMode, createfiterInfo } from "@/handlers/events/filterSearch.service.handler";
+import type { SearchInfoBody } from "@/stores/useTableDataStore";
 import { useFilterColumnHeaderSelectionStore, useFilterLutSelectionStore } from "@/stores/useSelectionStore";
+import { useSearchKeywordStore } from "@/stores/useSearchKeywordStore";
 
 
 const FilterLut = memo(() => {
@@ -20,14 +21,19 @@ const FilterLut = memo(() => {
     const filterColumnHeaderSelected = useFilterColumnHeaderSelectionStore((state) => state.selected);
     const paginationInfo = useDataTableStore((state) => state.pagination);
 
-    const fetchFilteredData = useDataTableStore((state) => state.fetchFilteredData);
-    const fetchPageData = useDataTableStore((state) => state.fetchPageData);
+    const searchKeyword = useSearchKeywordStore((state) => state.searchKeyword);
+    const fetchSearchData = useDataTableStore((state) => state.fetchSearchData);
 
     const selectAll = () => {
         if (!filterColumnHeaderSelected) return;
-        setFilterLutSectedSelected(filterLutSected.get(filterColumnHeaderSelected)?.length === lutOptions[filterColumnHeaderSelected]?.length ?
+        const updatedSelected = filterLutSected.get(filterColumnHeaderSelected)?.length === lutOptions[filterColumnHeaderSelected]?.length ?
             new Map(filterLutSected).set(filterColumnHeaderSelected, []) :
-            new Map(filterLutSected).set(filterColumnHeaderSelected, lutOptions[filterColumnHeaderSelected]?.map(option => option.label)));
+            new Map(filterLutSected).set(filterColumnHeaderSelected, lutOptions[filterColumnHeaderSelected]?.map(option => option.label))
+        setFilterLutSectedSelected(updatedSelected);
+
+        const mode = convertSearchMode(searchKeyword);
+        const searchInfo = createfiterInfo(updatedSelected, paginationInfo, searchKeyword, mode);
+        fetchSearchData(searchInfo as SearchInfoBody)
     };
 
     return (
@@ -56,35 +62,35 @@ const FilterLut = memo(() => {
             >
                 <div className="flex flex-col h-full">
                     <div
-                        className={`flex items-center gap-2 sm:gap-3 px-2 py-1 rounded cursor-pointer transition-colors 
+                        className={`flex items-center gap-2 sm:gap-3 px-1 py-1 rounded-lg cursor-pointer transition-colors mb-2
                             ${filterLutSected.get(filterColumnHeaderSelected)?.length === lutOptions[filterColumnHeaderSelected]?.length
                                 ? "bg-primary/10"
-                                : "hover:bg-accent/50"
+                                : "hover:bg-gray-200"
                             }`}
                         onClick={selectAll}
                     >
                         <Checkbox
                             checked={filterLutSected.get(filterColumnHeaderSelected)?.length === lutOptions[filterColumnHeaderSelected]?.length || false}
                             onCheckedChange={selectAll}
-                            className="pointer-events-none size-4.5 sm:size-4.5 lg:size-4.5 border-2 border-black bg-white shadow-sm  data-[state=checked]:border-black transition-all"
+                            className="pointer-events-none size-5 sm:size-5 lg:size-5 border-2 border-black bg-white shadow-sm  data-[state=checked]:border-black transition-all"
                         />
                         <Label
                             htmlFor={"all"}
-                            className="text-base sm:text-base cursor-pointer flex-1 select-none font-bold mb-2"
+                            className="text-base sm:text-base cursor-pointer flex-1 select-none font-bold"
                         >
                             전체 선택
                         </Label>
                     </div>
                     <Separator className="h-0.5 bg-gray-300 opacity-100" />
                     <ScrollArea className="h-[calc(100%-3rem)] pr-2">
-                        <div className="flex flex-col space-y-1 font-bold pr-2 mt-2 ">
+                        <div className="flex flex-col space-y-1 font-bold pr-2 mt-2">
                             {filterColumnHeaderSelected && lutOptions[filterColumnHeaderSelected]?.map((option) => (
                                 <div
                                     key={option.label}
-                                    className={`flex items-center gap-3 px-2 py-1 rounded cursor-pointer transition-colors font-bold mb-2 
+                                    className={`flex items-center gap-3 px-1 py-2 rounded-lg cursor-pointer transition-colors font-bold
                                         ${filterLutSected.get(filterColumnHeaderSelected)?.includes(option.label)
                                             ? "bg-primary/10"
-                                            : "hover:bg-accent/50"
+                                            : "hover:bg-gray-200"
                                         }`}
                                     onClick={async () => {
                                         if (!filterColumnHeaderSelected) return;
@@ -100,18 +106,17 @@ const FilterLut = memo(() => {
                                                     quickFilter[key] = values; // 배열로 바로 할당
                                                 }
                                             });
-                                            const filterInfo = await createfiterInfo(updatedSelected, paginationInfo);
-                                            Array.from(updatedSelected.values()).some(arr => arr.length > 0) ?
-                                                fetchFilteredData(filterInfo as FilterSearchBody) :
-                                                fetchPageData(paginationInfo);
+                                            const mode = convertSearchMode(searchKeyword);
+                                            const searchInfo = await createfiterInfo(updatedSelected, paginationInfo, searchKeyword, mode);
+                                            fetchSearchData(searchInfo as SearchInfoBody)
                                         } catch (error) {
-                                            console.error('Filter search failed:', error);
+                                            console.error('Search info search failed:', error);
                                         }
                                     }}
                                 >
                                     <Checkbox
                                         checked={filterLutSected.get(filterColumnHeaderSelected)?.includes(option.label) || false}
-                                        className="pointer-events-none size-4.5 sm:size-4.5 lg:size-4.5"
+                                        className="pointer-events-none size-5 sm:size-5 lg:size-5"
                                     />
                                     <Label
                                         htmlFor={option.label}

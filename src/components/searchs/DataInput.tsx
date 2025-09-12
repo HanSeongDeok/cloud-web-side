@@ -1,27 +1,11 @@
-import { memo, useState } from "react";
 import { Input } from "@components/ui/input";
 import { Button } from "@components/ui/button";
-import { Filter, Search } from "lucide-react";
-import { RefreshCcw } from "lucide-react";
+import { Search } from "lucide-react";
 import { useSearchKeywordStore } from "@/stores/useSearchKeywordStore";
-import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
-} from "@components/ui/dialog";
-import {
-    Select,
-    SelectTrigger,
-    SelectValue,
-    SelectContent,
-    SelectItem,
-} from "@components/ui/select";
-import { Label } from "@components/ui/label";
-import { Separator } from "@components/ui/separator";
-import { ScrollArea } from "@components/ui/scroll-area";
+import { useDataTableStore, type SearchInfoBody } from "@/stores/useTableDataStore";
+import { useFilterLutSelectionStore } from "@/stores/useSelectionStore";
+import { createfiterInfo } from "@/handlers/events/filterSearch.service.handler";
+import AdvancedSearch from "./AdvancedSearch";
 
 /**
  * 데이터 입력 컴포넌트 - ag-grid용
@@ -30,31 +14,18 @@ import { ScrollArea } from "@components/ui/scroll-area";
 const DataInput = () => {
     const searchKeyword = useSearchKeywordStore((state) => state.searchKeyword);
     const setSearchKeyword = useSearchKeywordStore((state) => state.setSearchKeyword);
-    const searchData = useSearchKeywordStore((state) => state.searchData);
+    const fetchSearchData = useDataTableStore((state) => state.fetchSearchData);
 
-    const [isOpen, setIsOpen] = useState(false);
-    const [fileType, setFileType] = useState("");
-    const [uploader, setUploader] = useState("");
-    const [fileName, setFileName] = useState("");
-    const [vehicle, setVehicle] = useState("");
-    const [step, setStep] = useState("");
-    const [result, setResult] = useState("");
-    const [startDate, setStartDate] = useState("");
-    const [endDate, setEndDate] = useState("");
-
-    const handleReset = () => {
-        setFileType("");
-        setUploader("");
-        setFileName("");
-        setVehicle("");
-        setStep("");
-        setResult("");
-        setStartDate("");
-        setEndDate("");
-    };
+    const paginationInfo = useDataTableStore((state) => state.pagination);
+    const filterLutSected = useFilterLutSelectionStore((state) => state.selected);
 
     const handleSearch = () => {
-        searchData(searchKeyword);
+        console.log(paginationInfo);
+        console.log(filterLutSected);
+        console.log(searchKeyword);
+
+        const basicSearchInfo = createfiterInfo(filterLutSected, paginationInfo, searchKeyword, "BASIC_SEARCH");
+        fetchSearchData(basicSearchInfo as SearchInfoBody);
     };
 
     return (
@@ -81,185 +52,7 @@ const DataInput = () => {
                     }}
                     className="w-full h-15 !text-lg pl-13 pr-13 border-gray-400/50 focus:border-gray-400/60 focus:ring-1 focus:ring-blue-200/20"
                 />
-                <Dialog
-                    open={isOpen}
-                    onOpenChange={setIsOpen}>
-                    <DialogTrigger asChild>
-                        <Button
-                            variant="ghost"
-                            size="sm"
-                            className="absolute right-2 top-1/2 transform -translate-y-1/2 h-10 w-10 p-0 hover:bg-gray-100 cursor-pointer"
-                        >
-                            <Filter className="!h-5 !w-5" />
-                        </Button>
-                    </DialogTrigger>
-                    <DialogContent
-                        className="flex flex-col resize overflow-hidden border-2 border-blue-200 rounded-lg shadow-lg bg-white"
-                        style={{
-                            width: 'clamp(320px, 60vw, 1500px)',
-                            height: 'clamp(400px, 80vh, 1200px)',
-                            minWidth: 500,
-                            minHeight: 600,
-                            maxWidth: '95vw',
-                            maxHeight: '95vh',
-                        }}>
-                        {/* 헤더 영역 */}
-                        <div className="pb-2">
-                            <DialogHeader>
-                                <DialogTitle>고급 검색 기능</DialogTitle>
-                                <DialogDescription>
-                                    데이터를 필터링하기 위한 조건을 설정하세요.
-                                </DialogDescription>
-                                <Label className="text-sky-700 font-bold text-lg"> 파일 필터 </Label>
-                            </DialogHeader>
-                            <Separator className="my-2" />
-                        </div>
-
-                        {/* 스크롤 영역 */}
-                        <div className="flex-1 overflow-y-auto px-2 py-4 min-h-0 scrollbar">
-                            <div className="grid gap-4">
-                                <div className="grid grid-cols-4 items-center gap-2">
-                                    <div className="col-span-4">
-                                        <Label htmlFor="fileType" className="mb-2 block text-left ml-1 text-base">타입</Label>
-                                        <Select value={fileType} onValueChange={setFileType}>
-                                            <SelectTrigger id="fileType" className="w-full border rounded-md p-2">
-                                                <SelectValue placeholder="파일 타입 선택" />
-                                            </SelectTrigger>
-                                            <SelectContent>
-                                                <SelectItem value="folder" className="font-medium ">폴더</SelectItem>
-                                                <SelectItem value="file" className="font-medium ">파일</SelectItem>
-                                            </SelectContent>
-                                        </Select>
-                                    </div>
-                                </div>
-
-                                <div className="grid grid-cols-4 items-center gap-2 mt-1">
-                                    <Label className="col-span-4  text-left ml-1 text-base">업로더</Label>
-                                    <div className="col-span-4">
-                                        <Input
-                                            type="text"
-                                            value={uploader}
-                                            onChange={(e) => setUploader(e.target.value)}
-                                            placeholder="업로더 이름 입력"
-                                            className="w-full p-2 border rounded-md"
-                                        />
-                                    </div>
-                                </div>
-
-                                <div className="grid grid-cols-4 items-center gap-2 mt-1">
-                                    <Label className="col-span-4 mb-1 text-left ml-1 text-base">파일 이름</Label>
-                                    <div className="col-span-4">
-                                        <Input
-                                            type="text"
-                                            value={fileName}
-                                            onChange={(e) => setFileName(e.target.value)}
-                                            placeholder="파일 이름 입력"
-                                            className="w-full p-2 border rounded-md"
-                                        />
-                                    </div>
-                                </div>
-
-                                <div className="grid grid-cols-4 items-center gap-4 mt-2">
-                                    <Label className="col-span-4 mb-1 text-left ml-1 text-base">날짜 범위</Label>
-                                    <div className="col-span-4">
-                                        <div className="flex items-center gap-2">
-                                            <input
-                                                type="date"
-                                                className="p-2 border rounded-md flex-1"
-                                                value={startDate}
-                                                onChange={e => setStartDate(e.target.value)}
-                                                placeholder="yyyy-mm-dd"
-                                                title="시작일"
-                                            />
-                                            <span> ~ </span>
-                                            <input
-                                                type="date"
-                                                className="p-2 border rounded-md flex-1"
-                                                value={endDate}
-                                                onChange={e => setEndDate(e.target.value)}
-                                                placeholder="yyyy-mm-dd"
-                                                title="종료일"
-                                            />
-                                        </div>
-                                    </div>
-                                </div>
-                                <Separator className="my-2" />
-                                <div className="grid grid-cols-4 items-center gap-2">
-                                    <div className="col-span-4">
-                                        <Label htmlFor="vehicleType" className="mb-2 block text-left ml-1 text-base">차량</Label>
-                                        <Select value={vehicle} onValueChange={setVehicle}>
-                                            <SelectTrigger id="vehicleType" className="w-full border rounded-md p-2">
-                                                <SelectValue placeholder="차량 타입 선택" />
-                                            </SelectTrigger>
-                                            <SelectContent>
-                                                <div className="max-h-34 overflow-y-auto scrollbar">
-                                                    <ScrollArea className="max-h-36">
-                                                        <SelectItem value="KONA" className="font-medium ">KONA</SelectItem>
-                                                        <SelectItem value="AVANTE" className="font-medium ">AVANTE</SelectItem>
-                                                        <SelectItem value="IONIQ" className="font-medium ">IONIQ</SelectItem>
-                                                    </ScrollArea>
-                                                </div>
-                                            </SelectContent>
-                                        </Select>
-                                    </div>
-                                </div>
-                                <div className="grid grid-cols-4 items-center gap-2">
-                                    <div className="col-span-4">
-                                        <Label htmlFor="stepType" className="mb-2 block text-left ml-1 text-base">단계</Label>
-                                        <Select value={step} onValueChange={setStep}>
-                                            <SelectTrigger id="stepType" className="w-full border rounded-md p-2">
-                                                <SelectValue placeholder="단계 타입 선택" />
-                                            </SelectTrigger>
-                                            <SelectContent>
-                                                <div className="max-h-34 overflow-y-auto scrollbar">
-                                                    <SelectItem value="Step_1" className="font-medium ">Step_1</SelectItem>
-                                                    <SelectItem value="Step_2" className="font-medium ">Step_2</SelectItem>
-                                                    <SelectItem value="Step_3" className="font-medium ">Step_3</SelectItem>
-                                                    <SelectItem value="Step_4" className="font-medium ">Step_4</SelectItem>
-                                                    <SelectItem value="Step_5" className="font-medium ">Step_5</SelectItem>
-                                                    <SelectItem value="Step_6" className="font-medium ">Step_6</SelectItem>
-                                                    <SelectItem value="Step_7" className="font-medium ">Step_7</SelectItem>
-                                                    <SelectItem value="Step_8" className="font-medium ">Step_8</SelectItem>
-                                                    <SelectItem value="Step_9" className="font-medium ">Step_9</SelectItem>
-                                                </div>
-                                            </SelectContent>
-                                        </Select>
-                                    </div>
-                                </div>
-                                <div className="grid grid-cols-4 items-center gap-2">
-                                    <div className="col-span-4">
-                                        <Label htmlFor="resultType" className="mb-2 block text-left ml-1 text-base">테스트 결과</Label>
-                                        <Select value={result} onValueChange={setResult}>
-                                            <SelectTrigger id="resultType" className="w-full border rounded-md p-2">
-                                                <SelectValue placeholder="테스트 결과 선택" />
-                                            </SelectTrigger>
-                                            <SelectContent>
-                                                <div className="max-h-34 overflow-y-auto scrollbar">
-                                                    <SelectItem value="pass" className="font-medium ">PASS</SelectItem>
-                                                    <SelectItem value="fail" className="font-medium ">FAIL</SelectItem>
-                                                    <SelectItem value="ok" className="font-medium ">OK</SelectItem>
-                                                    <SelectItem value="ng" className="font-medium ">NG</SelectItem>
-                                                </div>
-                                            </SelectContent>
-                                        </Select>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* 버튼 영역 */}
-                        <div className="h-20 border-t border-gray-200 bg-white px-6 flex items-center justify-between">
-                            <Button variant="outline" onClick={handleReset}>
-                                <RefreshCcw className="w-4 h-4 mr-1" />
-                                초기화
-                            </Button>
-                            <div className="flex gap-2">
-                                <Button variant="outline" onClick={() => setIsOpen(false)}>취소</Button>
-                                <Button variant="outline" onClick={() => setIsOpen(false)}>필터 검색</Button>
-                            </div>
-                        </div>
-                    </DialogContent>
-                </Dialog>
+                <AdvancedSearch />
             </div>
         </div>
     );

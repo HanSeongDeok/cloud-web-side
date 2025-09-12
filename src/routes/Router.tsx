@@ -1,7 +1,7 @@
 import { Route, Routes } from "react-router-dom";
 import { Navigate } from "react-router-dom";
 import StoragePage from "@/components/pages/StoragePage";
-import DashboardPage from "@/components/pages/DashboardPage";
+// import DashboardPage from "@/components/pages/DashboardPage";
 import AdminPage from "@/components/pages/AdminPage";
 import Layout from "@/layout/Layout";
 import MyPage from "@/components/pages/MyPage";
@@ -18,8 +18,7 @@ import PermissionPage from "@/components/pages/PermissionPage";
 import { SSOLoginVerifyPage } from "@/components/pages/SSOLoginVerifyPage";
 import Home from "@/components/Home";
 import { ROUTE_PATH } from "@/config/path.config";
-import ProtectedRoute from "@/routes/ProtestedRoute";
-import DashBoard from "@/components/DashBoard";
+import DashboardPage from "@/components/pages/DashboardPage";
 
 const Router: React.FC = () => {
   return (
@@ -47,7 +46,7 @@ const Router: React.FC = () => {
         {/* </Route> */}
         <Route path={ROUTE_PATH.MY_PAGE} element={<MyPage />} />
         <Route path={ROUTE_PATH.TRASH} element={<TrashPage />} />
-        <Route path={ROUTE_PATH.DASHBOARD} element={<DashBoard />} />
+        <Route path={ROUTE_PATH.DASHBOARD} element={<DashboardPage />} />
         {/* 관리자 전용 페이지 */}
         <Route path={ROUTE_PATH.ADMIN_ROOT} element={<AdminPage />}>
           <Route path={ROUTE_PATH.ADMIN_LOGGING} element={<LoggingPage />} />

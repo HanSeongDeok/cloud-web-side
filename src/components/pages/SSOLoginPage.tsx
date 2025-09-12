@@ -9,7 +9,6 @@ import {
 } from "@/components/ui/card";
 import {
   ssoLoginPage,
-  ssoLoginPageDev,
 } from "@/handlers/services/ssoLogin.service.handler";
 import { Info, LogIn } from "lucide-react";
 

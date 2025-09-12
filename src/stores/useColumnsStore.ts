@@ -4,7 +4,7 @@ import { create } from "zustand";
 import { fetchColumns } from "@/handlers/services/dataTable.service.handler";
 
 export interface ColumnArray {
-    originalName: string
+    columnName: string
     displayName: string
     useLut: boolean
     propertyType: string
@@ -13,36 +13,47 @@ export interface ColumnArray {
 interface ColumnsStore {
     columns: ColDef<Column>[];
     mapColumns: ColumnArray[];
+    selectedColumns: string[];
     setColumns: (columns: ColDef<Column>[]) => void;
     setMapColumns: (mapColumns: ColumnArray[]) => void;
+    setSelectedColumns: (selectedColumns: string[]) => void;
+    toggleColumnSelection: (columnField: string) => void;
     fetchColumns: () => Promise<void>;
 }
 
 export const useColumnsStore = create<ColumnsStore>((set, get) => ({
     columns: [],
     mapColumns: [],
+    selectedColumns: [],
     setColumns: (columns) => set({ columns }),
     setMapColumns: (mapColumns) => set({ mapColumns }),
+    setSelectedColumns: (selectedColumns) => set({ selectedColumns }),
+    toggleColumnSelection: (columnField) => {
+        const { selectedColumns } = get();
+        const newSelectedColumns = selectedColumns.includes(columnField)
+            ? selectedColumns.filter(field => field !== columnField)
+            : [...selectedColumns, columnField];
+        set({ selectedColumns: newSelectedColumns });
+    },
     fetchColumns: async () => {
         try {
             const columnsData = await fetchColumns();
-            // columnsData는 ColumnArray[] 배열이므로 직접 순회
             const mapColumns: ColumnArray[] = [];
             const columnsArray: ColDef<Column>[] = [];
             columnsData.forEach(item => {
-                const headerName = item.originalName.toLowerCase().replace(/\s+/g, '');
-                if (headerName === "name") {
+                if (item.columnName === "name") {
                     return;
                 }
-                mapColumns.push({ originalName: headerName, displayName: item.displayName, useLut: item.useLut, propertyType: item.propertyType });
-                columnsArray.push(createCustomColumn(headerName, item.displayName));
-                console.log(item.originalName);
-                
+                mapColumns.push({ columnName: item.columnName, displayName: item.displayName, useLut: item.useLut, propertyType: item.propertyType });
+                columnsArray.push(createCustomColumn(item.columnName, item.displayName));                
             });
 
             get().setColumns(columnsArray);
             get().setMapColumns(mapColumns);
             
+            // 초기 로드 시 모든 컬럼을 선택된 상태로 설정
+            const allColumnFields = columnsArray.map(col => col.field || '').filter(field => field !== '');
+            get().setSelectedColumns(allColumnFields);        
         } catch (error) {
             console.error('Failed to fetch columns:', error);
         }

@@ -1,4 +1,3 @@
-import { get } from "lodash";
 import { create } from "zustand";
 
 interface FileSelectionState {

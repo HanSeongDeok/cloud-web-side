@@ -23,6 +23,7 @@ const buttonVariants = cva(
       },
       size: {
         default: "h-9 px-4 py-2 has-[>svg]:px-3",
+        xs: "h-7 w-7 rounded-md gap-1.5 px-2 has-[>svg]:px-2",
         sm: "h-8 rounded-md gap-1.5 px-3 has-[>svg]:px-2.5",
         md: "h-9 rounded-md gap-1.5 px-8 has-[>svg]:px-3", // 커스터마이징 사이즈
         lg: "h-10 rounded-md px-6 has-[>svg]:px-4",
@@ -57,4 +58,3 @@ const Button = React.forwardRef<
 Button.displayName = "Button";
 
 export { Button, buttonVariants };
-

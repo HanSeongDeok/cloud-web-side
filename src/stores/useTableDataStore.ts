@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { fetchData, filterSearch } from "@/handlers/services/dataTable.service.handler";
+import { searchInfoData } from "@/handlers/services/dataTable.service.handler";
 
 export interface PaginationInfo {
     pageSize: number;
@@ -8,13 +8,15 @@ export interface PaginationInfo {
     totalRow: number;
 }
 
-export interface FilterSearchBody {
+export interface SearchInfoBody {
     mode: string;
     paging: {
-      page: number;
-      size: number;
+        page: number;
+        size: number;
     };
-    quickFilter: Record<string, string[]>; 
+    q?: string;
+    searchTarget?: string;
+    [key: string]: any;
 }
 
 interface DataTableStore {
@@ -26,8 +28,7 @@ interface DataTableStore {
     setPagination: (pagination: PaginationInfo) => void;
 
     // 데이터 페칭 관련
-    fetchPageData: (paginationInfo: PaginationInfo) => Promise<void>;
-    fetchFilteredData: (filterInfo: FilterSearchBody) => Promise<void>;   
+    fetchSearchData: (searchInfo: SearchInfoBody) => Promise<void>;
 }
 
 export const useDataTableStore = create<DataTableStore>((set, get) => ({
@@ -42,160 +43,14 @@ export const useDataTableStore = create<DataTableStore>((set, get) => ({
         totalPages: 0,
         totalRow: 0,
     },
-    setPagination: (pagination: PaginationInfo) => set({ pagination }),
-  
-    // 데이터 페칭 관련
-    fetchPageData: async (paginationInfo: PaginationInfo) => {
+    setPagination: (pagination: PaginationInfo) => set({ pagination }),  
+    fetchSearchData: async (searchInfo: SearchInfoBody) => {
         try {
-            const data = await fetchData(paginationInfo);
+            const data = await searchInfoData(searchInfo);
             let updateData: any[] = [];
-            let updateChildren: any[] = [];
+            
             if (Array.isArray(data.data.items)) {
-                updateData = data.data.items.map((item: any) => {
-                    if (typeof item.type !== "undefined") {
-                        item.fileformat = item.type;
-                        delete item.type;
-                        if (item.id && item.fileformat === "GROUP" && item.children.length > 0) {
-                            Object.entries(item.children).forEach(([key, value]: [string, any]) => {
-                                if (typeof value.id !== "undefined") {
-                                    value.registrationnumber = value.id;
-                                    value.path = [item.id, value.id];
-                                    delete value.id;
-                                }
-
-                                if (typeof value.type !== "undefined") {
-                                    value.fileformat = value.type;
-                                    delete value.type;
-                                }
-                                if (typeof value.uploadedAt !== "undefined") {
-                                    value.uploadedat = value.uploadedAt;
-                                    delete value.uploadedAt;
-                                }
-                                if (typeof value.testResult !== "undefined") {
-                                    value.result = value.testResult;
-                                    delete value.testResult;
-                                }
-                                if (typeof value.customMetadata !== "undefined") {
-                                    const newCustomMetadata: Record<string, any> = {};
-                                    Object.entries(value.customMetadata).forEach(([key, customvalue]) => {
-                                        const newKey = key.toLowerCase().replace(/\s+/g, "");
-                                        newCustomMetadata[newKey] = customvalue;
-                                        value[newKey] = customvalue;
-                                    });
-                                }
-                                updateChildren.push(value);
-                            });
-                        }
-                    }
-
-                    if (typeof item.id !== "undefined") {
-                        item.registrationnumber = item.id;
-                        item.path = [item.id];
-                        delete item.id;
-                    }
-                    if (typeof item.uploadedAt !== "undefined") {
-                        item.uploadedat = item.uploadedAt;
-                        delete item.uploadedAt;
-                    }
-                    if (typeof item.testResult !== "undefined") {
-                        item.result = item.testResult;
-                        delete item.testResult;
-                    }
-                    if (typeof item.customMetadata !== "undefined") {
-                        // customMetadata의 key를 소문자 및 공백 제거한 형태로 교체
-                        const newCustomMetadata: Record<string, any> = {};
-                        Object.entries(item.customMetadata).forEach(([key, customvalue]) => {
-                            const newKey = key.toLowerCase().replace(/\s+/g, "");
-                            newCustomMetadata[newKey] = customvalue;
-                            item[newKey] = customvalue;
-                        });
-                    }
-                    return item;
-                });
-            }
-            if (updateChildren.length > 0) {
-                updateData = updateData.concat(updateChildren);
-            }
-            get().setData(updateData);
-            get().setPagination({
-                pageSize: data.data.size,
-                currentPage: data.data.page + 1,
-                totalPages: data.data.totalPages,
-                totalRow: data.data.totalItems,
-            });
-            console.log(get().data);
-        } catch (error) {
-            console.error('Failed to fetch page data:', error);
-        }
-    },
-    
-    fetchFilteredData: async (filterInfo: FilterSearchBody) => {
-        try {
-            const data = await filterSearch(filterInfo);
-            let updateData: any[] = [];
-            let updateChildren: any[] = [];
-            if (Array.isArray(data.data.items)) {
-                updateData = data.data.items.map((item: any) => {
-                    if (typeof item.type !== "undefined") {
-                        item.fileformat = item.type;
-                        delete item.type;
-                        if (item.id && item.fileformat === "GROUP" && item.children.length > 0) {
-                            Object.entries(item.children).forEach(([key, value]: [string, any]) => {
-                                if (typeof value.id !== "undefined") {
-                                    value.registrationnumber = value.id;
-                                    value.path = [item.id, value.id];
-                                    delete value.id;
-                                }
-                                if (typeof value.type !== "undefined") {
-                                    value.fileformat = value.type;
-                                    delete value.type;
-                                }
-                                if (typeof value.uploadedAt !== "undefined") {
-                                    value.uploadedat = value.uploadedAt;
-                                    delete value.uploadedAt;
-                                }
-                                if (typeof value.testResult !== "undefined") {
-                                    value.result = value.testResult;
-                                    delete value.testResult;
-                                }
-                                if (typeof value.customMetadata !== "undefined") {
-                                    const newCustomMetadata: Record<string, any> = {};
-                                    Object.entries(value.customMetadata).forEach(([key, customvalue]) => {
-                                        const newKey = key.toLowerCase().replace(/\s+/g, "");
-                                        newCustomMetadata[newKey] = customvalue;
-                                        value[newKey] = customvalue;
-                                    });
-                                }
-                                updateChildren.push(value);
-                            });
-                        }
-                    }
-                    if (typeof item.id !== "undefined") {
-                        item.registrationnumber = item.id;
-                        item.path = [item.id];
-                        delete item.id;
-                    }
-                    if (typeof item.uploadedAt !== "undefined") {
-                        item.uploadedat = item.uploadedAt;
-                        delete item.uploadedAt;
-                    }
-                    if (typeof item.testResult !== "undefined") {
-                        item.result = item.testResult;
-                        delete item.testResult;
-                    }
-                    if (typeof item.customMetadata !== "undefined") {
-                        const newCustomMetadata: Record<string, any> = {};
-                        Object.entries(item.customMetadata).forEach(([key, customvalue]) => {
-                            const newKey = key.toLowerCase().replace(/\s+/g, "");
-                            newCustomMetadata[newKey] = customvalue;
-                            item[newKey] = customvalue;
-                        });
-                    }
-                    return item;
-                });
-            }
-            if (updateChildren.length > 0) {
-                updateData = updateData.concat(updateChildren);
+                updateData = transformDataItems(data.data.items);
             }
 
             get().setData(updateData);
@@ -207,7 +62,85 @@ export const useDataTableStore = create<DataTableStore>((set, get) => ({
             });
             console.log(get().data);
         } catch (error) {
-            console.error('Failed to fetch filtered data:', error);
+            console.error('Failed to fetch search data:', error);
         }
     }
 }));
+
+/**
+ * 데이터 변환
+ * @param items 
+ * @returns 
+ */
+const transformDataItems = (items: any[]) => {
+    let updateData: any[] = [];
+    let updateChildren: any[] = [];
+    
+    updateData = items.map((item: any) => {
+        if (typeof item.type !== "undefined") {
+            item.fileformat = item.type;
+            delete item.type;
+            processGroupChildren(item, updateChildren);
+        }
+        transformBasicFields(item);
+        return item;
+    });
+    
+    if (updateChildren.length > 0) {
+        updateData = updateData.concat(updateChildren);
+    }
+    
+    return updateData;
+};
+
+/**
+ * 기본 컬럼에 대한 처리
+ * @param item 
+ */
+const transformBasicFields = (item: any) => {
+    if (typeof item.id !== "undefined") {
+        item.registrationNumber = item.id;
+        item.path = [item.id];
+        delete item.id;
+    }
+    if (typeof item.type !== "undefined") {
+        item.fileFormat = item.type;
+        delete item.type;
+    }
+    if (typeof item.customMetadata !== "undefined") {
+        const newCustomMetadata: Record<string, any> = {};
+        Object.entries(item.customMetadata).forEach(([key, customvalue]) => {
+            newCustomMetadata[key] = customvalue;
+            item[key] = customvalue;
+        });
+    }
+};
+
+/**
+ * 동적 컬럼에 대한 처리
+ * @param item 
+ * @param updateChildren 
+ */
+const processGroupChildren = (item: any, updateChildren: any[]) => {
+    if (item.id && item.fileformat === "GROUP" && item.children && Array.isArray(item.children) && item.children.length > 0) {
+        Object.entries(item.children).forEach(([, value]: [string, any]) => {
+            if (typeof value.id !== "undefined") {
+                value.registrationNumber = value.id;
+                value.path = [item.id, value.id];
+                delete value.id;
+            }
+            if (typeof value.type !== "undefined") {
+                value.fileFormat = value.type;
+                delete value.type;
+            }
+            if (typeof value.customMetadata !== "undefined") {
+                const newCustomMetadata: Record<string, any> = {};
+                Object.entries(value.customMetadata).forEach(([key, customvalue]) => {
+                    newCustomMetadata[key] = customvalue;
+                    value[key] = customvalue;
+                });
+            }
+            updateChildren.push(value);
+        });
+    }
+};

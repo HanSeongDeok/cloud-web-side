@@ -1,6 +1,6 @@
 import { API_CONFIG, DATA_TABLE } from '@/config/api.config';
 import type { ColumnArray } from '@/stores/useColumnsStore';
-import type { FilterSearchBody } from '@/stores/useTableDataStore';
+import type { SearchInfoBody } from '@/stores/useTableDataStore';
   import type { PaginationInfo } from '@/stores/useTableDataStore';
 
 
@@ -46,10 +46,10 @@ export const fetchData = async (paginationInfo: PaginationInfo | null): Promise<
 
 /**
  * 
- * @param filterInfo - 필터 정보
+ * @param searchInfo - 검색 정보
  * @returns 
  */
-export const filterSearch = async (filterInfo: FilterSearchBody): Promise<any> => {
+export const searchInfoData = async (searchInfo: SearchInfoBody): Promise<any> => {
   try {
   const response = await fetch(`${API_CONFIG.baseURL}${DATA_TABLE.data}`, {
     method: 'POST',
@@ -57,33 +57,14 @@ export const filterSearch = async (filterInfo: FilterSearchBody): Promise<any> =
       'Content-Type': 'application/json',
     },
     credentials: 'include',
-    body: JSON.stringify(filterInfo),
+    body: JSON.stringify(searchInfo),
   });
 
     const data = await response.json(); 
     return data;
   } catch (error) {
-    console.error('Filter search failed:', error);
+    console.error('Search info search failed:', error);
     throw error;
   }
 };
 
-/**
- * 
- * @param keyword 
- * @returns 
- */
-export const searchData = async (keyword: string): Promise<any[]> => {
-  try {
-    const response = await fetch(`${API_CONFIG.baseURL}${DATA_TABLE.data}?keyword=${encodeURIComponent(keyword)}`);
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-
-    return await response.json();
-  } catch (error) {
-    console.error('Search failed:', error);
-    throw error;
-  }
-};

@@ -43,24 +43,26 @@ const FileMetaEditor = memo(() => {
     const mapColumns = useColumnsStore((state) => state.mapColumns);
 
     const sortedMapColumns = [
-        ...mapColumns.filter(col => col.originalName === "deliverabletype"),
-        ...mapColumns.filter(col => col.originalName === "testclassification"),
+        ...mapColumns.filter(col => col.columnName === "deliverableType"),
+        ...mapColumns.filter(col => col.columnName === "testClassification"),
         ...mapColumns.filter(
             col =>
                 col.propertyType !== "SERVER_MANAGED" &&
-                col.originalName !== "deliverabletype" &&
-                col.originalName !== "testclassification" &&
-                col.originalName !== "description"
+                col.columnName !== "deliverableType" &&
+                col.columnName !== "testClassification" &&
+                col.columnName !== "description"
         ),
-        ...mapColumns.filter(col => col.originalName === "description"),
+        ...mapColumns.filter(col => col.columnName === "description"),
     ];
 
     const isFieldRequiredForCurrentSelection = (fieldName: string) => {
-        const deliverableType = fileMetadata[selectedFileIndex]?.deliverabletype;
-        const testClassification = fileMetadata[selectedFileIndex]?.testclassification;
+        const deliverableType = fileMetadata[selectedFileIndex]?.deliverableType;
+        const testClassification = fileMetadata[selectedFileIndex]?.testClassification;
+
+        // const tempFieldName = fieldName.toLowerCase().replace(/\s+/g, '');
 
         if (!deliverableType || !testClassification) {
-            if (fieldName === "deliverabletype" || fieldName === "testclassification") {
+            if (fieldName === "deliverableType" || fieldName === "testClassification") {
                 return true;
             }
             return false;
@@ -69,10 +71,10 @@ const FileMetaEditor = memo(() => {
         return isFieldRequired(deliverableType, testClassification, fieldName);
     };
 
-    const getLutOptions = (originalName: string) => {
-        const deliverableTypeLut = fileMetadata[selectedFileIndex]?.deliverabletype;
-        const testClassificationLut = fileMetadata[selectedFileIndex]?.testclassification;      
-        if (originalName === "testresult" && deliverableTypeLut) {
+    const getLutOptions = (columnName: string) => {
+        const deliverableTypeLut = fileMetadata[selectedFileIndex]?.deliverableType;
+        const testClassificationLut = fileMetadata[selectedFileIndex]?.testClassification;      
+        if (columnName === "testResult" && deliverableTypeLut) {
             if (deliverableTypeLut === "test-report") { // Pass/Fault 옵션
                 return result1Options;
             }
@@ -81,7 +83,7 @@ const FileMetaEditor = memo(() => {
             }
         }
 
-        if (originalName === "testitem" && testClassificationLut) {
+        if (columnName === "testItem" && testClassificationLut) {
             if (testClassificationLut === "vehicle-compliance") { // 실차적합성 옵션
                 return testItem1Options;
             }
@@ -92,7 +94,7 @@ const FileMetaEditor = memo(() => {
                 return testItem3Options;
             }
         }
-        return lutOptions[originalName] || [];
+        return lutOptions[columnName] || [];
     };
 
     return (
@@ -141,23 +143,23 @@ const FileMetaEditor = memo(() => {
                             </>
                         )}
                         {sortedMapColumns.map((col) => (
-                            <div key={col.originalName}>
+                            <div key={col.columnName}>
                                 <Label className="text-left text-gray-500 font-medium text-lg mb-1">{col.displayName}</Label>
                                 {(() => {
-                                    if (col.originalName === "description") {
+                                    if (col.columnName === "description") {
                                         return (
                                             <Textarea
                                                 className={`h-25 resize-none border rounded-md px-3 py-2 transition-colors duration-150
-                                                    ${isFieldRequiredForCurrentSelection(col.originalName)
+                                                    ${isFieldRequiredForCurrentSelection(col.columnName)
                                                         ? "border-red-400 border-2"
                                                         : "border-gray-300"
                                                     }`}
-                                                value={fileMetadata[selectedFileIndex]?.[col.originalName] || ""}
+                                                value={fileMetadata[selectedFileIndex]?.[col.columnName] || ""}
                                                 onChange={(e) => {
                                                     if (col.propertyType === "USER_DEFINED") {
-                                                        setFileMetadata(selectedFileIndex, { ["customMetadata"]: { [col.originalName]: e.target.value } });
+                                                        setFileMetadata(selectedFileIndex, { ["customMetadata"]: { [col.columnName]: e.target.value } });
                                                     }
-                                                    setFileMetadata(selectedFileIndex, { [col.originalName]: e.target.value })
+                                                    setFileMetadata(selectedFileIndex, { [col.columnName]: e.target.value })
                                                 }}
                                                 style={{ fontSize: "18px" }}
                                             />
@@ -168,16 +170,16 @@ const FileMetaEditor = memo(() => {
                                                 <ContextMenuTrigger asChild>
                                                     <div>
                                                         <Select
-                                                            value={fileMetadata[selectedFileIndex]?.[col.originalName] || ""}
+                                                            value={fileMetadata[selectedFileIndex]?.[col.columnName] || ""}
                                                             onValueChange={(value) => {
                                                                 if (col.propertyType === "USER_DEFINED") {
-                                                                    setFileMetadata(selectedFileIndex, { ["customMetadata"]: { [col.originalName]: value } });
+                                                                    setFileMetadata(selectedFileIndex, { ["customMetadata"]: { [col.columnName]: value } });
                                                                 }
-                                                                setFileMetadata(selectedFileIndex, { [col.originalName]: value })
+                                                                setFileMetadata(selectedFileIndex, { [col.columnName]: value })
                                                             }}
                                                         >
                                                             <SelectTrigger className={`w-full !h-12 cursor-pointer rounded-md px-3 py-2 transition-colors duration-150 
-                                                                ${isFieldRequiredForCurrentSelection(col.originalName)
+                                                                ${isFieldRequiredForCurrentSelection(col.columnName)
                                                                     ? "border-red-400 border-2"
                                                                     : "border-gray-300"
                                                                 }`}>
@@ -187,7 +189,7 @@ const FileMetaEditor = memo(() => {
                                                             </SelectTrigger>
                                                             <SelectContent className="bg-white border border-gray-300 rounded-md shadow-lg">
                                                                 <ScrollArea className="h-[210px]" type="auto">
-                                                                    {getLutOptions(col.originalName)?.map((option) => (
+                                                                    {getLutOptions(col.columnName)?.map((option) => (
                                                                         <SelectItem
                                                                             key={option.id}
                                                                             value={option.id}
@@ -212,7 +214,7 @@ const FileMetaEditor = memo(() => {
                                                             if (col.propertyType === "USER_DEFINED") {
                                                                 setFileMetadata(selectedFileIndex, { ["customMetadata"]: "" });
                                                             }
-                                                            setFileMetadata(selectedFileIndex, { [col.originalName]: "" });
+                                                            setFileMetadata(selectedFileIndex, { [col.columnName]: "" });
                                                         }}
                                                     >
                                                         <RotateCcw className="mr-2 h-4 w-4 text-gray-600" />
@@ -225,15 +227,15 @@ const FileMetaEditor = memo(() => {
                                         return (
                                             <Input
                                                 placeholder={`...`}
-                                                value={fileMetadata[selectedFileIndex]?.[col.originalName] || ""}
+                                                value={fileMetadata[selectedFileIndex]?.[col.columnName] || ""}
                                                 onChange={(e) => {
                                                     if (col.propertyType === "USER_DEFINED") {
-                                                        setFileMetadata(selectedFileIndex, { ["customMetadata"]: { [col.originalName]: e.target.value } });
+                                                        setFileMetadata(selectedFileIndex, { ["customMetadata"]: { [col.columnName]: e.target.value } });
                                                     }
-                                                    setFileMetadata(selectedFileIndex, { [col.originalName]: e.target.value })
+                                                    setFileMetadata(selectedFileIndex, { [col.columnName]: e.target.value })
                                                 }}
                                                 className={`h-12 border rounded-md px-3 py-2 transition-colors duration-150 font-medium text-base
-                                                    ${isFieldRequiredForCurrentSelection(col.originalName)
+                                                    ${isFieldRequiredForCurrentSelection(col.columnName)
                                                         ? "border-red-400 border-2"
                                                         : "border-gray-300"
                                                     }`}

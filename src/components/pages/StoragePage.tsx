@@ -1,7 +1,7 @@
 import { memo } from "react";
 import DataTable from "@/components/tables/DataTable";
 import DataInput from "../searchs/DataInput";
-import { TableDropDownMenu } from "../DropDownMenu";
+import { TableColumnSetting } from "../tables/TableColumnSetting";
 import FilterColumnHeader from "../filter/FilterColumnHeader";
 import FilterLut from "../filter/FilterLut";
 import FilterBadgeButton from "../filter/FilterBadgeButton";
@@ -38,7 +38,7 @@ const StoragePage = memo(() => {
       <div className="flex justify-end w-full mb-4 pr-2">
         <div className="flex gap-4">
           <UploadButton />
-          <TableDropDownMenu />
+          <TableColumnSetting />
         </div>
       </div>
 
