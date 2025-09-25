@@ -42,9 +42,10 @@ const DbConfigPage: React.FC = () => {
   // TODO: 추가로 현재 선택된 행의 propertyId가 필요할 듯함
   //속성 관련 상태
   const [editModalOpen, setEditModalOpen] = useState(false);
+  // 현재 '수정중인' 속성 정보
   const [editingProperty, setEditingProperty] = useState<DbProperty | null>(
     null
-  ); // 현재 '수정중인' 속성 정보
+  );
   const [properties, setProperties] = useState<DbProperty[]>([]); //테이블 데이터
   const [loading, setLoading] = useState(false);
   const [selectedRows, setSelectedRows] = useState<DbProperty[]>([]); // 선택된 행들 상태로 관리
@@ -334,72 +335,67 @@ const DbConfigPage: React.FC = () => {
     }
   };
   return (
-    <div>
-      <h3 className="text-xl font-semibold mb-6">DB 속성 관리</h3>
-      <div className="min-h-screen bg-gray-100">
-        <div className="max-w-7xl mx-auto flex">
-          <div className="flex-1 p-6">
-            <DbConfigHeader
-              onAddProperty={handleAddProperty}
-              onRemoveProperty={handleRemoveProperty}
-              isRemoveDisabled={isRemoveDisabled}
-            />
-
-            <DbPropertyTable
-              ref={gridRef}
-              data={properties}
-              loading={loading}
-              onEditProperty={handleEditProperty}
-              onOpenLutModal={handleOpenLutModal}
-              onSelectionChanged={onSelectionChanged}
-            />
-          </div>
-        </div>
-
-        <PropertyEditModal
-          isOpen={editModalOpen}
-          onSave={handleSaveProperty}
-          onClose={() => setEditModalOpen(false)}
-          property={editingProperty}
-        />
-
-        <LutEditModal
-          initialItems={lutItems}
-          editingItem={editingLUT}
-          isOpen={lutModalOpen}
-          onClose={() => {
-            setLutModalOpen(false);
-            setEditingLUT(null);
-          }}
-          onEditItem={setEditingLUT}
-          onCreateItem={handleAddLutItem}
-          onDeleteItem={handleDeleteLutItem}
-          onUpdateItem={handleUpdateLUTItem}
-          onUpdateOrder={handleSaveLutOrder}
-          title={
-            properties.find((prop) => prop.id === lutPropertyId)?.name || ""
-          }
-        />
-
-        {/* 알림 모달 */}
-        <AlertModal
-          isOpen={alertModal.isOpen}
-          onClose={alertModal.hideAlert}
-          type={alertModal.config.type}
-          title={alertModal.config.title}
-          message={alertModal.config.message}
-          confirmText={alertModal.config.confirmText}
-          onConfirm={alertModal.config.onConfirm}
-          showCancel={alertModal.config.showCancel}
-          cancelText={alertModal.config.cancelText}
-        />
+    <div className="min-h-screen  rounded-2xl">
+      <div className="flex justify-between items-center ml-6 mt-6">
+        <h3 className="text-2xl font-semibold mb-6">DB 관리</h3>
       </div>
+      <div className="flex gap-2 border-b"></div>
+      <div className="max-w-7xl mx-auto flex">
+        <div className="flex-1 p-6">
+          <DbConfigHeader
+            onAddProperty={handleAddProperty}
+            onRemoveProperty={handleRemoveProperty}
+            isRemoveDisabled={isRemoveDisabled}
+          />
+
+          <DbPropertyTable
+            ref={gridRef}
+            data={properties}
+            loading={loading}
+            onEditProperty={handleEditProperty}
+            onOpenLutModal={handleOpenLutModal}
+            onSelectionChanged={onSelectionChanged}
+          />
+        </div>
+      </div>
+
+      <PropertyEditModal
+        isOpen={editModalOpen}
+        onSave={handleSaveProperty}
+        onClose={() => setEditModalOpen(false)}
+        property={editingProperty}
+      />
+
+      <LutEditModal
+        initialItems={lutItems}
+        editingItem={editingLUT}
+        isOpen={lutModalOpen}
+        onClose={() => {
+          setLutModalOpen(false);
+          setEditingLUT(null);
+        }}
+        onEditItem={setEditingLUT}
+        onCreateItem={handleAddLutItem}
+        onDeleteItem={handleDeleteLutItem}
+        onUpdateItem={handleUpdateLUTItem}
+        onUpdateOrder={handleSaveLutOrder}
+        title={properties.find((prop) => prop.id === lutPropertyId)?.name || ""}
+      />
+
+      {/* 알림 모달 */}
+      <AlertModal
+        isOpen={alertModal.isOpen}
+        onClose={alertModal.hideAlert}
+        type={alertModal.config.type}
+        title={alertModal.config.title}
+        message={alertModal.config.message}
+        confirmText={alertModal.config.confirmText}
+        onConfirm={alertModal.config.onConfirm}
+        showCancel={alertModal.config.showCancel}
+        cancelText={alertModal.config.cancelText}
+      />
     </div>
   );
 };
 
 export default DbConfigPage;
-
-// TODO: 현재 built-in 속성은 삭제할 수 없지만( 버튼 비활성화 처리 ), 개발자 도구 등의 접근으로
-// 직접 데이터를 조작해서 API를 호출할 경우를 대비해서 백엔드에서 검증 후
-// 예외 상황을 반환하면 대응하는 예외에 따라 안내 모달을 제공할 예정

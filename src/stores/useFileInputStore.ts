@@ -11,6 +11,11 @@ interface FileToggleState {
     setIsFolderMode: (isFolderMode: boolean) => void;
 }
 
+interface EditModalState {
+    showEditModal: boolean;
+    setShowEditModal: (show: boolean) => void;
+}
+
 export const useFileUploadStore = create<FileUploadState>((set) => ({
     selectedFiles: [],
     setSelectedFiles: (files) => set({ selectedFiles: files }),
@@ -20,4 +25,9 @@ export const useFileUploadStore = create<FileUploadState>((set) => ({
 export const useFileToggleStore = create<FileToggleState>((set) => ({
     isFolderMode: false,
     setIsFolderMode: (isFolderMode) => set({ isFolderMode }),
+}));
+
+export const useEditModalStore = create<EditModalState>((set) => ({
+    showEditModal: false,
+    setShowEditModal: (show) => set({ showEditModal: show }),
 }));

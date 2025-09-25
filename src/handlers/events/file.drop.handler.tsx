@@ -1,13 +1,30 @@
-import { useFileUploadStore } from "@/stores/useFileInputStore";
+import { useEditModalStore, useFileUploadStore } from "@/stores/useFileInputStore";
+
+// File 타입을 확장한 커스텀 타입
+interface ExtendedFile extends File {
+    isNewFile?: boolean;
+    registrationNumber?: string | number;
+    path?: (string | number)[];
+    fileName?: string;
+    originalName?: string;
+}
 
 const getFileUploadStore = () => useFileUploadStore.getState();
+const getEditModalStore = () => useEditModalStore.getState();
 
 export const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
     const { selectedFiles, setSelectedFiles } = getFileUploadStore();
+    const { showEditModal } = getEditModalStore();
 
     const files = Array.from(e.target.files || []);
+
     const filteredFiles = files.filter((file) => !selectedFiles.some((f) => f.name === file.name));
+    if (showEditModal) {
+        filteredFiles.forEach((file: ExtendedFile) => {
+            file.isNewFile = true;
+        });
+    }
     setSelectedFiles([...selectedFiles, ...filteredFiles]);
     e.target.value = '';
 };
@@ -15,6 +32,7 @@ export const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 export const handleDrop = async (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     const { selectedFiles, setSelectedFiles } = getFileUploadStore();
+    const { showEditModal } = getEditModalStore();
 
     const files: File[] = [];
     const items = Array.from(e.dataTransfer.items || []);
@@ -32,13 +50,13 @@ export const handleDrop = async (e: React.DragEvent<HTMLDivElement>) => {
             files.push(...filteredFiles);
         }
     }
-    
+
     const tempFiles: File[] = [];
     for (const file of fileList) {
-        const isFolder = folderInfo.some((folder) => 
+        const isFolder = folderInfo.some((folder) =>
             folder.name === file.name && folder.size === file.size
         );
-        
+
         if (!isFolder && !selectedFiles.some((f) => f.name === file.name)) {
             tempFiles.push(file);
         }
@@ -46,6 +64,11 @@ export const handleDrop = async (e: React.DragEvent<HTMLDivElement>) => {
 
     files.unshift(...tempFiles);
     if (files.length > 0) {
+        if (showEditModal) {
+            files.forEach((file: ExtendedFile) => {
+                file.isNewFile = true;
+            });
+        }
         setSelectedFiles([...selectedFiles, ...files]);
     }
 };

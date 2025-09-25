@@ -19,7 +19,7 @@ const PropertyEditModal = ({
   title = property ? "속성 편집" : "속성 추가",
 }: PropertyEditModalProps) => {
   const [formData, setFormData] = useState({
-    name: "",
+    displayName: "",
     dataType: "TEXT" as "TEXT" | "NUMBER" | "DATE" | "BOOLEAN",
     useLut: false as false | true,
     description: "",
@@ -34,7 +34,7 @@ const PropertyEditModal = ({
     if (property) {
       // 편집 모드일 때 기존 데이터 로드
       setFormData({
-        name: property.name,
+        displayName: property.displayName,
         dataType: property.dataType,
         useLut: property.useLut,
         description: property.description,
@@ -42,7 +42,7 @@ const PropertyEditModal = ({
     } else {
       // 새로 만들기 모드일 때 초기화
       setFormData({
-        name: "",
+        displayName: "",
         dataType: "TEXT",
         useLut: false,
         description: "",
@@ -95,8 +95,8 @@ const PropertyEditModal = ({
             </label>
             <input
               type="text"
-              value={formData.name}
-              onChange={(e) => handleInputChange("name", e.target.value)}
+              value={formData.displayName}
+              onChange={(e) => handleInputChange("displayName", e.target.value)}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               placeholder="속성명을 입력하세요"
               required

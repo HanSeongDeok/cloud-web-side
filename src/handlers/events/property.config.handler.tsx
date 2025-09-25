@@ -1,7 +1,7 @@
 import type { ColDef } from "ag-grid-community";
 
 export type Column = {
-  name: string;
+  displayName: string;
   dataType: string;
   useLut: string;
   description: string;
@@ -12,10 +12,10 @@ export type Column = {
  * 속성 이름 컬럼 생성
  * @returns 속성 이름 컬럼
  */
-const createNameColumn = (name: string): ColDef<Column> => {
+const createDisplayNameColumn = (displayName: string): ColDef<Column> => {
   return {
-    headerName: name,
-    field: "name",
+    headerName: displayName,
+    field: "displayName",
     flex: 1,
     cellStyle: { textAlign: "center" },
   };
@@ -80,52 +80,10 @@ const createPropertyTypeColumn = (propertyType: string): ColDef<Column> => {
  */
 export const columnDefs = (columns: Column): ColDef<Column>[] => {
   return [
-    createNameColumn(columns.name),
+    createDisplayNameColumn(columns.displayName),
     createDataTypeColumn(columns.dataType),
     createUseLutColumn(columns.useLut),
     createDescriptionColumn(columns.description),
     createPropertyTypeColumn(columns.propertyType),
   ];
 };
-
-// // 선택 변경 이벤트 핸들러
-// export const onSelectionChanged = (event: SelectionChangedEvent) => {
-//   const newMap = new Map<string, boolean>();
-//   event.api.forEachNode((node) => {
-//     newMap.set(node.id!, node.isSelected() || false);
-//   });
-//   useSelectionStore.getState().setSelectedMap(newMap);
-// };
-
-// // 행 클릭 이벤트 핸들러
-// export const onRowClicked = (event: RowClickedEvent) => {
-//   const target = event.event?.target as HTMLElement;
-//   const api = event.api;
-//   const clickedNode = event.node;
-//   const selectedNodes = api.getSelectedNodes();
-//   const isShift = (event.event as KeyboardEvent)?.shiftKey;
-//   const isCtrl =
-//     (event.event as KeyboardEvent)?.ctrlKey ||
-//     (event.event as KeyboardEvent)?.metaKey;
-//   const isSelected = useSelectionStore.getState().isSelected(clickedNode.id!);
-
-//   if (
-//     target.closest("button") ||
-//     target.closest("svg") ||
-//     target.closest(".no-select-cell")
-//   ) {
-//     clickedNode.setSelected(true);
-//     return;
-//   }
-
-//   if (selectedNodes.length > 0 && !isCtrl) {
-//     if (selectedNodes.includes(clickedNode) && selectedNodes.length === 1) {
-//       clickedNode.setSelected(false);
-//     } else if (!isShift) {
-//       api.deselectAll();
-//       clickedNode.setSelected(true);
-//     }
-//   } else {
-//     clickedNode.setSelected(!isSelected);
-//   }
-// };

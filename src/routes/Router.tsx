@@ -19,6 +19,7 @@ import { SSOLoginVerifyPage } from "@/components/pages/SSOLoginVerifyPage";
 import Home from "@/components/Home";
 import { ROUTE_PATH } from "@/config/path.config";
 import DashboardPage from "@/components/pages/DashboardPage";
+import ProtectedRoute from "./ProtestedRoute";
 
 const Router: React.FC = () => {
   return (
@@ -41,9 +42,9 @@ const Router: React.FC = () => {
       <Route path={ROUTE_PATH.ROOT} element={<Layout />}>
         <Route index element={<Navigate to={ROUTE_PATH.HOME} />} />
         {/* 보호된 라우트들 */}
-        {/* <Route element={<ProtectedRoute />}> */}
-        <Route path={ROUTE_PATH.STORAGE} element={<StoragePage />} />
-        {/* </Route> */}
+        <Route element={<ProtectedRoute />}>
+          <Route path={ROUTE_PATH.STORAGE} element={<StoragePage />} />
+        </Route>
         <Route path={ROUTE_PATH.MY_PAGE} element={<MyPage />} />
         <Route path={ROUTE_PATH.TRASH} element={<TrashPage />} />
         <Route path={ROUTE_PATH.DASHBOARD} element={<DashboardPage />} />

@@ -7,7 +7,7 @@ import {
     SelectItem,
 } from "../ui/select";
 import { Label } from "@radix-ui/react-dropdown-menu";
-import { memo, useState } from "react";
+import { memo, useState, useEffect } from "react";
 import { ScrollArea } from "../ui/scroll-area";
 import { useFileSelectionStore } from "@/stores/useFileSelectionStore";
 import { Separator } from "../ui/separator";
@@ -19,19 +19,12 @@ import {
     ContextMenuTrigger,
     ContextMenuLabel,
 } from "../ui/context-menu";
-import {
-    lutOptions,
-    result1Options,
-    result2Options,
-    testItem1Options,
-    testItem2Options,
-    testItem3Options,
-} from "@/models/multiSelectModel";
 import { useFileMetaDataStore } from "@/stores/useFileMetaDataStore";
 import { RotateCcw } from "lucide-react";
 import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
 import { useColumnsStore } from "@/stores/useColumnsStore";
+import { createLutOptionsFromMapColumns, getMatchedLutOptions } from "@/handlers/events/lut.config.handler";
 import { isFieldRequired } from "@/models/requiredValueModel";
 
 const FileMetaEditor = memo(() => {
@@ -41,6 +34,8 @@ const FileMetaEditor = memo(() => {
     const setFileMetadata = useFileMetaDataStore((state) => state.setFileMetadata);
     const isFolderMode = useFileToggleStore((state) => state.isFolderMode);
     const mapColumns = useColumnsStore((state) => state.mapColumns);
+    const lutRules = useColumnsStore((state) => state.lutRules);
+    const lutMapOptions = createLutOptionsFromMapColumns(mapColumns);
 
     const sortedMapColumns = [
         ...mapColumns.filter(col => col.columnName === "deliverableType"),
@@ -67,34 +62,21 @@ const FileMetaEditor = memo(() => {
             }
             return false;
         }
-        
-        return isFieldRequired(deliverableType, testClassification, fieldName);
+
+        return isFieldRequired(Number(deliverableType), Number(testClassification), fieldName);
     };
 
     const getLutOptions = (columnName: string) => {
         const deliverableTypeLut = fileMetadata[selectedFileIndex]?.deliverableType;
-        const testClassificationLut = fileMetadata[selectedFileIndex]?.testClassification;      
+        const testClassificationLut = fileMetadata[selectedFileIndex]?.testClassification;
         if (columnName === "testResult" && deliverableTypeLut) {
-            if (deliverableTypeLut === "test-report") { // Pass/Fault 옵션
-                return result1Options;
-            }
-            if (deliverableTypeLut === "vehicle-data") { // Ok/NG 옵션
-                return result2Options;
-            }
+            return getMatchedLutOptions(lutRules, lutMapOptions, columnName, Number(deliverableTypeLut));
         }
 
         if (columnName === "testItem" && testClassificationLut) {
-            if (testClassificationLut === "vehicle-compliance") { // 실차적합성 옵션
-                return testItem1Options;
-            }
-            if (testClassificationLut === "cyber-security") { // 사이버보안 옵션
-                return testItem2Options;
-            }
-            if (testClassificationLut === "ota") { // OTA 옵션
-                return testItem3Options;
-            }
+            return getMatchedLutOptions(lutRules, lutMapOptions, columnName, Number(testClassificationLut));
         }
-        return lutOptions[columnName] || [];
+        return lutMapOptions[columnName] || [];
     };
 
     return (
@@ -119,23 +101,30 @@ const FileMetaEditor = memo(() => {
                             <>
                                 <div className="rounded-lg border border-blue-200 bg-blue-50 p-4 mb-2">
                                     <div>
-                                        <Label className="text-left font-bold text-xl mb-2 text-blue-600">Group Properties</Label>
+                                        <Label className="text-left font-bold text-xl mb-2 text-blue-600">그룹 속성</Label>
                                     </div>
                                     <div>
-                                        <Label className="text-left font-bold text-lg mb-1">Group Name</Label>
+                                        <Label className="text-left font-bold text-lg mb-1 text-gray-800">그룹 이름</Label>
                                         <Input
-                                            className="mb-4"
-                                            placeholder="Enter group name"
-                                            value={""}
+                                            className="mb-4 !text-base w-full !h-12 rounded-md px-3 py-2 transition-colors duration-150 border-gray-300"
+                                            placeholder="그룹 이름 입력"
                                             style={{ fontSize: "18px" }}
+                                            value={fileMetadata[selectedFileIndex]?.groupName || ""}
+                                            onChange={(e) => {
+                                                setFileMetadata(selectedFileIndex, { groupName: e.target.value });
+                                            }}
                                         />
                                     </div>
                                     <div>
-                                        <Label className="text-left font-bold text-lg mb-1">Group Description</Label>
+                                        <Label className="text-left font-bold text-lg mb-1 text-gray-800">그룹 설명</Label>
                                         <Textarea
-                                            className="h-25 resize-none"
-                                            placeholder="Enter description..."
+                                            className="h-25 resize-none !text-base w-full rounded-md px-3 py-2 transition-colors duration-150 border-gray-300"
+                                            placeholder="그룹 설명 입력..."
                                             style={{ fontSize: "18px" }}
+                                            value={fileMetadata[selectedFileIndex]?.groupDescription || ""}
+                                            onChange={(e) => {
+                                                setFileMetadata(selectedFileIndex, { groupDescription: e.target.value });
+                                            }}
                                         />
                                     </div>
                                 </div>
@@ -170,7 +159,18 @@ const FileMetaEditor = memo(() => {
                                                 <ContextMenuTrigger asChild>
                                                     <div>
                                                         <Select
-                                                            value={fileMetadata[selectedFileIndex]?.[col.columnName] || ""}
+                                                            value={(() => {
+                                                                const storedValue = fileMetadata[selectedFileIndex]?.[col.columnName];
+                                                                if (!storedValue) return "";
+
+                                                                const matchingOptionById = getLutOptions(col.columnName)?.find(option => option.id === storedValue);
+                                                                if (matchingOptionById) return storedValue;
+
+                                                                const matchingOptionByLabel = getLutOptions(col.columnName)?.find(option => option.lutValue === storedValue);
+                                                                if (matchingOptionByLabel) return matchingOptionByLabel.id;
+
+                                                                return storedValue;
+                                                            })()}
                                                             onValueChange={(value) => {
                                                                 if (col.propertyType === "USER_DEFINED") {
                                                                     setFileMetadata(selectedFileIndex, { ["customMetadata"]: { [col.columnName]: value } });
@@ -192,10 +192,10 @@ const FileMetaEditor = memo(() => {
                                                                     {getLutOptions(col.columnName)?.map((option) => (
                                                                         <SelectItem
                                                                             key={option.id}
-                                                                            value={option.id}
+                                                                            value={option.id.toString()}
                                                                             className="text-lg font-medium px-3 py-3 bg-white hover:bg-blue-50 border-b border-gray-100 last:border-b-0 transition-colors duration-150 cursor-pointer"
                                                                         >
-                                                                            {option.label}
+                                                                            {option.lutValue}
                                                                         </SelectItem>
                                                                     ))}
                                                                 </ScrollArea>

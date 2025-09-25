@@ -5,7 +5,8 @@ export type DeleteRequestStatus = "IN_USE" | "DELETE_REQUESTED" | "DELETED";
 // DbProperty 기본 인터페이스
 export interface DbProperty {
   id: number;
-  name: string;
+  displayName: string;
+  columnName: string; // DB 컬럼명
   dataType: DataType;
   propertyType: PropertyType;
   useLut: boolean; // false: 사용안함(자율 양식), true: 사용(lut 사용)

@@ -3,13 +3,15 @@ import Switch from "react-switch";
 interface ToggleProps {
   checked: boolean;
   onChange: (checked: boolean) => void;
+  disabled?: boolean;
 }
 
-const Toggle = ({ checked, onChange }: ToggleProps) => {
+const Toggle = ({ checked, onChange, disabled=false }: ToggleProps) => {
   return (
     <Switch
       checked={checked}
       onChange={onChange}
+      disabled={disabled}
       offColor="#888"
       onColor="#0af"
       offHandleColor="#ffffff"

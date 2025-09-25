@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useDash } from "@/stores/useDash";
 import type { WidgetState } from "@/types/dashboard";
-import { RotateCcw } from "lucide-react";
+import { RotateCcw, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DndContext,
@@ -21,416 +21,83 @@ import DashboardHeader from "../dashboard/DashboardHeader";
 import FloatingActionButtons from "../dashboard/DashboardButton";
 import DashboardPanel from "../dashboard/DashboardPanel";
 
+import ChartWidget from "../dashboard/ChartWidget";
+import { fetchChartFields } from "@/handlers/services/dashboard.service.handler";
+import { useColumnsStore } from "@/stores/useColumnsStore";
+
 const DashboardPage: React.FC = () => {
   const widgets = useDash((state) => state.widgets);
   const setWidgets = useDash((state) => state.setWidgets);
+  const [fullscreenId, setFullscreenId] = useState<string | null>(null);
+  const fetchColumns = useColumnsStore((state) => state.fetchStorageColumns);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    setLoading(true);
+    Promise.all([
+      fetchChartFields().then((field) => {
+        useDash.getState().setFieldMeta(field);
+      }),
+      fetchColumns(),
+    ]).finally(() => {
+      setLoading(false);
+    });
+  }, []);
 
   // 위젯 초기화 - localStorage에 데이터가 없을 때만
   useEffect(() => {
     // 이미 위젯이 있으면 초기화하지 않음 (persist에서 복원됨)
     if (Object.keys(widgets).length > 0) return;
 
+    // bar 차트 유형의 초기 위젯 2개 생성 (data, series 포함)
     const initialWidgets: Record<string, WidgetState> = {
       c1: {
-        title: "차트 컴포넌트2",
+        title: "Default",
         chartSpec: {
-          chartType: "LINE",
+          chartType: "AREA",
           xKey: "uploaded_at",
-          yKey: "FileSize",
-          seriesKey: "FileFormat",
-          agg: "AVG",
-          interval: undefined,
-          dateFilter: { type: "range", startDate: "", endDate: "" },
-          topK: undefined,
+          time_grain: "MONTH",
+          seriesKey: "dev_step",
+          agg: "COUNT",
           stacked: false,
           direction: "vertical",
         },
         data: {
-          data: [
-            {
-              x: "2025-01",
-              OK: 103,
-              NG: 146,
-              Pass: 189,
-              Fail: 232,
-            },
-            {
-              x: "2025-02",
-              OK: 136,
-              NG: 182,
-              Pass: 228,
-              Fail: 274,
-            },
-            {
-              x: "2025-03",
-              OK: 169,
-              NG: 218,
-              Pass: 240,
-              Fail: 289,
-            },
-            {
-              x: "2025-04",
-              OK: 169,
-              NG: 218,
-              Pass: 240,
-              Fail: 289,
-            },
-            {
-              x: "2025-05",
-              OK: 169,
-              NG: 218,
-              Pass: 240,
-              Fail: 289,
-            },
-            {
-              x: "2025-06",
-              OK: 169,
-              NG: 218,
-              Pass: 240,
-              Fail: 289,
-            },
-            {
-              x: "2025-07",
-              OK: 169,
-              NG: 218,
-              Pass: 240,
-              Fail: 289,
-            },
-            {
-              x: "2025-08",
-              OK: 169,
-              NG: 218,
-              Pass: 240,
-              Fail: 289,
-            },
-            {
-              x: "2025-09",
-              OK: 169,
-              NG: 218,
-              Pass: 240,
-              Fail: 289,
-            },
-            {
-              x: "2025-10",
-              OK: 169,
-              NG: 218,
-              Pass: 240,
-              Fail: 289,
-            },
-            {
-              x: "2025-11",
-              OK: 169,
-              NG: 218,
-              Pass: 240,
-              Fail: 289,
-            },
-            {
-              x: "2025-12",
-              OK: 169,
-              NG: 218,
-              Pass: 240,
-              Fail: 289,
-            },
-          ],
-          series: [
-            {
-              type: "line",
-              xKey: "x",
-              yKey: "OK",
-              yName: "OK",
-            },
-            {
-              type: "line",
-              xKey: "x",
-              yKey: "NG",
-              yName: "NG",
-            },
-            {
-              type: "line",
-              xKey: "x",
-              yKey: "Pass",
-              yName: "Pass",
-            },
-            {
-              type: "line",
-              xKey: "x",
-              yKey: "Fail",
-              yName: "Fail",
-            },
-          ],
+          data: [],
+          series: [],
         },
       },
+
       c2: {
-        title: "차트 컴포넌트3",
+        title: "Default",
         chartSpec: {
           chartType: "BAR",
-          xKey: "Vehicle",
-          yKey: undefined,
-          seriesKey: "ECU",
-          agg: undefined,
-          interval: undefined,
-          dateFilter: { type: "range", startDate: "", endDate: "" },
-          topK: undefined,
-          stacked: false,
+          xKey: "vehicle",
+          seriesKey: "ecu",
+          agg: "COUNT",
+          stacked: true,
           direction: "vertical",
         },
         data: {
-          data: [
-            {
-              Vehicle: "GV80",
-              ICE: 201,
-              ECS: 282,
-              VPC: 363,
-              EPB: 445,
-              CMDPS: 526,
-              VCU: 607,
-              SbW: 688,
-              IEB: 769,
-              AWD: 850,
-              RMDPS: 931,
-            },
-            {
-              Vehicle: "MX5",
-              ICE: 252,
-              ECS: 335,
-              VPC: 417,
-              EPB: 500,
-              CMDPS: 582,
-              VCU: 665,
-              SbW: 747,
-              IEB: 830,
-              AWD: 912,
-              RMDPS: 995,
-            },
-            {
-              Vehicle: "IONIQ5",
-              ICE: 500,
-              ECS: 387,
-              VPC: 471,
-              EPB: 555,
-              CMDPS: 643,
-              VCU: 731,
-              SbW: 819,
-              IEB: 907,
-              AWD: 995,
-              RMDPS: 1083,
-            },
-            {
-              Vehicle: "Others",
-              ICE: 343,
-              ECS: 267,
-              VPC: 111,
-              EPB: 246,
-              CMDPS: 142,
-              VCU: 632,
-              SbW: 786,
-              IEB: 565,
-              AWD: 888,
-              RMDPS: 23,
-            },
-          ],
-          series: [
-            {
-              type: "bar",
-              xKey: "Vehicle",
-              yKey: "ICE",
-              yName: "ICE",
-              stacked: true,
-            },
-            {
-              type: "bar",
-              xKey: "Vehicle",
-              yKey: "ECS",
-              yName: "ECS",
-              stacked: true,
-            },
-            {
-              type: "bar",
-              xKey: "Vehicle",
-              yKey: "VPC",
-              yName: "VPC",
-              stacked: true,
-            },
-            {
-              type: "bar",
-              xKey: "Vehicle",
-              yKey: "EPB",
-              yName: "EPB",
-              stacked: true,
-            },
-            {
-              type: "bar",
-              xKey: "Vehicle",
-              yKey: "CMDPS",
-              yName: "CMDPS",
-              stacked: true,
-            },
-            {
-              type: "bar",
-              xKey: "Vehicle",
-              yKey: "VCU",
-              yName: "VCU",
-              stacked: true,
-            },
-            {
-              type: "bar",
-              xKey: "Vehicle",
-              yKey: "SbW",
-              yName: "SbW",
-              stacked: true,
-            },
-            {
-              type: "bar",
-              xKey: "Vehicle",
-              yKey: "IEB",
-              yName: "IEB",
-              stacked: true,
-            },
-            {
-              type: "bar",
-              xKey: "Vehicle",
-              yKey: "AWD",
-              yName: "AWD",
-              stacked: true,
-            },
-            {
-              type: "bar",
-              xKey: "Vehicle",
-              yKey: "RMDPS",
-              yName: "RMDPS",
-              stacked: true,
-            },
-          ],
+          data: [],
+          series: [],
         },
       },
-      // c4: {
-      //   title: "차트 컴포넌트4",
-      //   chartSpec: {
-      //     chartType: "scatter",
-      //     xKey: "FileSize",
-      //     yKey: "id",
-      //     seriesKey: "",
-      //     agg: "sum",
-      //     interval: undefined,
-      //     dateFilter: { type: "range", startDate: "", endDate: "" },
-      //     topK: undefined,
-      //     stacked: false,
-      //     direction: "vertical",
-      //   },
-      //   data: { data: [], series: [] },
-      // },
-      // c5: {
-      //   title: "차트 컴포넌트5",
-      //   chartSpec: {
-      //     chartType: "pie",
-      //     xKey: "",
-      //     yKey: "",
-      //     seriesKey: "FileFormat",
-      //     agg: undefined,
-      //     interval: undefined,
-      //     dateFilter: { type: "range", startDate: "", endDate: "" },
-      //     topK: undefined,
-      //     stacked: false,
-      //     direction: "vertical",
-      //   },
-      //   data: { data: [], series: [] },
-      // },
-      // c6: {
-      //   title: "차트 컴포넌트6",
-      //   chartSpec: {
-      //     chartType: "pie",
-      //     xKey: "",
-      //     yKey: "",
-      //     seriesKey: "FileFormat",
-      //     agg: undefined,
-      //     interval: undefined,
-      //     dateFilter: { type: "range", startDate: "", endDate: "" },
-      //     topK: undefined,
-      //     stacked: false,
-      //     direction: "vertical",
-      //   },
-      //   data: { data: [], series: [] },
-      // },
-      // c7: {
-      //   title: "차트 컴포넌트7",
-      //   chartSpec: {
-      //     chartType: "pie",
-      //     xKey: "",
-      //     yKey: "",
-      //     seriesKey: "FileFormat",
-      //     agg: undefined,
-      //     interval: undefined,
-      //     dateFilter: { type: "range", startDate: "", endDate: "" },
-      //     topK: undefined,
-      //     stacked: false,
-      //     direction: "vertical",
-      //   },
-      //   data: { data: [], series: [] },
-      // },
-      // c8: {
-      //   title: "차트 컴포넌트8",
-      //   chartSpec: {
-      //     chartType: "pie",
-      //     xKey: "",
-      //     yKey: "",
-      //     seriesKey: "FileFormat",
-      //     agg: undefined,
-      //     interval: undefined,
-      //     dateFilter: { type: "range", startDate: "", endDate: "" },
-      //     topK: undefined,
-      //     stacked: false,
-      //     direction: "vertical",
-      //   },
-      //   data: { data: [], series: [] },
-      // },
-      // c9: {
-      //   title: "차트 컴포넌트9",
-      //   chartSpec: {
-      //     chartType: "pie",
-      //     xKey: "",
-      //     yKey: "",
-      //     seriesKey: "FileFormat",
-      //     agg: undefined,
-      //     interval: undefined,
-      //     dateFilter: { type: "range", startDate: "", endDate: "" },
-      //     topK: undefined,
-      //     stacked: false,
-      //     direction: "vertical",
-      //   },
-      //   data: { data: [], series: [] },
-      // },
-      // c10: {
-      //   title: "차트 컴포넌트10",
-      //   chartSpec: {
-      //     chartType: "pie",
-      //     xKey: "",
-      //     yKey: "",
-      //     seriesKey: "FileFormat",
-      //     agg: undefined,
-      //     interval: undefined,
-      //     dateFilter: { type: "range", startDate: "", endDate: "" },
-      //     topK: undefined,
-      //     stacked: false,
-      //     direction: "vertical",
-      //   },
-      //   data: { data: [], series: [] },
-      // },
-      // c11: {
-      //   title: "차트 컴포넌트11",
-      //   chartSpec: {
-      //     chartType: "pie",
-      //     xKey: "",
-      //     yKey: "",
-      //     seriesKey: "FileFormat",
-      //     agg: undefined,
-      //     interval: undefined,
-      //     dateFilter: { type: "range", startDate: "", endDate: "" },
-      //     topK: undefined,
-      //     stacked: false,
-      //     direction: "vertical",
-      //   },
-      //   data: { data: [], series: [] },
-      // },
+      c3: {
+        title: "Default",
+        chartSpec: {
+          chartType: "PIE",
+          xKey: undefined,
+          seriesKey: "test_result",
+          agg: "COUNT",
+          stacked: true,
+          direction: "vertical",
+        },
+        data: {
+          data: [],
+          series: [],
+        },
+      },
     };
     setWidgets(initialWidgets);
   }, [widgets, setWidgets]); // widgets 의존성 추가
@@ -479,10 +146,21 @@ const DashboardPage: React.FC = () => {
   const handleDeleteAllWidget = () => {
     deleteAllWidgets();
   };
+  if (loading) {
+    return (
+      <main className="min-h-screen flex items-center justify-center">
+        <div className="text-2xl font-bold">필드 정보 로딩 중...</div>
+      </main>
+    );
+  }
+
   return (
-    <>
+    <main className="min-h-screen p-4 mt-10">
+      <div className="mb-6">
+        <h1 className="text-4xl font-bold mb-4">대시보드</h1>
+      </div>
       <DashboardHeader />
-      <div className="p-6 bg-[#D9D9D9] min-h-screen max-h-screen overflow-y-auto">
+      <div className="p-6 bg-[#D9D9D9] min-h-screen max-h-screen overflow-y-auto rounded-lg">
         <div className="flex justify-end mb-4">
           <Button
             onClick={handleDeleteAllWidget}
@@ -500,10 +178,14 @@ const DashboardPage: React.FC = () => {
           onDragStart={handleDragStart}
           onDragEnd={handleDragEnd}
         >
-          <div className="grid grid-cols-2 auto-rows-max gap-4 mt-6 pb-20">
+          <div className="flex flex-wrap gap-4 mt-6 pb-20 items-start">
             <SortableContext items={widgetIds} strategy={rectSortingStrategy}>
               {widgetIds.map((widgetId) => (
-                <DashboardPanel key={widgetId} widgetId={widgetId} />
+                <DashboardPanel
+                  key={widgetId}
+                  widgetId={widgetId}
+                  onFullscreen={setFullscreenId}
+                />
               ))}
             </SortableContext>
           </div>
@@ -519,12 +201,73 @@ const DashboardPage: React.FC = () => {
             ) : null}
           </DragOverlay>
         </DndContext>
+        {/* 전체보기 모달 오버레이 */}
+        {fullscreenId && widgets[fullscreenId] && (
+          <div
+            style={{
+              position: "fixed",
+              top: 0,
+              left: 0,
+              width: "100vw",
+              height: "100vh",
+              background: "rgba(0,0,0,0.85)",
+              zIndex: 1000,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+            onClick={() => setFullscreenId(null)}
+          >
+            <div
+              style={{
+                background: "#fff",
+                borderRadius: 12,
+                boxShadow: "0 8px 32px rgba(0,0,0,0.25)",
+                width: "100vw", // Increased width to nearly full screen
+                height: "80vh", // Increased height to nearly full screen
+                maxWidth: 1600, // Increased max width
+                maxHeight: 1000, // Increased max height
+                display: "flex",
+                flexDirection: "column",
+                position: "relative",
+              }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* 닫기 버튼 */}
+              <button
+                style={{
+                  position: "absolute",
+                  top: 16,
+                  right: 16,
+                  zIndex: 10,
+                  background: "#fff",
+                  border: "1px solid #ccc",
+                  borderRadius: 6,
+                  padding: 5,
+                  cursor: "pointer",
+                  fontWeight: 700,
+                  fontSize: 18,
+                }}
+                onClick={() => setFullscreenId(null)}
+                title="닫기"
+              >
+                <X />
+              </button>
+              {/* ChartWidget만 전체화면 */}
+              <div
+                style={{ flex: 1, width: "100%", height: "80%", padding: 24 }}
+              >
+                <ChartWidget widgetId={fullscreenId} />
+              </div>
+            </div>
+          </div>
+        )}
         {/* Floating Button - fixed to bottom left */}
         <div className="fixed left-6 bottom-6 z-50">
           <FloatingActionButtons />
         </div>
       </div>
-    </>
+    </main>
   );
 };
 export default DashboardPage;

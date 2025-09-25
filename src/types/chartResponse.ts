@@ -4,9 +4,7 @@ import type { AggType, TimeGrain } from "./dashboard";
 export interface ChartResponse {
   meta: Meta;
   shape: DataShape;
-  dataNoDim?: DataNoDim; // shape == NO_DIMENSION
-  dataOneDim?: DataOneDim; // shape == ONE_DIMENSION
-  dataTwoDim?: DataTwoDim; // shape == TWO_DIMENSION
+  data?: DataNoDim | DataOneDim | DataTwoDim; // shape == NO_DIMENSION
   totals?: Totals;
 }
 // -----------------------------------------

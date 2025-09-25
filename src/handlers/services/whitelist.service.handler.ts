@@ -6,8 +6,6 @@ import type {
   PermissionRequests,
 } from "@/types/whitelist";
 
-//TODO : 화이트리스트 검색 api 추가 필요
-
 /**
  * 모든 화이트리스트 팀 구조 트리를 가져오는 함수
  * @param
@@ -164,7 +162,7 @@ export const deleteGroup = async (
     const response = await fetch(
       `${API_CONFIG.baseURL}${WHITELIST.deleteGroup(groupId)}`,
       {
-        method: "DELETE",
+        method: "PUT",
         credentials: "include",
       }
     );

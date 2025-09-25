@@ -3,7 +3,8 @@ export type UserRole =
   | "PERMISSION_REQUESTED" // 권한 요청됨
   | "USER" // 일반 사용자
   | "ADMIN" // 관리자
-  | "SUPER_ADMIN"; // 최고 관리자
+  | "SUPER_ADMIN" // 최고 관리자
+  | "DEVELOPER"; // 개발자
 
 export interface WhitelistUser {
   id: number;

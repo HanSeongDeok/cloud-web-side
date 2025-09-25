@@ -15,7 +15,7 @@ const DbConfigHeader: React.FC<DbConfigHeaderProps> = ({
 }) => {
   return (
     <div className="flex justify-between items-center mb-4">
-      <h2 className="text-2xl font-bold">DB 속성 관리</h2>
+      <h2 className="text-xl font-semibold">DB 속성 테이블</h2>
       <div className="flex gap-2">
         <PropertyMinusButton
           onRemoveProperty={onRemoveProperty}

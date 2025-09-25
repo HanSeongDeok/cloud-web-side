@@ -1,7 +1,15 @@
-import type { AggType, ChartSpec, ChartType, TimeGrain } from "./dashboard";
+import { useDash } from "@/stores/useDash";
+import {
+  type AggType,
+  type ChartSpec,
+  type ChartType,
+  type TimeGrain,
+} from "./dashboard";
+import type { SearchInfoBody } from "@/stores/useTableDataStore";
 
 // ---------- chart RequestDto ----------
 export interface ChartRequest {
+  searchOptions: Omit<SearchInfoBody, "paging">;
   metric: MetricMeta;
   dimensions: DimensionMeta[];
   time?: RequestTimeMeta;
@@ -27,9 +35,20 @@ export interface RequestTimeMeta {
 // ---------- ChartSpec to API chartRequestDto Converter ----------
 
 export const convertChartSpecToRequest = (
+  globalFilters: Omit<SearchInfoBody, "paging">,
   chartSpec: ChartSpec
 ): ChartRequest => {
+  const metric: MetricMeta = {
+    aggregationType: (chartSpec.agg?.toUpperCase() as AggType) || "COUNT",
+  };
+
+  // yKey가 있을 때만 targetField 추가
+  if (chartSpec.yKey) {
+    metric.targetField = chartSpec.yKey;
+  }
+
   const request: ChartRequest = {
+    searchOptions: globalFilters,
     metric: {
       aggregationType: (chartSpec.agg?.toUpperCase() as AggType) || "COUNT",
       targetField: chartSpec.yKey,
@@ -38,8 +57,12 @@ export const convertChartSpecToRequest = (
     chartType: (chartSpec.chartType?.toUpperCase() as ChartType) || "BAR",
   };
 
-  // X축 dimension 추가
-  if (chartSpec.xKey) {
+  // chartSpec.xKey가 TEMPORAL이 아닌 경우에만 dimension에 추가
+  if (
+    chartSpec.xKey &&
+    useDash.getState().FIELD_META.find((f) => f.name === chartSpec.xKey)
+      ?.fieldKind !== "TEMPORAL"
+  ) {
     request.dimensions.push({
       field: chartSpec.xKey,
     });
@@ -53,10 +76,10 @@ export const convertChartSpecToRequest = (
   }
 
   // 시간 정보 추가
-  if (chartSpec.xKey && chartSpec.interval !== undefined) {
+  if (chartSpec.xKey && chartSpec.time_grain !== undefined) {
     request.time = {
       field: chartSpec.xKey,
-      grain: chartSpec.interval.toUpperCase() as TimeGrain,
+      grain: chartSpec.time_grain.toUpperCase() as TimeGrain,
     };
   }
 

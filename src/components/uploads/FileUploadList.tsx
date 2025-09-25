@@ -1,5 +1,5 @@
 // src/components/FileUploadList.tsx
-import { useFileUploadStore } from "@/stores/useFileInputStore";
+import { useEditModalStore, useFileToggleStore, useFileUploadStore } from "@/stores/useFileInputStore";
 import { Button } from "../ui/button";
 import { ScrollArea } from "../ui/scroll-area";
 import { Separator } from "../ui/separator";
@@ -8,16 +8,22 @@ import { memo } from "react";
 import { UploadBox } from "./UploadBox";
 import { useFileMultiSelectionStore, useFileSelectionStore } from "@/stores/useFileSelectionStore";
 import {
-    ContextMenu,
-    ContextMenuContent,
-    ContextMenuItem,
-    ContextMenuSeparator,
-    ContextMenuTrigger,
+  ContextMenu,
+  ContextMenuContent,
+  ContextMenuItem,
+  ContextMenuSeparator,
+  ContextMenuTrigger,
 } from "../ui/context-menu";
 import { useFileMetaDataStore } from "@/stores/useFileMetaDataStore";
 import { handleDrop } from "@/handlers/events/file.drop.handler";
 
 const FileUploadList = memo(() => {
+  /**
+   * Edit 인지 Upload인지 판단하는 상태
+   */
+  // const setIsFolderMode = useFileToggleStore((state) => state.setIsFolderMode);
+  const isFolderMode = useFileToggleStore((state) => state.isFolderMode);
+
   /**
    * 업로드된 파일 목록
    */
@@ -50,7 +56,7 @@ const FileUploadList = memo(() => {
     const selectedFiles = files.filter((_, i) => selectedFileIndices.includes(i));
     const baseFileMetadata = fileMetadata[selectedFileIndex];
 
-    if(baseFileMetadata) {
+    if (baseFileMetadata) {
       selectedFiles.forEach((_, index) => {
         setFileMetadata(index, baseFileMetadata);
       });
@@ -67,11 +73,11 @@ const FileUploadList = memo(() => {
     return selectedFileIndices.includes(index);
   }
   return (
-    <div 
+    <div
       className="w-full h-full flex flex-col"
     >
-      <div className="font-bold text-sm mb-2">파일 ({files.length})</div>
-      <ScrollArea 
+      <div className="font-bold text-sm mb-2"> 파일 ({files.length})</div>
+      <ScrollArea
         className="flex-1 overflow-auto mb-2 pr-4"
         type="auto"
         onDrop={handleDrop}
@@ -83,11 +89,10 @@ const FileUploadList = memo(() => {
               <ContextMenuTrigger asChild>
                 <Button
                   variant={isSelected(index) ? "secondary" : "outline"}
-                  className={`h-18 flex justify-between items-center p-2 overflow-hidden transition-colors cursor-pointer ${
-                    isSelected(index) ? 
-                      'text-sky-600 font-extrabold hover:text-sky-600 bg-sky-100 hover:bg-sky-200': 
-                      'bg-muted'
-                  }`}
+                  className={`h-18 flex justify-between items-center p-2 overflow-hidden transition-colors cursor-pointer ${isSelected(index) ?
+                      'text-sky-600 font-extrabold hover:text-sky-600 bg-sky-100 hover:bg-sky-200' :
+                      'bg-muted border-2 border-gray-400'
+                    }`}
                   onClick={(e) => {
                     e.preventDefault();
                     e.stopPropagation();
@@ -97,31 +102,30 @@ const FileUploadList = memo(() => {
                 >
                   <div className="flex-1 min-w-0 flex flex-col items-start overflow-hidden">
                     <div className="text-sm text-left truncate w-full">{file.name}</div>
-                    <div className={`text-xs text-left truncate w-full ${
-                      selectedFileIndices.includes(index) ? 'text-gray-600' : 'text-gray-500'
-                    }`}>
+                    <div className={`text-xs text-left truncate w-full ${selectedFileIndices.includes(index) ? 'text-gray-600' : 'text-gray-500'
+                      }`}>
                       {new Date(file.lastModified).toLocaleDateString()} / {(file.size / (1024 * 1024)).toFixed(2)} MB
                     </div>
                   </div>
-                  <div 
-                    className="ml-2 flex-shrink-0 p-1 rounded transition-colors text-red-500 cursor-pointer"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                      setFiles(files.filter((_, i) => i !== index));
-                      clearFileMetadata(index);
-                    }}
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </div>
+                    <div
+                      className="ml-2 flex-shrink-0 p-1 rounded transition-colors text-red-500 cursor-pointer"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        setFiles(files.filter((_, i) => i !== index));
+                        clearFileMetadata(index);
+                      }}
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </div>
                 </Button>
               </ContextMenuTrigger>
               <ContextMenuContent className="w-58 truncate max-w-full text-left">
-                <ContextMenuItem className="h-11 cursor-pointer font-bold text-sm flex items-center gap-2 px-3">
+                {/* <ContextMenuItem className="h-11 cursor-pointer font-bold text-sm flex items-center gap-2 px-3">
                   <Info className="w-4 h-4 " />
                   파일 정보 보기
-                </ContextMenuItem>
-                <ContextMenuItem 
+                </ContextMenuItem> */}
+                <ContextMenuItem
                   className="h-11 cursor-pointer font-bold text-sm flex items-center gap-2 px-3"
                   onClick={applyOptionsToSelectedFiles}
                 >
@@ -129,7 +133,7 @@ const FileUploadList = memo(() => {
                   선택 파일 옵션 일괄 적용
                 </ContextMenuItem>
                 <ContextMenuSeparator />
-                <ContextMenuItem 
+                <ContextMenuItem
                   className="h-11 cursor-pointer font-bold text-sm flex items-center gap-2 px-3"
                   onClick={clearSelectedFiles}
                 >
@@ -137,13 +141,13 @@ const FileUploadList = memo(() => {
                   선택 파일 초기화
                 </ContextMenuItem>
                 <ContextMenuSeparator />
-                <ContextMenuItem 
+                <ContextMenuItem
                   className="h-11 cursor-pointer font-bold text-sm flex items-center gap-2 px-3"
                   onClick={(e) => {
                     e.preventDefault();
                     e.stopPropagation();
                     setFiles(files.filter((_, i) => !selectedFileIndices.includes(i)));
-                    clearFileMetadata(index);  
+                    clearFileMetadata(index);
                   }}
                 >
                   <FileX className="w-4 h-4" />
@@ -155,9 +159,11 @@ const FileUploadList = memo(() => {
           </div>
         ))}
       </ScrollArea>
-      <UploadBox className="mt-4 w-full h-20 flex flex-col items-center 
+      {isFolderMode && (
+        <UploadBox className="mt-4 w-full h-20 flex flex-col items-center 
           justify-center border border-dashed border-gray-300 
           rounded-md cursor-pointer bg-muted hover:bg-muted/50 relative"/>
+      )}
     </div>
   );
 });

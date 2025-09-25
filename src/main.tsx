@@ -4,7 +4,7 @@ import App from "./App.tsx";
 import { BrowserRouter } from "react-router-dom";
 import { ModuleRegistry, AllCommunityModule } from "ag-grid-community";
 import { Toaster } from "sonner";
-
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 // 전역 컨텍스트 메뉴 차단
 document.addEventListener("contextmenu", (e) => {
   e.preventDefault();
@@ -22,14 +22,16 @@ document.addEventListener("drop", (e) => {
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 createRoot(document.getElementById("root")!).render(
-  <BrowserRouter>
-    <App />
-    <Toaster
-      position="bottom-right"
-      richColors
-      closeButton
-      duration={5000}
-      visibleToasts={7}
-    />
-  </BrowserRouter>
+  <QueryClientProvider client={new QueryClient()}>
+    <BrowserRouter>
+      <App />
+      <Toaster
+        position="bottom-right"
+        richColors
+        closeButton
+        duration={5000}
+        visibleToasts={7}
+      />
+    </BrowserRouter>
+  </QueryClientProvider>
 );

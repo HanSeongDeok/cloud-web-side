@@ -2,15 +2,19 @@
 import { useState, forwardRef, useMemo } from "react";
 import type { DbProperty } from "@/types/property";
 import { AgGridReact } from "ag-grid-react";
-import { getMockDbColumns } from "../../handlers/services/DbProperty.service.handler";
+import { getDbColumns } from "../../handlers/services/DbProperty.service.handler";
 import type { ColDef } from "ag-grid-community";
 import { PropertyEditButton } from "./PropertyEditButton";
 import { LUTButton } from "./LUTButton";
 
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
-import { AllCommunityModule, ModuleRegistry } from "ag-grid-community";
-import { provideGlobalGridOptions } from "ag-grid-community";
+import {
+  AllCommunityModule,
+  ModuleRegistry,
+  ValidationModule,
+} from "ag-grid-community";
+import { provideGlobalGridOptions, TooltipModule } from "ag-grid-community";
 
 interface DbPropertyTableProps {
   data: DbProperty[];
@@ -23,7 +27,11 @@ interface DbPropertyTableProps {
 provideGlobalGridOptions({
   theme: "legacy",
 });
-ModuleRegistry.registerModules([AllCommunityModule]);
+ModuleRegistry.registerModules([
+  AllCommunityModule,
+  TooltipModule,
+  ...(process.env.NODE_ENV !== "production" ? [ValidationModule] : []),
+]);
 
 const DbPropertyTable = forwardRef<AgGridReact, DbPropertyTableProps>(
   (
@@ -37,7 +45,7 @@ const DbPropertyTable = forwardRef<AgGridReact, DbPropertyTableProps>(
 
     //  AG-Grid 컬럼 정의 (편집 버튼, 룩업 버튼 컬럼 추가)
     const [columnDefs] = useState<ColDef[]>([
-      ...(getMockDbColumns() as ColDef[]),
+      ...(getDbColumns() as ColDef[]),
       {
         headerName: "룩업",
         colId: "LUT",
@@ -105,6 +113,7 @@ const DbPropertyTable = forwardRef<AgGridReact, DbPropertyTableProps>(
             onRowClicked={(event) => {
               console.log("클릭된 행:", event.data);
             }}
+            tooltipShowMode={"standard"}
           />
         </div>
       </div>

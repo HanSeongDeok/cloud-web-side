@@ -46,10 +46,6 @@ export function DateSearchForm({
 
   return (
     <div className="grid grid-cols-4 items-center gap-4 mt-2">
-      <Label className="col-span-4 mb-1 text-left ml-1 text-base font-bold text-gray-800">
-        날짜 범위
-      </Label>
-
       <div className="col-span-4">
         <Popover open={open} onOpenChange={setOpen} modal>
           <PopoverTrigger asChild>

@@ -83,7 +83,6 @@ const WhitelistTab: React.FC = () => {
    *   - handleDemoteUser: 서브 관리자를 일반 사용자로 강등시키는 기능, 실패 시 데이터 새로고침
    *   - filteredGroups: 검색어에 따라 필터링된 그룹 목록
    */
-  //TODO : 그룹삭제 및 사용자 삭제 모달 추가 필요
 
   const loadWhitelistData = async () => {
     setLoading(true);
@@ -191,7 +190,6 @@ const WhitelistTab: React.FC = () => {
       );
     }
   };
-  //TODO : 유저 삭제 시에도 알림 모달 뜨도록 UI feedback 추가 필요
   const handleDeleteUser = useCallback(
     async (userId: number) => {
       try {
@@ -278,7 +276,6 @@ const WhitelistTab: React.FC = () => {
 
   const handleDemoteUser = async (userId: number, userName: string) => {
     try {
-      // TODO: 실제 API 호출 구현 필요
       await demoteAdmin([userId]);
       await loadWhitelistData();
       // 임시로 로컬 상태 업데이트 (실제 API 연결 전까지)

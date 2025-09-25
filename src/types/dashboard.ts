@@ -3,7 +3,7 @@ import type { AgPieSeriesOptions } from "ag-charts-enterprise";
 type ChartDataItem = {
   [key: string]: string | number | Date;
 };
-export const chartTypes = ["BAR", "LINE", "AREA", "SCATTER", "PIE"] as const;
+export const chartTypes = ["BAR", "LINE", "AREA", "PIE"] as const;
 export type { ChartDataItem };
 
 type BarSeriesConfig = {
@@ -43,13 +43,20 @@ export type AggType = "COUNT" | "SUM" | "AVG" | "MAX" | "MIN";
 export type TimeGrain = "YEAR" | "MONTH" | "DAY";
 export type FieldKind = "CATEGORICAL" | "NUMERIC" | "TEMPORAL";
 
+export interface FieldMeta {
+  name: string;
+  displayName: string;
+  fieldKind: FieldKind;
+  fieldType: string;
+}
+
 export type ChartSpec = {
   chartType: ChartType | undefined;
   xKey?: string | undefined;
   yKey?: string | undefined;
   seriesKey?: string | undefined;
   agg?: AggType | undefined;
-  interval?: TimeGrain | undefined;
+  time_grain?: TimeGrain | undefined;
   topK?: number | undefined; //default : 10
   topKEnabled?: boolean | undefined; //default : false
   topKTarget?: string | undefined; //x축 또는 series 중 선택
@@ -65,4 +72,9 @@ export type WidgetState = {
   title: string;
   chartSpec: ChartSpec;
   data: ChartData;
+  layout?: {
+    width?: number;
+    height?: number;
+    widthPercent?: number;
+  };
 };

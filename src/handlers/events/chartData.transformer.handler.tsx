@@ -1,4 +1,8 @@
-import type { ChartResponse } from "@/types/chartResponse";
+import type {
+  ChartResponse,
+  OneDimRow,
+  TwoDimRow,
+} from "@/types/chartResponse";
 import type {
   ChartData,
   ChartSpec,
@@ -14,18 +18,28 @@ export class ChartDataTransformer {
     response: ChartResponse,
     chartSpec: ChartSpec
   ): ChartData {
-    const { dataNoDim, dataOneDim, dataTwoDim, shape } = response;
+    const { data, shape } = response;
 
     // shape에 따른 분기 처리
     switch (shape) {
       case "NO_DIMENSION":
-        return this.transformNoDimension(dataNoDim!, chartSpec);
+        return this.transformNoDimension(data as { value: number }, chartSpec);
 
       case "ONE_DIMENSION":
-        return this.transformOneDimension(dataOneDim!, chartSpec);
+        return this.transformOneDimension(
+          data as { dimensionField: string; rows: OneDimRow[] },
+          chartSpec
+        );
 
       case "TWO_DIMENSION":
-        return this.transformTwoDimension(dataTwoDim!, chartSpec);
+        return this.transformTwoDimension(
+          data as {
+            groupField: string;
+            seriesField: string;
+            rows: TwoDimRow[];
+          },
+          chartSpec
+        );
 
       default:
         throw new Error(`Unknown data shape: ${shape}`);
@@ -45,7 +59,7 @@ export class ChartDataTransformer {
         value: dataNoDim.value,
       },
     ];
-    //line, area, pie 는 무조건 하나의 dimension이 필요함 따라서 bar로 고정
+    //line, area, pie 는 무조건 하나이상의  dimension이 필요함 따라서 bar로 고정
     const series: SeriesConfig[] = [
       {
         type: "bar",
@@ -100,8 +114,8 @@ export class ChartDataTransformer {
         {
           type: "pie",
           angleKey: "value",
-          calloutLabelKey: dataOneDim.dimensionField,
-          legendItemKey: dataOneDim.dimensionField,
+          calloutLabelKey: dataOneDim.dimensionField || "category",
+          legendItemKey: dataOneDim.dimensionField || "category",
         },
       ];
       return { data, series };
@@ -124,7 +138,7 @@ export class ChartDataTransformer {
           : chartSpec.chartType === "AREA"
           ? "area"
           : "bar",
-      xKey: dataOneDim.dimensionField,
+      xKey: "x",
       yKey: row.label,
       yName: row.label,
     })) as SeriesConfig[];
@@ -152,14 +166,16 @@ export class ChartDataTransformer {
     const series: SeriesConfig[] = [
       {
         type:
-          chartSpec.chartType === "LINE"
+          chartSpec.chartType === "BAR"
+            ? "bar"
+            : chartSpec.chartType === "LINE"
             ? "line"
             : chartSpec.chartType === "AREA"
             ? "area"
             : "line",
         xKey: dataOneDim.dimensionField,
         yKey: "value",
-        yName: `${yKey} (${agg})`,
+        yName: yKey ? `${yKey} (${agg})` : "value",
       } as SeriesConfig,
     ];
 

@@ -15,8 +15,6 @@ const API_BASE_URL = "http://localhost:3001/api"; // 실제 API 서버 URL로 �
  * @returns Promise<DbProperty[]> - DB 속성 목록
  */
 export const getAllDbProperties = async (): Promise<DbProperty[]> => {
-  // 🔨 개발 중 Mock 데이터 반환 (나중에 제거)
-  // return getMockDbProperties();
   try {
     // 실제 API 호출
     const response = await fetch(`${API_CONFIG.baseURL}${DB_PROPERTY.list}`, {
@@ -210,10 +208,10 @@ export const deleteMultipleDbProperties = async (
  * property.config.handler.tsx의 columnDefs 함수를 사용
  * @returns ColDef<DbProperty>[] - AG-Grid 컬럼 정의 배열
  */
-export const getMockDbColumns = (): ColDef<PartialDbProperty>[] => {
+export const getDbColumns = (): ColDef<PartialDbProperty>[] => {
   // property.config.handler.tsx에서 사용하는 Column 타입의 헤더 정보
   const columnHeaders: Column = {
-    name: "이름",
+    displayName: "이름",
     dataType: "타입",
     useLut: "참조표 사용",
     description: "설명",
@@ -235,171 +233,5 @@ export const getMockDbColumns = (): ColDef<PartialDbProperty>[] => {
           params.value === 1 ? "✅ 사용" : "❌ 미사용",
       }),
     })) as ColDef<PartialDbProperty>[]),
-  ];
-};
-
-/**
- * 개발용 Mock 데이터를 반환하는 함수
- * @returns DbProperty[] - Mock 속성 목록
- */
-const getMockDbProperties = (): DbProperty[] => {
-  return [
-    {
-      id: 1,
-      name: "차종",
-      dataType: "TEXT",
-      propertyType: "BUILT_IN",
-      useLut: true,
-      isActive: true,
-      deleteRequestStatus: "IN_USE",
-      createdBy: 1,
-      createdAt: new Date("2024-01-01T00:00:00Z"),
-      updatedAt: new Date("2024-01-01T00:00:00Z"),
-      description: "차량 이름",
-    },
-    {
-      id: 2,
-      name: "개발단계",
-      dataType: "TEXT",
-      propertyType: "BUILT_IN",
-      useLut: false,
-      isActive: true,
-      deleteRequestStatus: "IN_USE",
-      createdBy: 1,
-      createdAt: new Date("2024-01-02T00:00:00Z"),
-      updatedAt: new Date("2024-01-02T00:00:00Z"),
-      description: "테스트 단계",
-    },
-    {
-      id: 3,
-      name: "TC #",
-      dataType: "TEXT",
-      propertyType: "BUILT_IN",
-      useLut: false,
-      isActive: true,
-      deleteRequestStatus: "IN_USE",
-      createdBy: 1,
-      createdAt: new Date("2024-01-03T00:00:00Z"),
-      updatedAt: new Date("2024-01-03T00:00:00Z"),
-      description: "테스트 케이스 그룹",
-    },
-    {
-      id: 4,
-      name: "시험 결과",
-      dataType: "TEXT",
-      propertyType: "BUILT_IN",
-      useLut: false,
-      isActive: true,
-      deleteRequestStatus: "IN_USE",
-      createdBy: 1,
-      createdAt: new Date("2024-01-04T00:00:00Z"),
-      updatedAt: new Date("2024-01-04T00:00:00Z"),
-      description: "테스트 결과",
-    },
-    {
-      id: 5,
-      name: "소프트웨어버전",
-      dataType: "NUMBER",
-      propertyType: "USER_DEFINED",
-      useLut: false,
-      isActive: true,
-      deleteRequestStatus: "IN_USE",
-      createdBy: 1,
-      createdAt: new Date("2024-01-05T00:00:00Z"),
-      updatedAt: new Date("2024-01-05T00:00:00Z"),
-      description: "SW 버전",
-    },
-    {
-      id: 6,
-      name: "산출물분류",
-      dataType: "TEXT",
-      propertyType: "USER_DEFINED",
-      useLut: true,
-      isActive: true,
-      deleteRequestStatus: "IN_USE",
-      createdBy: 1,
-      createdAt: new Date("2024-01-05T00:00:00Z"),
-      updatedAt: new Date("2024-01-05T00:00:00Z"),
-      description: "산출물 분류 정보",
-    },
-    {
-      id: 7,
-      name: "마지막 로그인",
-      dataType: "DATE",
-      propertyType: "USER_DEFINED",
-      useLut: true,
-      isActive: true,
-      deleteRequestStatus: "IN_USE",
-      createdBy: 1,
-      createdAt: new Date("2024-01-05T00:00:00Z"),
-      updatedAt: new Date("2024-01-05T00:00:00Z"),
-      description: "최근 로그인 시간",
-    },
-
-    {
-      id: 8,
-      name: "사용자 나이",
-      dataType: "NUMBER",
-      propertyType: "USER_DEFINED",
-      useLut: false,
-      isActive: true,
-      deleteRequestStatus: "IN_USE",
-      createdBy: 1,
-      createdAt: new Date("2024-01-05T00:00:00Z"),
-      updatedAt: new Date("2024-01-05T00:00:00Z"),
-      description: "사용자의 나이",
-    },
-    {
-      id: 9,
-      name: "사용자 성별",
-      dataType: "TEXT",
-      propertyType: "USER_DEFINED",
-      useLut: true,
-      isActive: true,
-      deleteRequestStatus: "IN_USE",
-      createdBy: 1,
-      createdAt: new Date("2024-01-05T00:00:00Z"),
-      updatedAt: new Date("2024-01-05T00:00:00Z"),
-      description: "사용자의 성별",
-    },
-    {
-      id: 10,
-      name: "사용자 지역",
-      dataType: "TEXT",
-      propertyType: "USER_DEFINED",
-      useLut: true,
-      isActive: true,
-      deleteRequestStatus: "IN_USE",
-      createdBy: 1,
-      createdAt: new Date("2024-01-05T00:00:00Z"),
-      updatedAt: new Date("2024-01-05T00:00:00Z"),
-      description: "사용자의 지역 정보",
-    },
-    {
-      id: 11,
-      name: "사용자 선호도",
-      dataType: "TEXT",
-      propertyType: "USER_DEFINED",
-      useLut: true,
-      isActive: true,
-      deleteRequestStatus: "IN_USE",
-      createdBy: 1,
-      createdAt: new Date("2024-01-05T00:00:00Z"),
-      updatedAt: new Date("2024-01-05T00:00:00Z"),
-      description: "사용자의 선호도 정보",
-    },
-    {
-      id: 12,
-      name: "사용자 활동 상태",
-      dataType: "BOOLEAN",
-      propertyType: "USER_DEFINED",
-      useLut: false,
-      isActive: true,
-      deleteRequestStatus: "IN_USE",
-      createdBy: 1,
-      createdAt: new Date("2024-01-05T00:00:00Z"),
-      updatedAt: new Date("2024-01-05T00:00:00Z"),
-      description: "사용자의 활동 상태",
-    },
   ];
 };
